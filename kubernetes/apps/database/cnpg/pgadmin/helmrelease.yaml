@@ -96,7 +96,7 @@ spec:
           - backendRefs: [{}]
     persistence:
       config:
-        existingClaim: *app
+        existingClaim: "{{ .Release.Name }}-config"
         globalMounts:
           - path: /var/lib/pgadmin
       oauth:
