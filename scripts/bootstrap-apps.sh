@@ -90,7 +90,11 @@ function sync_helm_releases() {
 
 function main() {
     check_env KUBECONFIG TALOSCONFIG
-    check_cli helmfile kubectl kustomize sops talhelper yq
+    check_cli helmfile jq kubectl kustomize minijinja-cli bws talosctl yq
+
+	if ! bws project list &>/dev/null; then
+		log error "Failed to authenticate with Bitwarden Seccret Manager CLI"
+	fi
 
     # Apply resources and Helm releases
     wait_for_nodes
