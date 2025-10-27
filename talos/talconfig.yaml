@@ -1,0 +1,190 @@
+---
+clusterName: matalos
+
+talosVersion: "${talosVersion}"
+kubernetesVersion: "${kubernetesVersion}"
+
+endpoint: https://10.0.20.20:6443
+additionalApiServerCertSans: &sans
+  - "127.0.0.1"
+  - "10.0.20.20"
+  - "matalos.materia.k8s"
+  - "matalos.internal"
+additionalMachineCertSans: *sans
+
+clusterPodNets: ["10.42.0.0/16"]
+clusterSvcNets: ["10.43.0.0/16"]
+
+# Disable built-in CNI to use Cilium
+cniConfig:
+  name: none
+
+nodes:
+  - hostname: "matalos-c1"
+    ipAddress: "10.0.20.10"
+    installDiskSelector:
+      model: "QEMU*"
+      size: "<=100G"
+    machineSpec:
+      secureboot: false
+    talosImageURL: factory.talos.dev/installer/a3fa64835b73de20a374e96f7a4e6bdefc9747d9ee0cb0d31f895198f71c83ce
+    controlPlane: true
+    networkInterfaces:
+      - deviceSelector:
+          hardwareAddr: "bc:24:11:a7:7e:af"
+          physical: true
+        dhcp: false
+        addresses:
+          - "10.0.20.10/24"
+        routes:
+          - network: "0.0.0.0/0"
+            gateway: "10.0.20.1"
+        mtu: 9000
+        vlans:
+          - # IOT
+            vlanId: 70
+            dhcp: false
+            mtu: 9000
+          - # VPN
+            vlanId: 90
+            dhcp: false
+            mtu: 9000
+        vip:
+          ip: "10.0.20.20"
+    schematic:
+      customization:
+        systemExtensions:
+          officialExtensions:
+            - siderolabs/iscsi-tools
+            - siderolabs/util-linux-tools
+            - siderolabs/intel-ucode
+            - siderolabs/qemu-guest-agent
+            - siderolabs/nfsrahead        # NFS Performance
+    patches:
+      - "@./patches/manifests/machine-uservolumes.yaml"
+      - "@./patches/global/machine-longhorn-v2.yaml"
+  - hostname: "matalos-c2"
+    ipAddress: "10.0.20.11"
+    installDisk: "/dev/nvme0n1"
+    machineSpec:
+      secureboot: false
+    # Additional kernel commands needed for bonding
+    # kernelArgs: bond=bond0:enp3s0,enp4s0:mode=802.3ad,xmit_hash_policy=layer3+4:9000 talos.network.interface.ignore=eno1 ip=10.0.20.11::10.0.20.1:255.255.255.0::bond0
+    talosImageURL: factory.talos.dev/installer/efcf08ff9bbfddcb893c597b1f7f8472c178314bf2bcd9a8a3e382d8aa1901e0
+    controlPlane: true
+    networkInterfaces:
+      - interface: bond0
+        bond:
+          mode: 802.3ad
+          lacpRate: fast
+          xmitHashPolicy: layer3+4
+          miimon: 100
+          updelay: 200
+          downdelay: 200
+          deviceSelectors:
+            - hardwareAddr: "02:76:c6:*"
+              physical: true
+        addresses:
+          - "10.0.20.11/24"
+        routes:
+          - network: "0.0.0.0/0"
+            gateway: "10.0.20.1"
+        mtu: 9000
+        vlans:
+          - # IOT
+            vlanId: 70
+            dhcp: false
+            mtu: 9000
+          - # VPN
+            vlanId: 90
+            dhcp: false
+            mtu: 9000
+        vip:
+          ip: "10.0.20.20"
+      - deviceSelector:
+          hardwareAddr: "f8:75:a4:2c:46:e6"
+        ignore: true
+    schematic:
+      customization:
+        systemExtensions:
+          officialExtensions:
+            - siderolabs/iscsi-tools
+            - siderolabs/util-linux-tools
+            - siderolabs/intel-ucode      # Intel iGPU
+            - siderolabs/i915             # Intel iGPU
+            - siderolabs/mei              # Intel iGPU
+            - siderolabs/nfsrahead        # NFS Performance
+    patches:
+      - "@./patches/global/machine-longhorn-v1.yaml"
+  - hostname: "matalos-c3"
+    ipAddress: "10.0.20.12"
+    installDisk: "/dev/nvme0n1"
+    machineSpec:
+      secureboot: false
+    # Additional kernel commands needed for bonding
+    # kernelArgs: bond=bond0:enp3s0,enp4s0:mode=802.3ad,xmit_hash_policy=layer3+4:9000 talos.network.interface.ignore=eno1 ip=10.0.20.12::10.0.20.1:255.255.255.0::bond0
+    talosImageURL: factory.talos.dev/installer/64faf15e86f47de5cc2e13672e46fd2a48c357dcd5366f4b90d733d2600937ad
+    controlPlane: true
+    networkInterfaces:
+      - interface: bond0
+        bond:
+          mode: 802.3ad
+          lacpRate: fast
+          xmitHashPolicy: layer3+4
+          miimon: 100
+          updelay: 200
+          downdelay: 200
+          deviceSelectors:
+            - hardwareAddr: "02:76:c6:*"
+              physical: true
+        addresses:
+          - "10.0.20.12/24"
+        routes:
+          - network: "0.0.0.0/0"
+            gateway: "10.0.20.1"
+        mtu: 9000
+        vlans:
+          - # IOT
+            vlanId: 70
+            dhcp: false
+            mtu: 9000
+          - # VPN
+            vlanId: 90
+            dhcp: false
+            mtu: 9000
+        vip:
+          ip: "10.0.20.20"
+      - deviceSelector:
+          hardwareAddr: "98:fa:9b:92:ef:43"
+        ignore: true
+    schematic:
+      customization:
+        systemExtensions:
+          officialExtensions:
+            - siderolabs/iscsi-tools
+            - siderolabs/util-linux-tools
+            - siderolabs/intel-ucode      # Intel iGPU
+            - siderolabs/i915             # Intel iGPU
+            - siderolabs/mei              # Intel iGPU
+            - siderolabs/nfsrahead        # NFS Performance
+    patches:
+      - "@./patches/global/machine-longhorn-v1.yaml"
+
+# Global patches
+patches:
+  - "@./patches/global/machine-features.yaml"
+  - "@./patches/global/machine-files.yaml"
+  - "@./patches/global/machine-kubelet.yaml"
+  - "@./patches/global/machine-network.yaml"
+  - "@./patches/global/machine-sysctls.yaml"
+  - "@./patches/global/machine-time.yaml"
+  - "@./patches/manifests/watchdogtimerconfig.yaml"
+
+# Controller patches
+controlPlane:
+  patches:
+    - "@./patches/controller/cluster.yaml"
+  kernelModules:
+    - name: nvme_tcp
+    - name: vfio_pci
+    - name: uio_pci_generic

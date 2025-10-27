@@ -1,0 +1,15 @@
+machine:
+  features:
+    kubernetesTalosAPIAccess:
+      enabled: true
+      allowedRoles: ['os:admin']
+      allowedKubernetesNamespaces: ['actions-runner-system', 'system-upgrade']
+    hostDNS:
+      enabled: true
+      resolveMemberNames: true
+      forwardKubeDNSToHost: false
+    kubePrism:
+      enabled: true
+      port: 7445
+    rbac: true
+    stableHostname: true

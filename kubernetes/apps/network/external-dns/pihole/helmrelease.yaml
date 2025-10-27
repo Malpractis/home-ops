@@ -1,0 +1,34 @@
+---
+# yaml-language-server: $schema=https://flux.tholinka.dev/helmrelease/v2/github/kubernetes-sigs/external-dns/master/charts/external-dns
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: &app external-dns-pihole
+spec:
+  chartRef:
+    kind: OCIRepository
+    name: external-dns-pihole
+  interval: 1h
+  values:
+    fullnameOverride: *app
+    provider:
+      name: pihole
+    extraArgs:
+      - --pihole-api-version=6
+      - --pihole-server=http://pihole-0.pihole.network.svc.cluster.local
+    triggerLoopOnEvent: true
+    policy: sync
+    sources:
+      - gateway-httproute
+      - gateway-grpcroute
+      - gateway-tlsroute
+      - gateway-tcproute
+      - gateway-udproute
+      - service
+    # Pihole only supports A/AAAA/CNAME records so there is no mechanism to track ownership.
+    # You don't need to set this flag, but if you leave it unset, you will receive warning
+    # logs when ExternalDNS attempts to create TXT records.
+    registry: noop
+    domainFilters: ['${SECRET_DOMAIN}']
+    serviceMonitor:
+      enabled: true

@@ -1,0 +1,110 @@
+---
+
+helmDefaults:
+  cleanupOnFail: true
+  wait: true
+  waitForJobs: true
+
+releases:
+  - name: cilium
+    namespace: kube-system
+    chart: oci://ghcr.io/home-operations/charts-mirror/cilium
+    version: 1.18.3
+    values: &template [./templates/values.yaml.gotmpl]
+    hooks:
+      - # Wait for Cilium CRDs to be available
+        command: bash
+        args:
+          - -c
+          - until kubectl get crd ciliumloadbalancerippools.cilium.io ciliumbgpadvertisements.cilium.io ciliumbgppeerconfigs.cilium.io ciliumbgpclusterconfigs.cilium.io &>/dev/null; do sleep 5; done
+        events:
+          - postsync
+        showlogs: true
+      - # Apply Cilium Resources
+        command: kubectl
+        args:
+          - apply
+          - --namespace=kube-system
+          - --server-side
+          - --field-manager=kustomize-controller
+          - --filename=../../kubernetes/apps/kube-system/cilium/app/networks.yaml
+        events:
+          - postsync
+        showlogs: true
+
+  - name: coredns
+    namespace: kube-system
+    chart: oci://ghcr.io/coredns/charts/coredns
+    version: 1.45.0
+    values: *template
+    needs: [kube-system/cilium]
+
+  - name: spegel
+    namespace: system
+    chart: oci://ghcr.io/spegel-org/helm-charts/spegel
+    version: 0.4.0
+    values: *template
+    needs: [kube-system/coredns]
+
+  - name: cert-manager
+    namespace: security
+    chart: oci://quay.io/jetstack/charts/cert-manager
+    version: v1.19.1
+    values: *template
+    hooks:
+      - # Apply cluster secret store configuration
+        # We need this for bitwarden, which we need for the cluster-secrets to get populated
+        # without those, flux fails to install anything
+        events: [postsync]
+        command: kubectl
+        args:
+          - apply
+          - --namespace=security
+          - --server-side
+          - --field-manager=kustomize-controller
+          - --filename=../../kubernetes/apps/security/cert-manager/app/clusterissuers.yaml
+          - --wait=true
+        showlogs: true
+      - # bitwarden needs its certissuer so it can come up, otherwise it just stays pending
+        events: [postsync]
+        command: kubectl
+        args:
+          - apply
+          - --namespace=security
+          - --server-side
+          - --field-manager=kustomize-controller
+          - --filename=../../kubernetes/apps/security/cert-manager/app/bitwarden-issuer.yaml
+          - --wait=true
+      - # bitwarden needs its cert so it can come up, otherwise it just stays pending
+        events: [postsync]
+        command: kubectl
+        args:
+          - apply
+          - --namespace=security
+          - --server-side
+          - --field-manager=kustomize-controller
+          - --filename=../../kubernetes/apps/security/external-secrets/store/bitwarden-secrets/certificate.yaml
+          - --wait=true
+    needs: [system/spegel]
+
+  # need external secrets to populate cluster-secrets so flux can come up
+  - name: external-secrets
+    namespace: security
+    chart: oci://ghcr.io/external-secrets/charts/external-secrets
+    version: 0.20.4
+    values: *template
+    needs: [security/cert-manager]
+
+  - name: flux-operator
+    namespace: flux-system
+    chart: oci://ghcr.io/controlplaneio-fluxcd/charts/flux-operator
+    version: 0.32.0
+    values: *template
+    needs: [security/external-secrets]
+
+  - name: flux-instance
+    namespace: flux-system
+    chart: oci://ghcr.io/controlplaneio-fluxcd/charts/flux-instance
+    version: 0.32.0
+    values: *template
+    needs: [flux-system/flux-operator]

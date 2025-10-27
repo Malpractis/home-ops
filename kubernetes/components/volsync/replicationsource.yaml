@@ -1,0 +1,30 @@
+---
+# yaml-language-server: $schema=https://kubernetes-schemas.pages.dev/volsync.backube/replicationsource_v1alpha1.json
+apiVersion: volsync.backube/v1alpha1
+kind: ReplicationSource
+metadata:
+  name: "${APP}-${PVC_NAME}"
+spec:
+  sourcePVC: "${APP}-${PVC_NAME}"
+  trigger:
+    schedule: "${VOLSYNC_SCHEDULE:=0 0 * * *}"
+  restic:
+    repository: "${APP}-${PVC_NAME}-volsync-b2-secret"
+    copyMethod: "${VOLSYNC_COPYMETHOD:=Snapshot}"
+    # Capacity
+    cacheCapacity: "${VOLSYNC_CACHE_CAPACITY:=10Gi}"
+    # Storage Classes
+    storageClassName: "${VOLSYNC_STORAGECLASS:=longhorn-snapshot-sc}"
+    volumeSnapshotClassName: "${VOLSYNC_SNAPSHOTCLASS:=longhorn-snapshot-vsc}"
+    cacheStorageClassName: "${VOLSYNC_STORAGECLASS:=longhorn-cache-sc}"
+    # Access Modes
+    cacheAccessModes: ["${VOLSYNC_CACHE_ACCESSMODES:=ReadWriteOnce}"]
+    accessModes: ["${VOLSYNC_SNAP_ACCESSMODES:=ReadWriteOnce}"]
+    moverSecurityContext:
+      runAsUser: ${VOLSYNC_PUID:=568}
+      runAsGroup: ${VOLSYNC_PGID:=568}
+      fsGroup: ${VOLSYNC_FS_PGID:=568}
+    pruneIntervalDays: 7
+    retain:
+      daily: 7
+      weekly: 4

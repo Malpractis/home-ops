@@ -1,0 +1,70 @@
+---
+# yaml-language-server: $schema=https://datreeio.github.io/CRDs-catalog/kustomize.toolkit.fluxcd.io/kustomization_v1.json
+apiVersion: kustomize.toolkit.fluxcd.io/v1
+kind: Kustomization
+metadata:
+  name: &app external-secrets
+  namespace: security
+spec:
+  commonMetadata:
+    labels:
+      app.kubernetes.io/name: *app
+  path: ./kubernetes/apps/security/external-secrets/app
+  sourceRef:
+    kind: GitRepository
+    name: flux-system
+    namespace: flux-system
+  interval: 30m
+  retryInterval: 2m
+  prune: true
+  timeout: 5m
+  wait: false
+---
+# yaml-language-server: $schema=https://datreeio.github.io/CRDs-catalog/kustomize.toolkit.fluxcd.io/kustomization_v1.json
+apiVersion: kustomize.toolkit.fluxcd.io/v1
+kind: Kustomization
+metadata:
+  name: &app external-secrets-store
+  namespace: &namespace security
+spec:
+  commonMetadata:
+    labels:
+      app.kubernetes.io/name: *app
+  path: ./kubernetes/apps/security/external-secrets/store
+  sourceRef:
+    kind: GitRepository
+    name: flux-system
+    namespace: flux-system
+  interval: 30m
+  retryInterval: 5m
+  prune: true
+  timeout: 5m
+  wait: false
+  dependsOn:
+    - name: external-secrets
+      namespace: security
+  postBuild:
+    substitute:
+      APP: *app
+      GATUS_SUBDOMAIN: bitwarden
+  healthChecks:
+    - apiVersion: &certApiVersion cert-manager.io/v1
+      kind: &certKind Certificate
+      name: bitwarden-css-certs
+      namespace: *namespace
+    - apiVersion: *certApiVersion
+      kind: *certKind
+      name: bitwarden-tls-certs
+      namespace: *namespace
+    - apiVersion: &secretApiVersion external-secrets.io/v1
+      kind: &secretKind ClusterSecretStore
+      name: bitwarden-secrets-manager
+  healthCheckExprs:
+    - apiVersion: *certApiVersion
+      kind: *certKind
+      current: status.conditions.filter(e, e.type == 'Ready').all(e, e.status == 'True')
+      failed: status.conditions.filter(e, e.type == 'Ready').all(e, e.status == 'False')
+    - apiVersion: *secretApiVersion
+      kind: *secretKind
+      current: status.conditions.filter(e, e.type == 'Ready').all(e, e.status == 'True')
+      failed: status.conditions.filter(e, e.type == 'Ready').all(e, e.status == 'False')

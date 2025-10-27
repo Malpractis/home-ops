@@ -1,0 +1,24 @@
+---
+- # Apply targetNamespace to all Flux Kustomizations
+  source:
+    kind: Namespace
+    fieldPath: metadata.name
+  targets:
+    - select:
+        kind: Kustomization
+        group: kustomize.toolkit.fluxcd.io
+      fieldPaths:
+        - spec.targetNamespace
+      options:
+        create: true
+- # Apply app.kubernetes.io/name label to the Namespace
+  source:
+    kind: Namespace
+    fieldPath: metadata.name
+  targets:
+    - select:
+        kind: Namespace
+      fieldPaths:
+        - metadata.labels.[app.kubernetes.io/name]
+      options:
+        create: true

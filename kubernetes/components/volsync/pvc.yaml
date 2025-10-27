@@ -1,0 +1,15 @@
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: "${APP}-${PVC_NAME}"
+spec:
+  accessModes: ["${VOLSYNC_ACCESSMODES:=ReadWriteOnce}"]
+  dataSourceRef:
+    kind: ReplicationDestination
+    apiGroup: volsync.backube
+    name: "${APP}-${PVC_NAME}-dest"
+  resources:
+    requests:
+      storage: "${PVC_CAPACITY:=10Gi}"
+  storageClassName: "${PVC_STORAGECLASS:=longhorn}"
