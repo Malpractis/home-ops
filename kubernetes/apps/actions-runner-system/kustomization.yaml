@@ -9,5 +9,4 @@ components:
 replacements:
   - path: ../../components/replacements/ks.yaml
 resources:
-  - ./namespace.yaml
   - ./actions-runner-controller/ks.yaml
