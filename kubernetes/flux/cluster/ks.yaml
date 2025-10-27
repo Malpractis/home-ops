@@ -5,8 +5,6 @@ metadata:
   name: cluster-apps
   namespace: flux-system
 spec:
-  decryption:
-    provider: sops
   deletionPolicy: WaitForTermination
   path: ./kubernetes/apps
   sourceRef:
@@ -29,8 +27,6 @@ spec:
         metadata:
           name: _
         spec:
-          decryption:
-            provider: sops
           deletionPolicy: WaitForTermination
           postBuild:
             substituteFrom:
