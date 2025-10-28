@@ -4,10 +4,10 @@ kind: Secret
 metadata:
   name: "${APP}-blobs-volsync-b2-secret"
 stringData:
-  RESTIC_REPOSITORY: "${SECRET_S3_URL}/${SECRET_S3_PREFIX}-${APP}/${APP}/volsync/blobs-volsync-b2"
-  RESTIC_PASSWORD: "${SECRET_S3_ENC_KEY}"
-  AWS_ACCESS_KEY_ID: "${SECRET_S3_ID}"
-  AWS_SECRET_ACCESS_KEY: "${SECRET_S3_KEY}"
+  RESTIC_REPOSITORY: "${S3_URL}/${S3_PREFIX}-${APP}/${APP}/volsync/blobs-volsync-b2"
+  RESTIC_PASSWORD: "${S3_ENC_KEY}"
+  AWS_ACCESS_KEY_ID: "${S3_ID}"
+  AWS_SECRET_ACCESS_KEY: "${S3_KEY}"
 ---
 # yaml-language-server: $schema=https://kubernetes-schemas.pages.dev/volsync.backube/replicationdestination_v1alpha1.json
 apiVersion: volsync.backube/v1alpha1

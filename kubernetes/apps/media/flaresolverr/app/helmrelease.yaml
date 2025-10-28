@@ -12,10 +12,10 @@ spec:
   values:
     controllers:
       flaresolverr:
-        replicas: 2
-        strategy: RollingUpdate
         annotations:
           reloader.stakater.com/auto: "true"
+        replicas: 2
+        strategy: RollingUpdate
         containers:
           app:
             nameOverride: *app

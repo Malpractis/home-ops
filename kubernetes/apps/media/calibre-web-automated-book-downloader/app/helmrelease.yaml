@@ -12,6 +12,8 @@ spec:
   values:
     controllers:
       calibre-web-automated-book-downloader:
+        annotations:
+          reloader.stakater.com/auto: "true"
         containers:
           app:
             nameOverride: *app
