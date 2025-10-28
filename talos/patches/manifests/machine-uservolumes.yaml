@@ -6,3 +6,4 @@ provisioning:
   diskSelector:
     match: "!system_disk"
   minSize: 800GiB
+  grow: true
