@@ -69,7 +69,7 @@ spec:
       peers:
         - name: unifi-v4
           peerASN: 64513
-          peerAddress: 10.0.20.3
+          peerAddress: 10.0.20.1
           peerConfigRef:
             name: bgp-peer-config-v4
 ---
