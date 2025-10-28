@@ -29,9 +29,11 @@ spec:
       defaultLonghornStaticStorageClass: longhorn
       nodeDownPodDeletionPolicy: delete-both-statefulset-and-deployment-pod
       # -- Setting that allows you to specify the data engine version for the default Longhorn StorageClass. (Options: "v1", "v2")
-      dataEngine: v1
+      dataEngine: v2
+      defaultDataPath: /var/mnt/longhorn-data
     persistence:
       # Set to false to pick another CSI as default
       defaultClass: true
+      dataEngine: v2
       # Increase to 3 for a multi-node cluster
       defaultClassReplicaCount: "2"
