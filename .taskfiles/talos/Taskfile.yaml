@@ -55,18 +55,6 @@ tasks:
       - test -f {{.TALOSCONFIG}}
       - which talhelper talosctl yq
 
-  reboot-node:
-    desc: Reboot Talos on a single node [NODE=required] [MODE={{.MODE}}]
-    cmd: talosctl --nodes {{.NODE}} reboot --mode={{.MODE}}
-    vars:
-      MODE: '{{.MODE | default "default"}}'
-    requires:
-      vars: [NODE]
-    preconditions:
-      - talosctl config info
-      - talosctl --nodes {{.NODE}} get machineconfig
-      - which talosctl
-
   reset-node:
     desc: Reset Talos on a single node [NODE=required]
     dir: '{{.TALOS_DIR}}'
