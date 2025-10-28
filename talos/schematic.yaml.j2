@@ -1,0 +1,29 @@
+---
+customization:
+  extraKernelArgs:
+    - -init_on_alloc                      # Less security, faster puter
+    - -init_on_free                       # Less security, faster puter
+    - -selinux                            # Less security, faster puter
+    - apparmor=0                          # Less security, faster puter
+    - init_on_alloc=0                     # Less security, faster puter
+    - init_on_free=0                      # Less security, faster puter
+    - intel_iommu=on                      # PCI Passthrough
+    - iommu=pt                            # PCI Passthrough
+    - pcie_aspm=off                       # Disable PCIe ASPM
+    - mitigations=off                     # Less security, faster puter
+    - security=none                       # Less security, faster puter
+    - talos.auditd.disabled=1             # Less security, faster puter
+    {% if ENV.ISO == 'true' %}
+    - talos.network.interface.ignore=eno1
+    - bond=bond0:enp3s0,enp4s0:mode=802.3ad,xmit_hash_policy=layer3+4:9000
+    - ip=bond0:dhcp
+    {% endif %}
+  systemExtensions:
+    officialExtensions:
+      - siderolabs/qemu-guest-agent       # QEMU Guest Agent
+      - siderolabs/iscsi-tools            # iSCSI Support
+      - siderolabs/util-linux-tools       # Useful Utilities
+      - siderolabs/intel-ucode            # Intel CPU Microcode
+      - siderolabs/i915                   # Intel GPU
+      - siderolabs/mei                    # Intel GPU
+      - siderolabs/nfsrahead              # NFS Performance

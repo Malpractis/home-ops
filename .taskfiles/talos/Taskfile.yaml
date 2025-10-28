@@ -55,10 +55,71 @@ tasks:
       - test -f {{.TALOSCONFIG}}
       - which talhelper talosctl yq
 
-  reset:
+  reboot-node:
+    desc: Reboot Talos on a single node [NODE=required] [MODE={{.MODE}}]
+    cmd: talosctl --nodes {{.NODE}} reboot --mode={{.MODE}}
+    vars:
+      MODE: '{{.MODE | default "default"}}'
+    requires:
+      vars: [NODE]
+    preconditions:
+      - talosctl config info
+      - talosctl --nodes {{.NODE}} get machineconfig
+      - which talosctl
+
+  reset-node:
+    desc: Reset Talos on a single node [NODE=required]
+    dir: '{{.TALOS_DIR}}'
+    prompt: Reset Talos node '{{.NODE}}' ... continue?
+    cmd: talhelper gencommand reset --nodes {{.NODE}} --extra-flags="--reboot {{- if eq .CLI_FORCE false }} --system-labels-to-wipe STATE --system-labels-to-wipe EPHEMERAL{{ end }} --graceful=false --wait=false" | bash
+    requires:
+      vars: [NODE]
+    preconditions:
+      - talosctl config info
+      - talosctl --nodes {{.NODE}} get machineconfig
+      - which talhelper
+      - which talosctl
+
+  reset-cluster:
     desc: Resets nodes back to maintenance mode
     dir: '{{.TALOS_DIR}}'
     prompt: This will destroy your cluster and reset the nodes back to maintenance mode... continue?
     cmd: talhelper gencommand reset --extra-flags="--reboot {{- if eq .CLI_FORCE false }} --system-labels-to-wipe STATE --system-labels-to-wipe EPHEMERAL{{ end }} --graceful=false --wait=false" | bash
     preconditions:
       - which talhelper
+
+  generate-kubeconfig:
+    desc: Generate the kubeconfig for a Talos cluster
+    cmd: talosctl kubeconfig --nodes {{.RANDOM_CONTROLLER}} --force {{.KUBERNETES_DIR}}
+    vars:
+      RANDOM_CONTROLLER:
+        sh: talosctl config info --output json | jq --raw-output '.endpoints[]' | shuf -n 1
+    preconditions:
+      - talosctl config info
+      - talosctl --nodes {{.RANDOM_CONTROLLER}} get machineconfig
+      - which jq talosctl
+
+  generate-iso:
+    desc: Generate a Talos ISO for a specific version [VERSION=required]
+    cmd: |-
+      curl -L -o {{.TALOS_DIR}}/talos-{{.VERSION}}.iso \
+        https://factory.talos.dev/image/{{.TALOS_SCHEMATIC}}/{{.VERSION}}/metal-amd64.iso
+    vars:
+      TALOS_SCHEMATIC:
+        sh: task --silent talos:generate-schematic ISO=true
+    requires:
+      vars: [VERSION]
+    preconditions:
+      - which curl task
+
+  generate-schematic:
+    desc: Generate a Talos schematic
+    cmd: |-
+      minijinja-cli {{.TALOS_DIR}}/schematic.yaml.j2 \
+        | curl --silent -X POST --data-binary @- https://factory.talos.dev/schematics \
+        | jq --raw-output '.id'
+    env:
+      ISO: '{{.ISO | default "false"}}'
+    preconditions:
+      - test -f {{.TALOS_DIR}}/schematic.yaml.j2
+      - which curl jq minijinja-cli

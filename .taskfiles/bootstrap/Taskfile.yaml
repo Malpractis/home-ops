@@ -3,25 +3,88 @@ version: '3'
 
 tasks:
 
+  # talos:
+  #   desc: Bootstrap the Talos cluster
+  #   dir: '{{.TALOS_DIR}}'
+  #   cmds:
+  #     - bws run --no-inherit-env -- talhelper genconfig
+  #     - talhelper gencommand apply --extra-flags="--insecure" | bash
+  #     - until talhelper gencommand bootstrap | bash; do sleep 20; done
+  #     - until talhelper gencommand kubeconfig --extra-flags="{{.ROOT_DIR}} --force" | bash; do sleep 10; done
+  #   preconditions:
+  #     - bws project list
+  #     - test -f {{.TALOS_DIR}}/talconfig.yaml
+  #     - which talhelper talosctl sops
+
+  # apps:
+  #   desc: Bootstrap apps into the Talos cluster
+  #   cmd: bash {{.SCRIPTS_DIR}}/bootstrap-apps.sh
+  #   preconditions:
+  #     - bws project list
+  #     - msg: Unsupported bash version, run `brew install bash` to upgrade
+  #       sh: '{{if eq OS "darwin"}}test -f /opt/homebrew/bin/bash || test -f /usr/local/bin/bash{{end}}'
+  #     - test -f {{.KUBECONFIG}}
+  #     - test -f {{.SCRIPTS_DIR}}/bootstrap-apps.sh
   talos:
     desc: Bootstrap the Talos cluster
     dir: '{{.TALOS_DIR}}'
+    prompt: Bootstrap the Talos cluster ...?
     cmds:
       - bws run --no-inherit-env -- talhelper genconfig
       - talhelper gencommand apply --extra-flags="--insecure" | bash
-      - until talhelper gencommand bootstrap | bash; do sleep 10; done
-      - until talhelper gencommand kubeconfig --extra-flags="{{.ROOT_DIR}} --force" | bash; do sleep 10; done
+      - |
+        if [ -n "{{.IP}}" ]; then
+          until talhelper gencommand bootstrap --node {{.IP}} | bash; do sleep 5; done
+        else
+          until talhelper gencommand bootstrap --node {{.RANDOM_CONTROLLER}} | bash; do sleep 5; done
+        fi
+      - talosctl kubeconfig --nodes {{.RANDOM_CONTROLLER}} --force {{.TALOSCONFIG}}
+    vars:
+      IP: ""
+      RANDOM_CONTROLLER:
+        sh: talosctl config info --output json | jq --raw-output '.endpoints[]' | shuf -n 1
     preconditions:
       - bws project list
-      - test -f {{.TALOS_DIR}}/talconfig.yaml
-      - which talhelper talosctl sops
+      - talosctl config info
+      - which jq talosctl
 
   apps:
     desc: Bootstrap apps into the Talos cluster
-    cmd: bash {{.SCRIPTS_DIR}}/bootstrap-apps.sh
+    prompt: Bootstrap apps into the Talos cluster ...?
+    cmds:
+      # - kubectl config set-cluster {{.CONTEXT}} --server https://{{.IP}}:6443
+      - defer: talosctl kubeconfig --nodes {{.IP}} --force {{.KUBERNETES_DIR}}
+      - until kubectl wait nodes --for=condition=Ready=False --all --timeout=10m; do sleep 5; done
+      - bash {{.SCRIPTS_DIR}}/bootstrap-apps.sh
+    vars:
+      IP: ""
+      CONTEXT:
+        sh: talosctl config info --output json | jq --raw-output '.context'
+      RANDOM_CONTROLLER:
+        sh: talosctl config info --output json | jq --raw-output '.endpoints[]' | shuf -n 1
     preconditions:
       - bws project list
       - msg: Unsupported bash version, run `brew install bash` to upgrade
         sh: '{{if eq OS "darwin"}}test -f /opt/homebrew/bin/bash || test -f /usr/local/bin/bash{{end}}'
-      - test -f {{.KUBECONFIG}}
-      - test -f {{.SCRIPTS_DIR}}/bootstrap-apps.sh
+      - talosctl config info
+      - talosctl --nodes {{.RANDOM_CONTROLLER}} get machineconfig
+      - test -f {{.BOOTSTRAP_DIR}}/helmfile.d/00-crds.yaml
+      - test -f {{.BOOTSTRAP_DIR}}/helmfile.d/01-apps.yaml
+      - test -f {{.BOOTSTRAP_DIR}}/resources.yaml.j2
+
+
+
+      # - |
+      #   if [ -n "{{.IP}}" ]; then
+      #     kubectl config set-cluster {{.CONTEXT}} --server https://{{.IP}}:6443
+      #   else
+      #     kubectl config set-cluster {{.CONTEXT}} --server https://{{.RANDOM_CONTROLLER}}:6443
+      #   fi
+      # - |
+      #   if [ -n "{{.IP}}" ]; then
+      #     defer: talosctl kubeconfig --nodes {{.IP}} --force {{.KUBERNETES_DIR}}
+      #   else
+      #     defer: talosctl kubeconfig --nodes {{.RANDOM_CONTROLLER}} --force {{.KUBERNETES_DIR}}
+      #   fi
+      # - until kubectl wait nodes --for=condition=Ready=False --all --timeout=10m; do sleep 5; done
+      # - bash {{.SCRIPTS_DIR}}/bootstrap-apps.sh

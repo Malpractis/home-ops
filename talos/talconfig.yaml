@@ -27,7 +27,7 @@ nodes:
       size: "<=100G"
     machineSpec:
       secureboot: false
-    talosImageURL: factory.talos.dev/installer/a3fa64835b73de20a374e96f7a4e6bdefc9747d9ee0cb0d31f895198f71c83ce
+    talosImageURL: factory.talos.dev/installer/eb42ac300ab39b1ff84e3e99ab6ebbffc77673845eaae7b97940544a20f5b1f0
     controlPlane: true
     networkInterfaces:
       - deviceSelector:
@@ -49,8 +49,6 @@ nodes:
             vlanId: 90
             dhcp: false
             mtu: 9000
-        vip:
-          ip: "10.0.20.20"
     schematic:
       customization:
         systemExtensions:
@@ -62,15 +60,15 @@ nodes:
             - siderolabs/nfsrahead        # NFS Performance
     patches:
       - "@./patches/manifests/machine-uservolumes.yaml"
-      - "@./patches/global/machine-longhorn-v2.yaml"
   - hostname: "matalos-c2"
     ipAddress: "10.0.20.11"
-    installDisk: "/dev/nvme0n1"
+    installDiskSelector:
+      model: "Samsung SSD 980 1TB"
     machineSpec:
       secureboot: false
     # Additional kernel commands needed for bonding
     # kernelArgs: bond=bond0:enp3s0,enp4s0:mode=802.3ad,xmit_hash_policy=layer3+4:9000 talos.network.interface.ignore=eno1 ip=10.0.20.11::10.0.20.1:255.255.255.0::bond0
-    talosImageURL: factory.talos.dev/installer/efcf08ff9bbfddcb893c597b1f7f8472c178314bf2bcd9a8a3e382d8aa1901e0
+    talosImageURL: factory.talos.dev/installer/2ac69590087c343b8773f569d993be11c45ed8f6a82ec8e1fb61e4185d6d4a70
     controlPlane: true
     networkInterfaces:
       - interface: bond0
@@ -99,8 +97,6 @@ nodes:
             vlanId: 90
             dhcp: false
             mtu: 9000
-        vip:
-          ip: "10.0.20.20"
       - deviceSelector:
           hardwareAddr: "f8:75:a4:2c:46:e6"
         ignore: true
@@ -115,15 +111,16 @@ nodes:
             - siderolabs/mei              # Intel iGPU
             - siderolabs/nfsrahead        # NFS Performance
     patches:
-      - "@./patches/global/machine-longhorn-v1.yaml"
+      - "@./patches/manifests/machine-systemvolumes.yaml"
   - hostname: "matalos-c3"
     ipAddress: "10.0.20.12"
-    installDisk: "/dev/nvme0n1"
+    installDiskSelector:
+      model: "Samsung SSD 980 1TB"
     machineSpec:
       secureboot: false
     # Additional kernel commands needed for bonding
     # kernelArgs: bond=bond0:enp3s0,enp4s0:mode=802.3ad,xmit_hash_policy=layer3+4:9000 talos.network.interface.ignore=eno1 ip=10.0.20.12::10.0.20.1:255.255.255.0::bond0
-    talosImageURL: factory.talos.dev/installer/64faf15e86f47de5cc2e13672e46fd2a48c357dcd5366f4b90d733d2600937ad
+    talosImageURL: factory.talos.dev/installer/2ac69590087c343b8773f569d993be11c45ed8f6a82ec8e1fb61e4185d6d4a70
     controlPlane: true
     networkInterfaces:
       - interface: bond0
@@ -152,8 +149,6 @@ nodes:
             vlanId: 90
             dhcp: false
             mtu: 9000
-        vip:
-          ip: "10.0.20.20"
       - deviceSelector:
           hardwareAddr: "98:fa:9b:92:ef:43"
         ignore: true
@@ -168,13 +163,14 @@ nodes:
             - siderolabs/mei              # Intel iGPU
             - siderolabs/nfsrahead        # NFS Performance
     patches:
-      - "@./patches/global/machine-longhorn-v1.yaml"
+      - "@./patches/manifests/machine-systemvolumes.yaml"
 
 # Global patches
 patches:
   - "@./patches/global/machine-features.yaml"
   - "@./patches/global/machine-files.yaml"
   - "@./patches/global/machine-kubelet.yaml"
+  - "@./patches/global/machine-longhorn.yaml"
   - "@./patches/global/machine-network.yaml"
   - "@./patches/global/machine-sysctls.yaml"
   - "@./patches/global/machine-time.yaml"

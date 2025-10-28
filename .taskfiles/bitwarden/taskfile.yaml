@@ -1,0 +1,34 @@
+---
+version: "3"
+
+tasks:
+  push:
+    desc: Push all kubeconfig to Secrets Manager
+    cmds:
+      - bws secret edit 1fe3f0d7-8092-4852-b90c-b38100882bed --value "$(kubectl config view --flatten)"
+      - bws secret edit 1c493889-1e30-4156-a937-b10100433300 --value "$(kubectl config view --flatten | base64)"
+      - task: push-main
+    preconditions:
+      - { msg: "Bitwarden Secret Manager CLI not found", sh: "test bws" }
+
+  push-main:
+    desc: Push main kubeconfig/talosconfig to Secrets Manager
+    cmds:
+      - bws secret edit 660c8a0a-7256-448b-8023-b3810087b447 --value "$(cat {{.KUBERNETES_DIR}}/main/kubeconfig)"
+      - bws secret edit bdd36e8d-bcdb-4a1b-bb38-b3810087c475 --value "$(cat {{.KUBERNETES_DIR}}/main/bootstrap/talos/clusterconfig/talosconfig)"
+    preconditions:
+      - { msg: "Bitwarden Secret Manager CLI not found", sh: "test bws" }
+
+  pull:
+    desc: Pull Kubeconfig from Secrets Manager
+    cmds:
+      - mkdir -p ~/.kube
+      - mkdir -p ~/.talos
+      - bws secret get 660c8a0a-7256-448b-8023-b3810087b447 | jq -r '.value' > {{.KUBERNETES_DIR}}/main/kubeconfig # Main kubeconfig
+      - bws secret get bdd36e8d-bcdb-4a1b-bb38-b3810087c475 | jq -r '.value' > {{.KUBERNETES_DIR}}/main/bootstrap/talos/clusterconfig/talosconfig # Main talosconfig
+      - bws secret get 1fe3f0d7-8092-4852-b90c-b38100882bed | jq -r '.value' > ~/.kube/config # Flat kubeconfig
+      ## Note: The last `talosconfig` merged becomes the default context
+      - talosctl config merge {{.KUBERNETES_DIR}}/main/bootstrap/talos/clusterconfig/talosconfig --talosconfig  ~/.talos/config #Merge main into flat talosconfig
+    preconditions:
+      - { msg: "Bitwarden Secret Manager CLI not found", sh: "test bws" }
+      - { msg: "JQ not found", sh: "test jq" }

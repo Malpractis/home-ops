@@ -15,11 +15,16 @@ vars:
 env:
   KUBECONFIG: '{{.ROOT_DIR}}/kubeconfig'
   BITWARDEN_KEY_FILE: '{{.ROOT_DIR}}/bitwarden.key'
+  MINIJINJA_CONFIG_FILE: '{{.ROOT_DIR}}/.minijinja.toml'
   TALOSCONFIG: '{{.TALOSCONFIG}}'
 
 includes:
   bootstrap: .taskfiles/bootstrap
+  bitwarden: .taskfiles/bitwarden
+  external-secrets: .taskfiles/externalsecrets
+  kubernetes: .taskfiles/kubernetes
   talos: .taskfiles/talos
+  volsync: .taskfiles/volsync
 
 tasks:
 

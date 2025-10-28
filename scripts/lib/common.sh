@@ -125,3 +125,27 @@ function render_template() {
 
 	echo "${output}"
 }
+
+# Select a random controller to bootstrap to
+function random_controller() {
+    local random_controller
+    random_controller=$(talosctl config info --output json | jq --raw-output '.endpoints[]' | shuf -n 1)
+
+    if [ -z "$random_controller" ]; then
+        log error "No controllers found in the talconfig"
+    fi
+
+    echo "$random_controller"
+}
+
+# Get the current talos context
+function get_context() {
+    local context
+    context=$(talosctl config info --output json | jq --raw-output '.context')
+
+    if [ -z "$context" ]; then
+        log fatal "Could not get Talos context"
+    fi
+
+    echo "$context"
+}
