@@ -22,8 +22,8 @@ spec:
       orphanAutoDeletion: true
       concurrentAutomaticEngineUpgradePerNodeLimit: "2"
       # -- Maximum number of replicas that can be concurrently rebuilt on each node.
-      concurrentReplicaRebuildPerNodeLimit: 1
-      replicaReplenishmentWaitInterval: 15
+      concurrentReplicaRebuildPerNodeLimit: "1"
+      replicaReplenishmentWaitInterval: "15"
       defaultLonghornStaticStorageClass: longhorn
       nodeDownPodDeletionPolicy: delete-both-statefulset-and-deployment-pod
       # -- Setting that allows you to specify the data engine version for the default Longhorn StorageClass. (Options: "v1", "v2")
