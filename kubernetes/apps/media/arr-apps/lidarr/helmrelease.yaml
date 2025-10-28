@@ -1,0 +1,95 @@
+---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/bjw-s-labs/helm-charts/main/charts/other/app-template/schemas/helmrelease-helm-v2.schema.json
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: &app lidarr
+spec:
+  chartRef:
+    kind: OCIRepository
+    name: lidarr
+  interval: 1h
+  values:
+    controllers:
+      lidarr:
+        annotations:
+          reloader.stakater.com/auto: 'true'
+        containers:
+          app:
+            nameOverride: *app
+            image:
+              repository: ghcr.io/home-operations/lidarr
+              tag: 3.0.0.4855@sha256:2f7f6ad08afa31d1822c93dfd31f1c8e9f9df0cb054784c7960f964819649808
+            env:
+              LIDARR__AUTH__METHOD: External
+              LIDARR__AUTH__REQUIRED: DisabledForLocalAddresses
+              LIDARR__APP__INSTANCENAME: Lidarr
+              LIDARR__SERVER__PORT: &port 80
+              LIDARR__APP__THEME: dark
+            envFrom:
+              - secretRef:
+                  name: lidarr-secret
+            probes:
+              liveness: &probes
+                enabled: true
+                custom: true
+                spec:
+                  httpGet:
+                    path: /ping
+                    port: *port
+                  initialDelaySeconds: 0
+                  periodSeconds: 10
+                  timeoutSeconds: 1
+                  failureThreshold: 3
+              readiness: *probes
+            securityContext:
+              allowPrivilegeEscalation: false
+              readOnlyRootFilesystem: true
+              capabilities: { drop: ['ALL'] }
+            resources:
+              requests:
+                cpu: 100m
+              limits:
+                memory: 1Gi
+    defaultPodOptions:
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 568
+        runAsGroup: 568
+        fsGroup: 568
+        fsGroupChangePolicy: OnRootMismatch
+    service:
+      app:
+        ports:
+          http:
+            port: *port
+    route:
+      app:
+        hostnames:
+          - 'lidarr.${SECRET_DOMAIN}'
+        parentRefs:
+          - name: envoy-internal
+            namespace: network
+        rules:
+          - backendRefs:
+              - name: *app
+                port: *port
+    persistence:
+      config:
+        existingClaim: "{{ .Release.Name }}-config"
+        globalMounts:
+          - path: /config
+      tmp:
+        type: emptyDir
+      data:
+        type: nfs
+        server: ${TRUENAS_IP}
+        path: /mnt/tank/data
+        globalMounts:
+          - path: /data
+      backup:
+        type: nfs
+        server: ${TRUENAS_IP}
+        path: /mnt/tank/backup/apps/lidarr
+        globalMounts:
+          - path: /backup

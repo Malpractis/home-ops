@@ -1,0 +1,57 @@
+---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/bjw-s-labs/helm-charts/main/charts/other/app-template/schemas/helmrelease-helm-v2.schema.json
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: &app calibre-web-automated-book-downloader
+spec:
+  chartRef:
+    kind: OCIRepository
+    name: calibre-web-automated-book-downloader
+  interval: 1h
+  values:
+    controllers:
+      calibre-web-automated-book-downloader:
+        annotations:
+          reloader.stakater.com/auto: "true"
+        containers:
+          app:
+            nameOverride: *app
+            image:
+              repository: ghcr.io/calibrain/calibre-web-automated-book-downloader
+              tag: 20250815@sha256:6b25a35de28e31e91f13a86d1be227ef9eb61c034c4d7edf27f09c5c07ab29c0
+            env:
+              FLASK_PORT: &port 8084
+              UID: 568
+              GID: 568
+              BOOK_LANGUAGE: en
+              CUSTOM_DNS: cloudflare
+              USE_DOH: true
+            securityContext:
+              allowPrivilegeEscalation: false
+            resources:
+              requests:
+                cpu: 5m
+    service:
+      app:
+        ports:
+          http:
+            port: *port
+    route:
+      app:
+        hostnames:
+          - 'calibre-book-downloader.${SECRET_DOMAIN}'
+        parentRefs:
+          - name: envoy-internal
+            namespace: network
+        rules:
+          - backendRefs:
+              - name: *app
+                port: *port
+    persistence:
+      ingest:
+        type: nfs
+        server: ${TRUENAS_IP}
+        path: /mnt/tank/data/torrents/ebooks_watch
+        globalMounts:
+          - path: /cws-book-ingest

@@ -1,0 +1,29 @@
+---
+# yaml-language-server: $schema=https://datreeio.github.io/CRDs-catalog/kustomize.toolkit.fluxcd.io/kustomization_v1.json
+apiVersion: kustomize.toolkit.fluxcd.io/v1
+kind: Kustomization
+metadata:
+  name: &app kube-prometheus-stack
+  namespace: observability
+spec:
+  commonMetadata:
+    labels:
+      app.kubernetes.io/name: *app
+  path: ./kubernetes/apps/observability/kube-prometheus-stack/app
+  sourceRef:
+    kind: GitRepository
+    name: flux-system
+    namespace: flux-system
+  interval: 1h
+  retryInterval: 2m
+  prune: true
+  timeout: 5m
+  dependsOn:
+    - name: external-secrets-store
+      namespace: security
+    - name: storage-ready
+      namespace: flux-system
+  postBuild:
+    substitute:
+      APP: *app
+      GATUS_SUBDOMAIN: prometheus

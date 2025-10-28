@@ -1,0 +1,123 @@
+---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/bjw-s/helm-charts/main/charts/other/app-template/schemas/helmrelease-helm-v2.schema.json
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: &app notifiarr
+spec:
+  chartRef:
+    kind: OCIRepository
+    name: notifiarr
+  interval: 1h
+  values:
+    controllers:
+      notifiarr:
+        annotations:
+          reloader.stakater.com/auto: "true"
+        containers:
+          app:
+            nameOverride: *app
+            image:
+              repository: ghcr.io/notifiarr/notifiarr
+              tag: v0.9.0@sha256:cbc49fd23cd9eb77e12c0a113fc44e8b68f78bb11c1c1152644f18453227e126
+            env:
+              DN_UPSTREAMS_0: "[10.42.0.0/16,10.43.0.0/16,10.0.20.0/24]"
+              TMPDIR: /tmp
+              DN_LOG_FILE: "/config/logs/notifiarr.log"
+              DN_HTTP_LOG: "/config/logs/http.log"
+              DN_SERVICES_LOG_FILE: "/config/logs/services.log"
+              DN_LOG_FILE_MB: "10"
+              DN_LOG_FILES: "5"
+              DN_FILE_MODE: "0600"
+              DN_TIMEOUT: "60s"
+            # Lidarr Configuration
+              DN_LIDARR_0_NAME: "Lidarr"
+              DN_LIDARR_0_URL: http://lidarr.media.svc.cluster.local
+            # Prowlarr Configuration
+              DN_PROWLARR_0_NAME: "Prowlarr"
+              DN_PROWLARR_0_URL: http://prowlarr.media.svc.cluster.local
+            # Radarr Configuration
+              DN_RADARR_0_NAME: "Radarr"
+              DN_RADARR_0_URL: http://radarr.media.svc.cluster.local
+              DN_RADARR_1_NAME: "Radarr-Anime"
+              DN_RADARR_1_URL: http://radarr-anime.media.svc.cluster.local
+              DN_RADARR_2_NAME: "Radarr-4k"
+              DN_RADARR_2_URL: http://radarr-4k.media.svc.cluster.local
+            # Readarr Configuration
+              DN_READARR_0_NAME: "Readarr"
+              DN_READARR_0_URL: http://readarr.media.svc.cluster.local
+            # Sonarr Configuration
+              DN_SONARR_0_NAME: "Sonarr"
+              DN_SONARR_0_URL: http://sonarr.media.svc.cluster.local
+              DN_SONARR_1_NAME: "Sonarr-Anime"
+              DN_SONARR_1_URL: http://sonarr-anime.media.svc.cluster.local
+            # qBittorrent Configuration
+              DN_QBIT_0_NAME: "qBittorrent"
+              DN_QBIT_0_URL: http://qbittorrent.torrents.svc.cluster.local
+            # SABnzbd Configuration
+              DN_SABNZBD_0_NAME: "SABnzbd"
+              DN_SABNZBD_0_URL: http://sabnzbd.media.svc.cluster.local
+            # Plex Configuration
+              DN_PLEX_URL: http://plex.media.svc.cluster.local:32400
+            # Tautulli Configuration
+              DN_TAUTULLI_NAME: "Tautulli"
+              DN_TAUTULLI_URL: http://tautulli.media.svc.cluster.local:8181
+            envFrom:
+              - secretRef:
+                  name: notifiarr-secret
+            probes:
+              liveness:
+                enabled: true
+              readiness:
+                enabled: true
+              startup:
+                enabled: true
+                spec:
+                  failureThreshold: 30
+                  periodSeconds: 5
+            securityContext:
+              allowPrivilegeEscalation: false
+              readOnlyRootFilesystem: true
+              capabilities: { drop: ["ALL"] }
+            resources:
+              requests:
+                cpu: 10m
+              limits:
+                memory: 3Gi
+    defaultPodOptions:
+      hostname: notifiarr
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 568
+        runAsGroup: 568
+        fsGroup: 568
+        fsGroupChangePolicy: OnRootMismatch
+    service:
+      app:
+        controller: *app
+        ports:
+          http:
+            port: &port 5454
+    route:
+      app:
+        hostnames:
+          - 'notifiarr.${SECRET_DOMAIN}'
+        parentRefs:
+          - name: envoy-internal
+            namespace: network
+        rules:
+          - backendRefs:
+              - name: *app
+                port: *port
+    persistence:
+      config:
+        type: persistentVolumeClaim
+        accessMode: ReadWriteOnce
+        size: 10Gi
+        storageClass: longhorn
+        globalMounts:
+          - path: /config
+            readOnly: false
+      tmp:
+        type: emptyDir
+        medium: Memory
