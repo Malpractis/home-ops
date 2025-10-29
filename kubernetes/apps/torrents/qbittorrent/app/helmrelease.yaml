@@ -101,7 +101,7 @@ spec:
               - path: /config
       config-file:
         type: configMap
-        identifier: config
+        identifier: config-map
         globalMounts:
           - path: /config/.qbt.toml
             subPath: .qbt.toml
