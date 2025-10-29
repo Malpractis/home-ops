@@ -71,6 +71,8 @@ spec:
         fsGroupChangePolicy: OnRootMismatch
     service:
       app:
+        primary: true
+        forceRename: *app
         ports:
           http:
             port: *port
