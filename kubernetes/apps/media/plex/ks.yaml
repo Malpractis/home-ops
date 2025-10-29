@@ -24,7 +24,6 @@ spec:
   dependsOn:
     - name: intel-device-plugin-gpu
       namespace: system
-    - name: longhorn
     - name: storage-ready
       namespace: flux-system
   postBuild:
