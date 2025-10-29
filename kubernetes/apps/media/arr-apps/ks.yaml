@@ -92,10 +92,8 @@ spec:
   dependsOn:
     - name: external-secrets-store
       namespace: security
-    - name: longhorn
-      namespace: storage
-    - name: volsync
-      namespace: storage
+    - name: storage-ready
+      namespace: flux-system
   postBuild:
     substitute:
       APP: *app
@@ -130,10 +128,8 @@ spec:
   dependsOn:
     - name: external-secrets-store
       namespace: security
-    - name: longhorn
-      namespace: storage
-    - name: volsync
-      namespace: storage
+    - name: storage-ready
+      namespace: flux-system
   postBuild:
     substitute:
       APP: *app
@@ -168,10 +164,8 @@ spec:
   dependsOn:
     - name: external-secrets-store
       namespace: security
-    - name: longhorn
-      namespace: storage
-    - name: volsync
-      namespace: storage
+    - name: storage-ready
+      namespace: flux-system
   postBuild:
     substitute:
       APP: *app
@@ -206,10 +200,8 @@ spec:
   dependsOn:
     - name: external-secrets-store
       namespace: security
-    - name: longhorn
-      namespace: storage
-    - name: volsync
-      namespace: storage
+    - name: storage-ready
+      namespace: flux-system
   postBuild:
     substitute:
       APP: *app
@@ -244,10 +236,8 @@ spec:
   dependsOn:
     - name: external-secrets-store
       namespace: security
-    - name: longhorn
-      namespace: storage
-    - name: volsync
-      namespace: storage
+    - name: storage-ready
+      namespace: flux-system
     - name: calibre-web-automated
       namespace: media
   postBuild:
@@ -284,10 +274,8 @@ spec:
   dependsOn:
     - name: external-secrets-store
       namespace: security
-    - name: longhorn
-      namespace: storage
-    - name: volsync
-      namespace: storage
+    - name: storage-ready
+      namespace: flux-system
   postBuild:
     substitute:
       APP: *app
@@ -322,10 +310,8 @@ spec:
   dependsOn:
     - name: external-secrets-store
       namespace: security
-    - name: longhorn
-      namespace: storage
-    - name: volsync
-      namespace: storage
+    - name: storage-ready
+      namespace: flux-system
   postBuild:
     substitute:
       APP: *app
@@ -360,10 +346,8 @@ spec:
   dependsOn:
     - name: external-secrets-store
       namespace: security
-    - name: longhorn
-      namespace: storage
-    - name: volsync
-      namespace: storage
+    - name: storage-ready
+      namespace: flux-system
   postBuild:
     substitute:
       APP: *app
@@ -398,10 +382,8 @@ spec:
   dependsOn:
     - name: external-secrets-store
       namespace: security
-    - name: longhorn
-      namespace: storage
-    - name: volsync
-      namespace: storage
+    - name: storage-ready
+      namespace: flux-system
   postBuild:
     substitute:
       APP: *app
