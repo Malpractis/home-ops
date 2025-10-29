@@ -86,7 +86,7 @@ spec:
               - name: *app
                 port: *port
     configMaps:
-      config-file:
+      config:
         data:
           .qbt.toml: |-
             [qbittorrent]
@@ -101,7 +101,7 @@ spec:
               - path: /config
       config-file:
         type: configMap
-        identifier: config-map
+        identifier: config
         globalMounts:
           - path: /config/.qbt.toml
             subPath: .qbt.toml
