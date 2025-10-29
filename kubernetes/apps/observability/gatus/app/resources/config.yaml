@@ -36,6 +36,6 @@ ui:
     - name: Github
       link: https://github.com/Malpractis
     - name: Homelab
-      link: https://github.com/Malpractis/matalos
+      link: https://github.com/Malpractis/home-ops
 web:
   port: ${GATUS_WEB_PORT}
