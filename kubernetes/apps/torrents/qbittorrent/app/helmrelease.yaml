@@ -71,16 +71,13 @@ spec:
         fsGroupChangePolicy: OnRootMismatch
     service:
       app:
-        controller: *app
-        forceRename: *app
         ports:
           http:
-            primary: true
             port: *port
     route:
       app:
         hostnames:
-          - 'qbittorrent.${SECRET_DOMAIN}'
+          - '{{ .Release.Name }}.${SECRET_DOMAIN}'
         parentRefs:
           - name: envoy-internal
             namespace: network
@@ -88,6 +85,12 @@ spec:
           - backendRefs:
               - name: *app
                 port: *port
+    configMaps:
+      config:
+        data:
+          .qbt.toml: |-
+            [qbittorrent]
+            addr = "http://localhost:80"
     persistence:
       config:
         enabled: true
@@ -96,6 +99,12 @@ spec:
           qbittorrent:
             app:
               - path: /config
+      config-file:
+        type: configMap
+        identifier: config
+        globalMounts:
+          - path: /config/.qbt.toml
+            subPath: .qbt.toml
       data:
         type: nfs
         server: ${TRUENAS_IP}
