@@ -86,7 +86,7 @@ spec:
               - name: *app
                 port: *port
     configMaps:
-      config:
+      config-file:
         data:
           .qbt.toml: |-
             [qbittorrent]
