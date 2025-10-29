@@ -26,7 +26,7 @@ spec:
               QBT_TORRENTING_PORT: 50413
             probes:
               liveness: &probes
-                enabled: true
+                enabled: false
                 custom: true
                 spec:
                   httpGet:
@@ -38,7 +38,7 @@ spec:
                   failureThreshold: 5
               readiness: *probes
               startup:
-                enabled: true
+                enabled: false
                 spec:
                   failureThreshold: 30
                   periodSeconds: 10
