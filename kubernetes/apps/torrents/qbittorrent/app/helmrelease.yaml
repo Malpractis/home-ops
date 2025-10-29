@@ -14,6 +14,24 @@ spec:
       qbittorrent:
         annotations:
           reloader.stakater.com/auto: 'true'
+        initContainers:
+          socks5:
+            restartPolicy: Always
+            image:
+              repository: serjs/go-socks5-proxy
+              tag: latest@sha256:0af522996f402c03ecd985a87997158eabeb28935365e3a384df37eafcf740ea
+            env:
+              PROXY_PORT: &proxy-port 8888
+              REQUIRE_AUTH: 'false'
+            resources:
+              requests:
+                cpu: 5m
+              limits:
+                memory: 32Mi
+            securityContext: &securityContext
+              allowPrivilegeEscalation: false
+              readOnlyRootFilesystem: true
+              capabilities: { drop: [ALL] }
         containers:
           app:
             nameOverride: *app
@@ -42,13 +60,7 @@ spec:
                 spec:
                   failureThreshold: 30
                   periodSeconds: 10
-            securityContext:
-              runAsUser: 568
-              runAsGroup: 568
-              runAsNonRoot: true
-              allowPrivilegeEscalation: false
-              readOnlyRootFilesystem: true
-              capabilities: {drop: ["ALL"]}
+            securityContext: *securityContext
             resources:
               requests:
                 cpu: 100m
@@ -78,8 +90,8 @@ spec:
             port: *port
       proxy:
         ports:
-          http:
-            port: 8888
+          socks-proxy:
+            port: *proxy-port
     route:
       app:
         hostnames:
