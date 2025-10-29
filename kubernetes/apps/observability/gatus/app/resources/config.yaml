@@ -26,7 +26,7 @@ metrics: true
 storage:
   type: sqlite
   caching: true
-  path: ${GATUS_CONFIG_PATH}/gatus.db
+  path: /config/gatus.db
 ui:
   title: Status | Gatus
   header: Status
@@ -38,4 +38,4 @@ ui:
     - name: Homelab
       link: https://github.com/Malpractis/home-ops
 web:
-  port: ${GATUS_WEB_PORT}
+  port: 80
