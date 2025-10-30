@@ -22,6 +22,8 @@ metadata:
   name: actions-runner-controller-runners
   namespace: actions-runner-system
 spec:
+  components:
+    - ../../../../components/common
   path: ./kubernetes/apps/actions-runner-system/actions-runner-controller/runners
   sourceRef:
     kind: GitRepository

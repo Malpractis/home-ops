@@ -9,6 +9,8 @@ spec:
   commonMetadata:
     labels:
       app.kubernetes.io/name: *app
+  components:
+    - ../../../../components/nfs-scaler
   path: ./kubernetes/apps/media/stash/app
   sourceRef:
     kind: GitRepository

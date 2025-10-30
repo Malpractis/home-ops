@@ -71,8 +71,8 @@ spec:
   dependsOn:
     - name: cnpg-crds
       namespace: database
-    - name: longhorn
-      namespace: storage
+    - name: storage-ready
+      namespace: flux-system
   components:
     - ../../../../components/cnpg/backup
   postBuild:
@@ -109,8 +109,13 @@ spec:
   interval: 1h
   prune: true
   components:
+    - ../../../../components/common
     - ../../../../components/volsync
   postBuild:
     substitute:
       APP: *app
-      VOLSYNC_CAPACITY: 2Gi
+      PVC_NAME: config
+      GATUS_SUBDOMAIN: plex
+      PVC_CAPACITY: 10Gi
+      VOLSYNC_CAPACITY: 10Gi
+      VOLSYNC_SCHEDULE: ${PGADMIN_CONFIG_VOLSYNC_SCHEDULE}
