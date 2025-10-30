@@ -10,8 +10,8 @@ spec:
     labels:
       app.kubernetes.io/name: *app
   components:
-    - ../../../components/common
-    - ../../../components/volsync
+    - ../../../../components/common
+    - ../../../../components/volsync
   path: ./kubernetes/apps/network/pihole/app
   sourceRef:
     kind: GitRepository
