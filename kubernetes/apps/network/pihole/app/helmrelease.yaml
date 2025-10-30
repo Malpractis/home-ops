@@ -50,12 +50,14 @@ spec:
       existingSecret: pihole-secret
       passwordKey: password
     extraEnvVars:
-      FTLCONF_dns_listeningMode: all
-      FTLCONF_dns_dnssec: 'false'
       FTLCONF_webserver_interface_boxed: false
       FTLCONF_webserver_interface_theme: default-auto
     DNS1: ${DNSCRYPT_IP}
     DNS2: ${DNSCRYPT_IP}
+    dnsmasq:
+      customSettings:
+        # https://docs.pi-hole.net/ftldns/interfaces/#all
+        useAllInterfaces: except-interface=nonexisting
     monitoring:
       sidecar:
         enabled: true
