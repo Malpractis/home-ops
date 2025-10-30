@@ -190,7 +190,7 @@ spec:
         hostnames:
           - '{{ .Release.Name }}.${SECRET_DOMAIN}'
         parentRefs:
-          - name: internal-envoy
+          - name: envoy-internal
             namespace: network
         rules:
           - backendRefs: [identifier: *app]
