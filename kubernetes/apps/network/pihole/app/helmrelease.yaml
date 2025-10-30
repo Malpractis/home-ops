@@ -64,22 +64,8 @@ spec:
               accessMode: ReadWriteOnce
               size: 2Gi
               advancedMounts:
-                init:
-                  - path: /final
                 *app :
                   - path: /etc/pihole
-        initContainers:
-          init:
-            image:
-              repository: ghcr.io/pi-hole/pihole
-              tag: 2025.08.0@sha256:90a1412b3d3037d1c22131402bde19180d898255b584d685c84d943cf9c14821
-            securityContext:
-              allowPrivilegeEscalation: false
-            resources:
-              requests:
-                cpu: 200m
-              limits:
-                memory: 256Mi
         containers:
           *app :
             image:
