@@ -60,8 +60,6 @@ spec:
   dependsOn:
     - name: plex
       namespace: media
-    - name: storage-ready
-      namespace: flux-system
   postBuild:
     substitute:
       APP: *app
