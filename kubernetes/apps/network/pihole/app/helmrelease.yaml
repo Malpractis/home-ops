@@ -50,7 +50,7 @@ spec:
     dnsmasq:
       customSettings:
         # https://docs.pi-hole.net/ftldns/interfaces/#all
-        useAllInterfaces: except-interface=nonexisting
+        - "useAllInterfaces=except-interface=nonexisting"
     monitoring:
       sidecar:
         enabled: true
