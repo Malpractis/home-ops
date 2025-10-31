@@ -3,7 +3,7 @@
 apiVersion: helm.toolkit.fluxcd.io/v2
 kind: HelmRelease
 metadata:
-  name: qui
+  name: &app qui
 spec:
   chartRef:
     kind: OCIRepository
@@ -16,6 +16,7 @@ spec:
           reloader.stakater.com/auto: "true"
         containers:
           app:
+            nameOverride: *app
             image:
               repository: ghcr.io/autobrr/qui
               tag: v1.5.0@sha256:393055be10e7b11b893f665c02b936cf50529ed1dbd6166ad1177bf36e1a68cb
