@@ -4,10 +4,10 @@ clusterName: matalos
 talosVersion: "${talosVersion}"
 kubernetesVersion: "${kubernetesVersion}"
 
-endpoint: https://192.168.20:6443
+endpoint: https://192.168.20.20:6443
 additionalApiServerCertSans: &sans
   - "127.0.0.1"
-  - "192.168.20"
+  - "192.168.20.20"
   - "matalos.materia.k8s"
   - "matalos.internal"
 additionalMachineCertSans: *sans
@@ -61,7 +61,7 @@ nodes:
     patches:
       - "@./patches/manifests/machine-uservolumes.yaml"
   - hostname: "matalos-c2"
-    ipAddress: " 192.168.20.11"
+    ipAddress: "192.168.20.11"
     installDiskSelector:
       model: "Samsung SSD 980 1TB"
     machineSpec:
@@ -83,10 +83,10 @@ nodes:
             - hardwareAddr: "02:76:c6:*"
               physical: true
         addresses:
-          - " 192.168.20.11/24"
+          - "192.168.20.11/24"
         routes:
           - network: "0.0.0.0/0"
-            gateway: " 192.168.20.1"
+            gateway: "192.168.20.1"
         mtu: 9000
         vlans:
           - # IOT
@@ -113,7 +113,7 @@ nodes:
     patches:
       - "@./patches/manifests/machine-systemvolumes.yaml"
   - hostname: "matalos-c3"
-    ipAddress: " 192.168.20.12"
+    ipAddress: "192.168.20.12"
     installDiskSelector:
       model: "Samsung SSD 980 1TB"
     machineSpec:
@@ -135,10 +135,10 @@ nodes:
             - hardwareAddr: "02:76:c6:*"
               physical: true
         addresses:
-          - " 192.168.20.12/24"
+          - "192.168.20.12/24"
         routes:
           - network: "0.0.0.0/0"
-            gateway: " 192.168.20.1"
+            gateway: "192.168.20.1"
         mtu: 9000
         vlans:
           - # IOT

@@ -8,13 +8,13 @@ components:
 replacements:
   - path: ../../components/replacements/ks.yaml
 resources:
-  - ./arr-apps/ks.yaml
-  - ./calibre-web-automated/ks.yaml
-  - ./calibre-web-automated-book-downloader/ks.yaml
-  - ./emby/ks.yaml
+#  - ./arr-apps/ks.yaml
+#  - ./calibre-web-automated/ks.yaml
+#  - ./calibre-web-automated-book-downloader/ks.yaml
+#  - ./emby/ks.yaml
   - ./flaresolverr/ks.yaml
-  - ./notifiarr/ks.yaml
-  - ./overseerr/ks.yaml
-  - ./plex/ks.yaml
-  - ./sabnzbd/ks.yaml
-  - ./stash/ks.yaml
+#  - ./notifiarr/ks.yaml
+#  - ./overseerr/ks.yaml
+#  - ./plex/ks.yaml
+#  - ./sabnzbd/ks.yaml
+#  - ./stash/ks.yaml
