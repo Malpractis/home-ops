@@ -32,10 +32,10 @@ tasks:
     cmds:
       - bws run --no-inherit-env -- talhelper genconfig
       - talhelper gencommand apply --extra-flags="--insecure" | bash
-      - until talhelper gencommand bootstrap --node 10.0.20.11 | bash; do sleep 5; done
-      - talosctl kubeconfig --talosconfig=./clusterconfig/talosconfig /mnt/git/home-ops --force --nodes 10.0.20.11
+      - until talhelper gencommand bootstrap --node 192.168.20.11 | bash; do sleep 5; done
+      - talosctl kubeconfig --talosconfig=./clusterconfig/talosconfig /mnt/git/home-ops --force --nodes 192.168.20.11
     vars:
-      IP: 10.0.20.11
+      IP: 192.168.20.11
       RANDOM_CONTROLLER:
         sh: talosctl config info --output json | jq --raw-output '.endpoints[]' | shuf -n 1
     preconditions:
@@ -48,12 +48,12 @@ tasks:
     prompt: Bootstrap apps into the Talos cluster ...?
     dir: '{{.TALOS_DIR}}'
     cmds:
-      - kubectl config set-cluster matalos --server https://10.0.20.11:6443
+      - kubectl config set-cluster matalos --server https://192.168.20.11:6443
       - defer: talhelper gencommand kubeconfig --extra-flags="{{.ROOT_DIR}} --force" | bash; do sleep 10; done
       - until kubectl wait nodes --for=condition=Ready=False --all --timeout=10m; do sleep 5; done
       - bash {{.SCRIPTS_DIR}}/bootstrap-apps.sh
     vars:
-      IP: 10.0.20.11
+      IP: 192.168.20.11
       CONTEXT:
         sh: talosctl config info --output json | jq --raw-output '.context'
       RANDOM_CONTROLLER:

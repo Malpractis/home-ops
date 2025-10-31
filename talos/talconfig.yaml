@@ -4,10 +4,10 @@ clusterName: matalos
 talosVersion: "${talosVersion}"
 kubernetesVersion: "${kubernetesVersion}"
 
-endpoint: https://10.0.20.20:6443
+endpoint: https://192.168.20:6443
 additionalApiServerCertSans: &sans
   - "127.0.0.1"
-  - "10.0.20.20"
+  - "192.168.20"
   - "matalos.materia.k8s"
   - "matalos.internal"
 additionalMachineCertSans: *sans
@@ -21,7 +21,7 @@ cniConfig:
 
 nodes:
   - hostname: "matalos-c1"
-    ipAddress: "10.0.20.10"
+    ipAddress: "192.168.20.10"
     installDiskSelector:
       model: "QEMU*"
       size: "<=100G"
@@ -35,10 +35,10 @@ nodes:
           physical: true
         dhcp: false
         addresses:
-          - "10.0.20.10/24"
+          - "192.168.20.10/24"
         routes:
           - network: "0.0.0.0/0"
-            gateway: "10.0.20.1"
+            gateway: "192.168.20.1"
         mtu: 9000
         vlans:
           - # IOT
@@ -61,13 +61,13 @@ nodes:
     patches:
       - "@./patches/manifests/machine-uservolumes.yaml"
   - hostname: "matalos-c2"
-    ipAddress: "10.0.20.11"
+    ipAddress: " 192.168.20.11"
     installDiskSelector:
       model: "Samsung SSD 980 1TB"
     machineSpec:
       secureboot: false
     # Additional kernel commands needed for bonding
-    # kernelArgs: bond=bond0:enp3s0,enp4s0:mode=802.3ad,xmit_hash_policy=layer3+4:9000 talos.network.interface.ignore=eno1 ip=10.0.20.11::10.0.20.1:255.255.255.0::bond0
+    # kernelArgs: bond=bond0:enp3s0,enp4s0:mode=802.3ad,xmit_hash_policy=layer3+4:9000 talos.network.interface.ignore=eno1 ip= 192.168.20.11:: 192.168.20.1:255.255.255.0::bond0
     talosImageURL: factory.talos.dev/installer/2ac69590087c343b8773f569d993be11c45ed8f6a82ec8e1fb61e4185d6d4a70
     controlPlane: true
     networkInterfaces:
@@ -83,10 +83,10 @@ nodes:
             - hardwareAddr: "02:76:c6:*"
               physical: true
         addresses:
-          - "10.0.20.11/24"
+          - " 192.168.20.11/24"
         routes:
           - network: "0.0.0.0/0"
-            gateway: "10.0.20.1"
+            gateway: " 192.168.20.1"
         mtu: 9000
         vlans:
           - # IOT
@@ -113,13 +113,13 @@ nodes:
     patches:
       - "@./patches/manifests/machine-systemvolumes.yaml"
   - hostname: "matalos-c3"
-    ipAddress: "10.0.20.12"
+    ipAddress: " 192.168.20.12"
     installDiskSelector:
       model: "Samsung SSD 980 1TB"
     machineSpec:
       secureboot: false
     # Additional kernel commands needed for bonding
-    # kernelArgs: bond=bond0:enp3s0,enp4s0:mode=802.3ad,xmit_hash_policy=layer3+4:9000 talos.network.interface.ignore=eno1 ip=10.0.20.12::10.0.20.1:255.255.255.0::bond0
+    # kernelArgs: bond=bond0:enp3s0,enp4s0:mode=802.3ad,xmit_hash_policy=layer3+4:9000 talos.network.interface.ignore=eno1 ip= 192.168.20.12:: 192.168.20.1:255.255.255.0::bond0
     talosImageURL: factory.talos.dev/installer/2ac69590087c343b8773f569d993be11c45ed8f6a82ec8e1fb61e4185d6d4a70
     controlPlane: true
     networkInterfaces:
@@ -135,10 +135,10 @@ nodes:
             - hardwareAddr: "02:76:c6:*"
               physical: true
         addresses:
-          - "10.0.20.12/24"
+          - " 192.168.20.12/24"
         routes:
           - network: "0.0.0.0/0"
-            gateway: "10.0.20.1"
+            gateway: " 192.168.20.1"
         mtu: 9000
         vlans:
           - # IOT

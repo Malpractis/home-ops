@@ -15,7 +15,7 @@ spec:
       name: pihole
     extraArgs:
       - --pihole-api-version=6
-      - --pihole-server=http://10.0.0.2
+      - --pihole-server=http://192.168.1.2
     triggerLoopOnEvent: true
     policy: sync
     sources:
