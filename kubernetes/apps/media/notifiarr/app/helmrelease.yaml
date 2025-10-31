@@ -85,7 +85,7 @@ spec:
               limits:
                 memory: 512Mi
     defaultPodOptions:
-      hostname: notifiarr
+      hostname: notifiarr-talos
       securityContext:
         runAsNonRoot: true
         runAsUser: 568
