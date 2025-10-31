@@ -67,8 +67,8 @@ nodes:
     machineSpec:
       secureboot: false
     # Additional kernel commands needed for bonding
-    # kernelArgs: bond=bond0:enp3s0,enp4s0:mode=802.3ad,xmit_hash_policy=layer3+4:9000 talos.network.interface.ignore=eno1 ip= 192.168.20.11:: 192.168.20.1:255.255.255.0::bond0
-    talosImageURL: factory.talos.dev/installer/2ac69590087c343b8773f569d993be11c45ed8f6a82ec8e1fb61e4185d6d4a70
+    # kernelArgs: bond=bond0:enp3s0,enp4s0:mode=802.3ad,xmit_hash_policy=layer3+4:9000 talos.network.interface.ignore=eno1 ip=192.168.20.11::192.168.20.1:255.255.255.0::bond0
+    talosImageURL: factory.talos.dev/installer/3a9b4e0827232f357f3baa6c4a704929ab06d83d7572c3b7ed93701743b725d1
     controlPlane: true
     networkInterfaces:
       - interface: bond0
@@ -119,8 +119,8 @@ nodes:
     machineSpec:
       secureboot: false
     # Additional kernel commands needed for bonding
-    # kernelArgs: bond=bond0:enp3s0,enp4s0:mode=802.3ad,xmit_hash_policy=layer3+4:9000 talos.network.interface.ignore=eno1 ip= 192.168.20.12:: 192.168.20.1:255.255.255.0::bond0
-    talosImageURL: factory.talos.dev/installer/2ac69590087c343b8773f569d993be11c45ed8f6a82ec8e1fb61e4185d6d4a70
+    # kernelArgs: bond=bond0:enp3s0,enp4s0:mode=802.3ad,xmit_hash_policy=layer3+4:9000 talos.network.interface.ignore=eno1 ip=192.168.20.12::192.168.20.1:255.255.255.0::bond0
+    talosImageURL: factory.talos.dev/installer/b96735e7e75b5ec48d75ec858bd5e9f0ff48eaafd7d24efe75119b151d831118
     controlPlane: true
     networkInterfaces:
       - interface: bond0

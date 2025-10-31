@@ -13,5 +13,5 @@ name: longhorn-data
 provisioning:
   diskSelector:
     match: system_disk
-  minSize: 500GiB
+  minSize: 850GiB
   grow: true
