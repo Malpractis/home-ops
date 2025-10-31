@@ -11,7 +11,7 @@ resources:
   - ./arr-apps/ks.yaml
   - ./calibre-web-automated/ks.yaml
   - ./calibre-web-automated-book-downloader/ks.yaml
-#  - ./emby/ks.yaml
+  - ./emby/ks.yaml
   - ./flaresolverr/ks.yaml
   - ./notifiarr/ks.yaml
   - ./overseerr/ks.yaml
