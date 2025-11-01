@@ -6,9 +6,9 @@ metadata:
   name: emby-autodiscovery
 spec:
   hostnames: ["emby.${SECRET_DOMAIN}"]
-        parentRefs:
-          - name: envoy-internal
-            namespace: network
+  parentRefs:
+    - name: envoy-internal
+      namespace: network
   rules:
     - backendRefs:
       - name: emby

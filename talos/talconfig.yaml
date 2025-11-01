@@ -4,10 +4,10 @@ clusterName: matalos
 talosVersion: "${talosVersion}"
 kubernetesVersion: "${kubernetesVersion}"
 
-endpoint: https://192.168.20.20:6443
+endpoint: https://192.168.10.20:6443
 additionalApiServerCertSans: &sans
   - "127.0.0.1"
-  - "192.168.20.20"
+  - "192.168.10.20"
   - "matalos.materia.k8s"
   - "matalos.internal"
 additionalMachineCertSans: *sans
