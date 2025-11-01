@@ -1,0 +1,88 @@
+{
+  $schema: "https://docs.renovatebot.com/renovate-schema.json",
+  packageRules: [
+    {
+      description: "Actions Runner Controller Group",
+      groupName: "actions-runner-controller",
+      matchDatasources: ["docker"],
+      matchPackageNames: ["/gha-runner-scale-set-controller/", "/gha-runner-scale-set/"],
+      group: {
+        commitMessageTopic: "{{{groupName}}} group",
+      },
+      minimumGroupSize: 2,
+    },
+    {
+      description: "Flux Operator Group",
+      groupName: "flux-operator",
+      matchDatasources: ["docker"],
+      matchPackageNames: ["/flux-operator/", "/flux-instance/", "/flux-operator-manifests/"],
+      group: {
+        commitMessageTopic: "{{{groupName}}} group",
+      },
+      minimumGroupSize: 3,
+    },
+    {
+      description: "Intel Device Plugins Group",
+      groupName: "intel-device-plugins",
+      matchDatasources: ["docker"],
+      matchPackageNames: ["/intel-device-plugins-operator/", "/intel-device-plugins-gpu/"],
+      group: {
+        commitMessageTopic: "{{{groupName}}} group",
+      },
+      minimumGroupSize: 2,
+    },
+    {
+      description: "Kubernetes Group",
+      groupName: "kubernetes",
+      matchDatasources: ["docker"],
+      matchPackageNames: [
+        "/kube-apiserver/",
+        "/kube-controller-manager/",
+        "/kube-proxy/",
+        "/kube-scheduler/",
+        "/kubelet/",
+      ],
+      group: {
+        commitMessageTopic: "{{{groupName}}} group",
+      },
+      minimumGroupSize: 5,
+    },
+    {
+      description: "Longhorn Group",
+      groupName: "longhorn",
+      matchDatasources: ["docker"],
+      matchPackageNames: ["/storage/longhorn/"],
+      group: {
+        commitMessageTopic: "{{{groupName}}} group",
+      },
+      minimumGroupSize: 2,
+    },
+    {
+      description: "Talos Group",
+      groupName: "talos",
+      matchDatasources: ["docker"],
+      matchPackageNames: ["/installer/"],
+      group: {
+        commitMessageTopic: "{{{groupName}}} group",
+      },
+      minimumGroupSize: 2,
+    },
+    {
+      description: "Auto-merge GitHub Actions",
+      matchManagers: ["github-actions"],
+      automerge: true,
+      automergeType: "branch",
+      matchUpdateTypes: ["minor", "patch", "digest"],
+      minimumReleaseAge: "3 days",
+      ignoreTests: true,
+    },
+    {
+      description: "Auto-merge Mise Tools",
+      matchManagers: ["mise"],
+      automerge: true,
+      automergeType: "branch",
+      matchUpdateTypes: ["minor", "patch"],
+      ignoreTests: true,
+    },
+  ],
+}
