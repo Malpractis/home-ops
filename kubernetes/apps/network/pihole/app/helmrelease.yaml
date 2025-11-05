@@ -29,11 +29,13 @@ spec:
       externalTrafficPolicy: Local
       annotations:
         lbipam.cilium.io/ips: ${CLUSTER_PIHOLE_IP}
+        lbipam.cilium.io/sharing-key: "pihhole"
     serviceWeb:
       type: LoadBalancer
       externalTrafficPolicy: Local
       annotations:
         lbipam.cilium.io/ips: ${CLUSTER_PIHOLE_IP}
+        lbipam.cilium.io/sharing-key: "pihhole"
     serviceDhcp:
       enabled: false
     ingress:
