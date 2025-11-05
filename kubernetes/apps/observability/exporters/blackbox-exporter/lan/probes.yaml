@@ -11,7 +11,7 @@ spec:
   targets:
     staticConfig:
       static:
-        - ${TRUENAS_IP}
+        - ${NAS_IP}
         - ${PIKVM_IP}
   metricRelabelings:
     - targetLabel: service
@@ -30,7 +30,7 @@ spec:
   targets:
     staticConfig:
       static:
-        - ${TRUENAS_IP}:2049
+        - ${NAS_IP}:2049
   metricRelabelings:
     - targetLabel: service
       replacement: blackbox-exporter-lan

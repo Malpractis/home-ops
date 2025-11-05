@@ -74,13 +74,13 @@ spec:
         existingClaim: "{{ .Release.Name }}-config"
       backup:
         type: nfs
-        server: ${TRUENAS_IP}
+        server: ${NAS_IP}
         path: /mnt/tank/backup/apps/tautulli
         globalMounts:
           - path: /backup
       logs:
         type: nfs
-        server: ${TRUENAS_IP}
+        server: ${NAS_IP}
         path: /mnt/tank/apps-nfs/plex-logs
         globalMounts:
           - path: "/plex-logs"

@@ -85,14 +85,14 @@ spec:
             subPath: transcode
       data:
         type: nfs
-        server: ${TRUENAS_IP}
+        server: ${NAS_IP}
         path: /mnt/tank/data
         globalMounts:
           - path: /data
             readOnly: true
       backup:
         type: nfs
-        server: ${TRUENAS_IP}
+        server: ${NAS_IP}
         path: /mnt/tank/backup/apps/emby
         globalMounts:
           - path: /backup

@@ -77,7 +77,7 @@ spec:
           - path: /config
       data:
         type: nfs
-        server: ${TRUENAS_IP}
+        server: ${NAS_IP}
         path: /mnt/tank/data
         globalMounts:
           - path: /data
@@ -85,7 +85,7 @@ spec:
         type: emptyDir
       backup:
         type: nfs
-        server: ${TRUENAS_IP}
+        server: ${NAS_IP}
         path: /mnt/tank/backup/apps/bazarr-anime
         globalMounts:
           - path: /backup

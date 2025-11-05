@@ -96,14 +96,14 @@ spec:
             subPath: transcode
       ebooks:
         type: nfs
-        server: ${TRUENAS_IP}
+        server: ${NAS_IP}
         path: /mnt/tank/data/media/ebooks
         globalMounts:
           - path: /calibre-library
             readOnly: false
       ingest:
         type: nfs
-        server: ${TRUENAS_IP}
+        server: ${NAS_IP}
         path: /mnt/tank/data/torrents/ebooks_watch
         globalMounts:
           - path: /cws-book-ingest

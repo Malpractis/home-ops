@@ -84,7 +84,7 @@ spec:
         type: emptyDir
       backup:
         type: nfs
-        server: ${TRUENAS_IP}
+        server: ${NAS_IP}
         path: /mnt/tank/backup/apps/prowlarr
         globalMounts:
           - path: /backup

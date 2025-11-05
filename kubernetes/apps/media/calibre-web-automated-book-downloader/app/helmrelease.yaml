@@ -54,7 +54,7 @@ spec:
     persistence:
       ingest:
         type: nfs
-        server: ${TRUENAS_IP}
+        server: ${NAS_IP}
         path: /mnt/tank/data/torrents/ebooks_watch
         globalMounts:
           - path: /cws-book-ingest

@@ -96,20 +96,20 @@ spec:
             subPath: transcode
       media:
         type: nfs
-        server: ${TRUENAS_IP}
+        server: ${NAS_IP}
         path: /mnt/tank/data
         globalMounts:
           - path: /media
             readOnly: true
       logs:
         type: nfs
-        server: ${TRUENAS_IP}
+        server: ${NAS_IP}
         path: /mnt/tank/apps-nfs/plex-logs
         globalMounts:
           - path: "/config/Library/Application Support/Plex Media Server/Logs"
       backup:
         type: nfs
-        server: ${TRUENAS_IP}
+        server: ${NAS_IP}
         path: /mnt/tank/backup/apps/plex
         globalMounts:
           - path: /backup

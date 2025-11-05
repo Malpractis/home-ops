@@ -114,7 +114,7 @@ spec:
               - path: "/blobs"
       data:
         type: nfs
-        server: ${TRUENAS_IP}
+        server: ${NAS_IP}
         path: /mnt/tank/data/stash
         globalMounts:
           - path: /data

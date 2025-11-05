@@ -52,7 +52,7 @@ spec:
       FTLCONF_webserver_interface_boxed: false
       FTLCONF_webserver_interface_theme: default-auto
     DNS1: ${DNSCRYPT_IP}
-    DNS2: ${DNSCRYPT_IP}
+    DNS2: ${NAS_IP}
     dnsmasq:
       customSettings:
         # https://docs.pi-hole.net/ftldns/interfaces/#all

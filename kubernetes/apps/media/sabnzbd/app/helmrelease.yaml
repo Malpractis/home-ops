@@ -99,13 +99,13 @@ spec:
             subPath: tmp
       data:
         type: nfs
-        server: ${TRUENAS_IP}
+        server: ${NAS_IP}
         path: /mnt/tank/data
         globalMounts:
           - path: /data
       backup:
         type: nfs
-        server: ${TRUENAS_IP}
+        server: ${NAS_IP}
         path: /mnt/tank/backup/apps/sabnzbd
         globalMounts:
           - path: /backup
