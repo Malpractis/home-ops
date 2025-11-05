@@ -1,0 +1,17 @@
+---
+# docker-compose for the backup dnscrypt on nas
+services:
+  dnscrypt-proxy:
+    restart: always
+    pull_policy: always
+    image: ghcr.io/klutchell/dnscrypt-proxy:main
+    network_mode: host
+    ports:
+      - "5053:5053/tcp"
+      - "5053:5053/udp"
+    configs:
+      - source: dnscrypt-config
+        target: /config/dnscrypt-proxy.toml
+configs:
+  dnscrypt-config:
+    file: /mnt/tank/sysadmin/git/home-ops/kubernetes/apps/network/dnscrypt-proxy/app/resources/dnscrypt-proxy.toml
