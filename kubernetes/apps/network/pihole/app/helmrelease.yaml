@@ -68,7 +68,7 @@ spec:
         - 192.168.1.2
     persistentVolumeClaim:
       enabled: true
-      existingClaim: "{{ .Release.Name }}-config"
+      existingClaim: "pihole-config"
     deploymentAnnotations:
       reloader.stakater.com/auto: "true"
     adlists:
