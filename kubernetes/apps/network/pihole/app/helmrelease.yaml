@@ -59,7 +59,7 @@ spec:
       prometheus.io/port: '9617'
     podDisruptionBudget:
       enabled: true
-      maxUnavailable: 1
+      minAvailable: 1
     podDnsConfig:
       enabled: true
       policy: "None"
