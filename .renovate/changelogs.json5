@@ -3,8 +3,8 @@
   packageRules: [
     {
       description: "Changelog URL for Longhorn",
-      matchPackageNames: ["/1password/"],
-      changelogUrl: "https://github.com/1Password/connect/blob/main/CHANGELOG.md",
+      matchPackageNames: ["/longhorn/"],
+      changelogUrl: "https://github.com/longhorn/longhorn/blob/master/CHANGELOG",
     },
     {
       description: "Changelog URL for Cloudflared",
