@@ -85,13 +85,13 @@ spec:
             readOnly: true
       data:
         type: nfs
-        server: ${NAS_IP}
+        server: nas.internal
         path: /mnt/tank/data
         globalMounts:
           - path: /data
       torrents:
         type: nfs
-        server: ${NAS_IP}
+        server: nas.internal
         path: /mnt/tank/data/torrents/BT_backup
         globalMounts:
           - path: /torrents

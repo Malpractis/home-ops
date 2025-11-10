@@ -1,122 +1,198 @@
 ---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/bjw-s-labs/helm-charts/main/charts/other/app-template/schemas/helmrelease-helm-v2.schema.json
 apiVersion: helm.toolkit.fluxcd.io/v2
 kind: HelmRelease
 metadata:
-  name: pihole
+  name: &app pihole
+  namespace: network
 spec:
-  interval: 30m
-  chart:
-    spec:
-      chart: pihole
-      version: 2.34.0
-      sourceRef:
-        kind: HelmRepository
-        name: pihole-charts
-        namespace: network
-      interval: 15m
+  interval: 1h
+  chartRef:
+    kind: OCIRepository
+    name: pihole
   values:
-    image:
-      repository: "docker.io/pihole/pihole"
-      tag: "2025.11.0"
-      pullPolicy: IfNotPresent
-    replicaCount: 1
-    revisionHistoryLimit: 2
-    dualStack:
-      enabled: false
-    serviceDns:
-      mixedService: true
-      type: LoadBalancer
-      externalTrafficPolicy: Local
-      annotations:
-        lbipam.cilium.io/ips: ${CLUSTER_PIHOLE_IP}
-        lbipam.cilium.io/sharing-key: "pihhole"
-    serviceWeb:
-      type: LoadBalancer
-      externalTrafficPolicy: Local
-      annotations:
-        lbipam.cilium.io/ips: ${CLUSTER_PIHOLE_IP}
-        lbipam.cilium.io/sharing-key: "pihhole"
-    serviceDhcp:
-      enabled: false
-    ingress:
-      enabled: false
-    resources:
-      requests:
-        cpu: 10m
-        memory: 100Mi
-    admin:
-      enabled: true
-      existingSecret: pihole-secret
-      passwordKey: password
-    extraEnvVars:
-      FTLCONF_webserver_interface_boxed: false
-      FTLCONF_webserver_interface_theme: default-auto
-    DNS1: ${DNSCRYPT_IP}
-    DNS2: ${NAS_IP}
-    dnsmasq:
-      customSettings:
-        # https://docs.pi-hole.net/ftldns/interfaces/#all
-        useAllInterfaces: "except-interface=nonexisting"
-    monitoring:
-      sidecar:
-        enabled: true
-    podAnnotations:
-      prometheus.io/scrape: 'true'
-      prometheus.io/port: '9617'
-    podDisruptionBudget:
-      enabled: true
-      minAvailable: 1
-    podDnsConfig:
-      enabled: true
-      policy: "None"
-      nameservers:
-        - 127.0.0.1
-        - 192.168.1.2
-    persistentVolumeClaim:
-      enabled: true
-      existingClaim: "pihole-config"
-    deploymentAnnotations:
-      reloader.stakater.com/auto: "true"
-    adlists:
-      # Ads
-      - https://s3.amazonaws.com/lists.disconnect.me/simple_ad.txt
-      - https://blocklistproject.github.io/Lists/ads.txt
-      - https://adaway.org/hosts.txt
-      - https://v.firebog.net/hosts/AdguardDNS.txt
-      - https://v.firebog.net/hosts/Admiral.txt
-      - https://raw.githubusercontent.com/anudeepND/blacklist/master/adservers.txt
-      - https://v.firebog.net/hosts/Easylist.txt
-      - https://pgl.yoyo.org/adservers/serverlist.php?hostformat=hosts&showintro=0&mimetype=plaintext
-      - https://raw.githubusercontent.com/FadeMind/hosts.extras/master/UncheckyAds/hosts
-      - https://raw.githubusercontent.com/bigdargon/hostsVN/master/hosts
-      # Malware
-      - https://blocklistproject.github.io/Lists/malware.txt
-      - https://blocklistproject.github.io/Lists/ransomware.txt
-      - https://raw.githubusercontent.com/DandelionSprout/adfilt/master/Alternate%20versions%20Anti-Malware%20List/AntiMalwareHosts.txt
-      - https://s3.amazonaws.com/lists.disconnect.me/simple_malvertising.txt
-      - https://v.firebog.net/hosts/Prigent-Crypto.txt
-      - https://raw.githubusercontent.com/FadeMind/hosts.extras/master/add.Risk/hosts
-      - https://bitbucket.org/ethanr/dns-blacklists/raw/8575c9f96e5b4a1308f2f12394abd86d0927a4a0/bad_lists/Mandiant_APT1_Report_Appendix_D.txt
-      - https://phishing.army/download/phishing_army_blocklist_extended.txt
-      - https://gitlab.com/quidsup/notrack-blocklists/raw/master/notrack-malware.txt
-      - https://v.firebog.net/hosts/RPiList-Malware.txt
-      - https://v.firebog.net/hosts/RPiList-Phishing.txt
-      - https://raw.githubusercontent.com/Spam404/lists/master/main-blacklist.txt
-      - https://raw.githubusercontent.com/AssoEchap/stalkerware-indicators/master/generated/hosts
-      - https://urlhaus.abuse.ch/downloads/hostfile/
-      # Suspicious
-      - https://blocklistproject.github.io/Lists/crypto.txt
-      - https://blocklistproject.github.io/Lists/drugs.txt
-      - https://blocklistproject.github.io/Lists/fraud.txt
-      - https://blocklistproject.github.io/Lists/gambling.txt
-      - https://blocklistproject.github.io/Lists/phishing.txt
-      - https://blocklistproject.github.io/Lists/scam.txt
-      - https://raw.githubusercontent.com/PolishFiltersTeam/KADhosts/master/KADhosts.txt
-      - https://raw.githubusercontent.com/FadeMind/hosts.extras/master/add.Spam/hosts
-      - https://v.firebog.net/hosts/static/w3kbl.txt
-      # Tracking and Telemetry
-      - https://v.firebog.net/hosts/Easyprivacy.txt
-      - https://v.firebog.net/hosts/Prigent-Ads.txt
-      - https://raw.githubusercontent.com/FadeMind/hosts.extras/master/add.2o7Net/hosts
-      - https://raw.githubusercontent.com/crazy-max/WindowsSpyBlocker/master/data/hosts/spy.txt
-      - https://hostfiles.frogeye.fr/firstparty-trackers-hosts.txt
+    defaultPodOptions:
+      hostUsers: false
+    controllers:
+      *app :
+        type: statefulset
+        annotations:
+          reloader.stakater.com/auto: 'true'
+        replicas: 3
+        strategy: RollingUpdate
+        rollingUpdate:
+          unavailable: 1
+          surge: 1
+        pod:
+          annotations:
+            kubectl.kubernetes.io/default-container: pihole
+          affinity:
+            podAffinity:
+              preferredDuringSchedulingIgnoredDuringExecution:
+                - weight: 100
+                  podAffinityTerm:
+                    labelSelector:
+                      matchExpressions:
+                        - key: app.kubernetes.io/name
+                          operator: In
+                          values:
+                            - dnscrypt-proxy
+                    topologyKey: kubernetes.io/hostname
+            podAntiAffinity:
+              preferredDuringSchedulingIgnoredDuringExecution:
+                - weight: 100
+                  podAffinityTerm:
+                    labelSelector:
+                      matchExpressions:
+                        - key: app.kubernetes.io/name
+                          operator: In
+                          values:
+                            - *app
+                    topologyKey: kubernetes.io/hostname
+          priorityClassName: system-cluster-critical
+          dnsPolicy: None
+          dnsConfig:
+            nameservers:
+              - ${DNSCRYPT_IP}
+              - ${NAS_IP}
+            options:
+              - name: ndots
+                value: '1'
+        statefulset:
+          volumeClaimTemplates:
+            - name: config
+              storageClass: longhorn
+              accessMode: ReadWriteOnce
+              size: 10Gi
+              advancedMounts:
+                *app :
+                  - path: /etc/pihole
+        containers:
+          *app :
+            image:
+              repository: ghcr.io/pi-hole/pihole
+              tag: 2025.11.0@sha256:e28e239f55e648a9d32c8f065650acfe987ddebf1cd5f64f1c071e8716156ceb
+            env:
+              FTLCONF_dns_listeningMode: all
+              FTLCONF_dns_dnssec: 'false'
+              FTLCONF_dns_upstreams: ${DNSCRYPT_IP};${NAS_IP}
+              FTLCONF_webserver_interface_boxed: false
+              FTLCONF_webserver_interface_theme: default-auto
+              FTLCONF_webserver_port: &pihole-port 80
+              FTLCONF_webserver_api_password: &pihole-password
+                valueFrom:
+                  secretKeyRef:
+                    name: pihole-secret
+                    key: password
+            probes:
+              liveness: &pihole-probes
+                enabled: true
+                custom: true
+                spec:
+                  exec:
+                    command:
+                      - /bin/sh
+                      - -c
+                      - "curl --silent http://localhost/api/info/login | jq 'if (.dns | not) then halt_error(1) end'"
+              readiness: *pihole-probes
+            securityContext:
+              allowPrivilegeEscalation: false
+            resources:
+              requests:
+                cpu: 100m
+              limits:
+                # looking at the query log can spike the memory usage very high
+                memory: 1Gi
+          exporter:
+            image:
+              repository: ekofr/pihole-exporter
+              tag: v1.2.0
+            env:
+              PIHOLE_HOSTNAME:
+                valueFrom:
+                  fieldRef:
+                    fieldPath: status.podIP
+              PIHOLE_PORT: *pihole-port
+              PIHOLE_PASSWORD: *pihole-password
+            resources:
+              requests:
+                cpu: 10m
+              limits:
+                memory: 64Mi
+            probes:
+              liveness: &exporter-probes
+                enabled: true
+                custom: true
+                spec:
+                  failureThreshold: 3
+                  initialDelaySeconds: 10
+                  periodSeconds: 20
+                  successThreshold: 1
+                  tcpSocket:
+                    port: &exporter-port 9617
+                  timeoutSeconds: 1
+              readiness: *exporter-probes
+            securityContext:
+              allowPrivilegeEscalation: false
+              readOnlyRootFileSystem: true
+              capabilities: { drop: ['ALL'] }
+              runAsNonRoot: true
+              runAsUser: 568
+              runAsGroup: 568
+              fsGroup: 568
+              fsGroupChangePolicy: OnRootMismatch
+    service:
+      *app :
+        controller: *app
+        type: LoadBalancer
+        ipFamilies: [IPv4, IPv6]
+        ipFamilyPolicy: PreferDualStack
+        annotations:
+          lbipam.cilium.io/ips: ${CLUSTER_PIHOLE_IP}
+        ports:
+          dns-udp:
+            port: 53
+            protocol: UDP
+          dns-tcp:
+            port: 53
+            protocol: TCP
+          # ntp-udp:
+          #   port: 123
+          #   protocol: UDP
+          # ntp-tcp:
+          #   port: 123
+          #   protocol: TCP
+          http:
+            primary: true
+            port: *pihole-port
+            protocol: HTTP
+          https:
+            port: 443
+            protocol: HTTPS
+          prometheus:
+            port: *exporter-port
+            protocol: HTTP
+    route:
+      app:
+        hostnames:
+          - '{{ .Release.Name }}.${SECRET_DOMAIN}'
+        parentRefs:
+          - name: internal-envoy
+            namespace: network
+        rules:
+          - backendRefs: [identifier: *app]
+            sessionPersistence:
+              sessionName: *app
+              type: Cookie
+              absoluteTimeout: 35m
+    serviceMonitor:
+      app:
+        service:
+          identifier: *app
+        endpoints:
+          - port: prometheus # exporter-port's name
+            scheme: http
+            path: /metrics
+            interval: 1m
+            scrapeTimeout: 10s
+        forceRename: *app

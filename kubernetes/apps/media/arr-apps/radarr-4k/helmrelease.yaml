@@ -84,13 +84,13 @@ spec:
         type: emptyDir
       data:
         type: nfs
-        server: ${NAS_IP}
+        server: nas.internal
         path: /mnt/tank/data
         globalMounts:
           - path: /data
       backup:
         type: nfs
-        server: ${NAS_IP}
+        server: nas.internal
         path: /mnt/tank/backup/apps/radarr-4k
         globalMounts:
           - path: /backup

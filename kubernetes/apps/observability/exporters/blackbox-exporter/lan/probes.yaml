@@ -11,8 +11,8 @@ spec:
   targets:
     staticConfig:
       static:
-        - ${NAS_IP}
-        - ${PIKVM_IP}
+        - nas.internal
+        - pikvm.internal
   metricRelabelings:
     - targetLabel: service
       replacement: blackbox-exporter-lan
@@ -30,7 +30,7 @@ spec:
   targets:
     staticConfig:
       static:
-        - ${NAS_IP}:2049
+        - nas.internal:2049
   metricRelabelings:
     - targetLabel: service
       replacement: blackbox-exporter-lan

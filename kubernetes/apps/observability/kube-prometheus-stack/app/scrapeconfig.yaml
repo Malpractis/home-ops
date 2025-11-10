@@ -7,8 +7,8 @@ metadata:
 spec:
   staticConfigs:
     - targets:
-        - ${NAS_IP}:9100
-        # - ${PIKVM_IP}:9100
+        - nas.internal:9100
+        # - pikvm.internal:9100
   metricsPath: /metrics
   relabelings:
     - action: replace
@@ -23,7 +23,7 @@ metadata:
 spec:
   staticConfigs:
     - targets:
-        - ${NAS_IP}:9633
+        - nas.internal:9633
   metricsPath: /metrics
   relabelings:
     - action: replace
@@ -38,7 +38,7 @@ metadata:
 spec:
   staticConfigs:
     - targets:
-        - ${PIKVM_IP}
+        - pikvm.internal
   metricsPath: /api/export/prometheus/metrics
   relabelings:
     - action: replace

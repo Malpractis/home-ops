@@ -74,7 +74,7 @@ spec:
           - path: /config
       data:
         type: nfs
-        server: ${NAS_IP}
+        server: nas.internal
         path: /mnt/tank/data
         globalMounts:
           - path: /data
@@ -82,7 +82,7 @@ spec:
         type: emptyDir
       backup:
         type: nfs
-        server: ${NAS_IP}
+        server: nas.internal
         path: /mnt/tank/backup/apps/bazarr
         globalMounts:
           - path: /backup
