@@ -9,7 +9,7 @@ spec:
   interval: 1h
   chartRef:
     kind: OCIRepository
-    name: app-template
+    name: pihole-nebula-sync
   values:
     defaultPodOptions:
       priorityClassName: system-cluster-critical
