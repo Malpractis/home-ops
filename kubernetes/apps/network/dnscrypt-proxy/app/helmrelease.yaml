@@ -25,6 +25,7 @@ spec:
           surge: 1
         containers:
           app:
+            nameOverride: *app
             image:
               repository: ghcr.io/klutchell/dnscrypt-proxy
               tag: 2.1.14@sha256:546df99b6c130742c3f24d739e5cb32db5ea82869ca3cb7a808946bac6dd6ee1
