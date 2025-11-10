@@ -44,3 +44,5 @@ spec:
     - action: replace
       targetLabel: job
       replacement: pikvm
+  tlsConfig:
+    insecureSkipVerify: true
