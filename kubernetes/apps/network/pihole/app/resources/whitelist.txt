@@ -2,6 +2,7 @@
 # Combined from multiple sources with organized sections
 # Last updated: November 2025
 
+
 # See also https://github.com/GoodnessJSON/PiHole-Whitelist/tree/master/lists
 # https://raw.githubusercontent.com/GoodnessJSON/PiHole-Whitelist/refs/heads/master/lists/whitelist.txt
 # https://raw.githubusercontent.com/GoodnessJSON/PiHole-Whitelist/refs/heads/master/lists/optional-list.txt
