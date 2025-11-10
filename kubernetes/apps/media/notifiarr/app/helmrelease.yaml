@@ -33,35 +33,59 @@ spec:
             # Lidarr Configuration
               DN_LIDARR_0_NAME: "Lidarr"
               DN_LIDARR_0_URL: http://lidarr.media.svc.cluster.local
+              DN_LIDARR_0_INTERVAL: 5m
+              DN_LIDARR_0_TIMEOUT: 5s
             # Prowlarr Configuration
               DN_PROWLARR_0_NAME: "Prowlarr"
               DN_PROWLARR_0_URL: http://prowlarr.media.svc.cluster.local
+              DN_PROWLARR_0_INTERVAL: 5m
+              DN_PROWLARR_0_TIMEOUT: 5s
             # Radarr Configuration
               DN_RADARR_0_NAME: "Radarr"
               DN_RADARR_0_URL: http://radarr.media.svc.cluster.local
+              DN_RADARR_0_INTERVAL: 5m
+              DN_RADARR_0_TIMEOUT: 5s
               DN_RADARR_1_NAME: "Radarr-Anime"
               DN_RADARR_1_URL: http://radarr-anime.media.svc.cluster.local
+              DN_RADARR_1_INTERVAL: 5m
+              DN_RADARR_1_TIMEOUT: 5s
               DN_RADARR_2_NAME: "Radarr-4k"
               DN_RADARR_2_URL: http://radarr-4k.media.svc.cluster.local
+              DN_RADARR_2_INTERVAL: 5m
+              DN_RADARR_2_TIMEOUT: 5s
             # Readarr Configuration
               DN_READARR_0_NAME: "Readarr"
               DN_READARR_0_URL: http://readarr.media.svc.cluster.local
+              DN_READARR_0_INTERVAL: 5m
+              DN_READARR_0_TIMEOUT: 5s
             # Sonarr Configuration
               DN_SONARR_0_NAME: "Sonarr"
               DN_SONARR_0_URL: http://sonarr.media.svc.cluster.local
+              DN_SONARR_0_INTERVAL: 5m
+              DN_SONARR_0_TIMEOUT: 5s
               DN_SONARR_1_NAME: "Sonarr-Anime"
               DN_SONARR_1_URL: http://sonarr-anime.media.svc.cluster.local
+              DN_SONARR_1_INTERVAL: 5m
+              DN_SONARR_1_TIMEOUT: 5s
             # qBittorrent Configuration
               DN_QBIT_0_NAME: "qBittorrent"
               DN_QBIT_0_URL: http://qbittorrent.torrents.svc.cluster.local
+              DN_QBIT_0_INTERVAL: 5m
+              DN_QBIT_0_TIMEOUT: 5s
             # SABnzbd Configuration
               DN_SABNZBD_0_NAME: "SABnzbd"
               DN_SABNZBD_0_URL: http://sabnzbd.media.svc.cluster.local
+              DN_SABNZBD_0_INTERVAL: 5m
+              DN_SABNZBD_0_TIMEOUT: 5s
             # Plex Configuration
               DN_PLEX_URL: http://plex.media.svc.cluster.local:32400
+              DN_PLEX_INTERVAL: 5m
+              DN_PLEX_TIMEOUT: 5s
             # Tautulli Configuration
               DN_TAUTULLI_NAME: "Tautulli"
               DN_TAUTULLI_URL: http://tautulli.media.svc.cluster.local:8181
+              DN_TAUTULLI_INTERVAL: 5m
+              DN_TAUTULLI_TIMEOUT: 5s
             envFrom:
               - secretRef:
                   name: notifiarr-secret
