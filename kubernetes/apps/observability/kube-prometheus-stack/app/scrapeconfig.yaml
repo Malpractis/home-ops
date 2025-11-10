@@ -8,7 +8,6 @@ spec:
   staticConfigs:
     - targets:
         - nas.internal:9100
-        # - pikvm.internal:9100
   metricsPath: /metrics
   relabelings:
     - action: replace
@@ -44,5 +43,6 @@ spec:
     - action: replace
       targetLabel: job
       replacement: pikvm
+  scheme: HTTPS
   tlsConfig:
     insecureSkipVerify: true
