@@ -8,5 +8,5 @@ components:
 replacements:
   - path: ../../components/replacements/ks.yaml
 resources:
-  # - ./cnpg/ks.yaml
+  - ./cnpg/ks.yaml
   - ./dragonfly/ks.yaml
