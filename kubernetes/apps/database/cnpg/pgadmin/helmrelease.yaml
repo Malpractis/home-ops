@@ -101,7 +101,7 @@ spec:
           - path: /var/lib/pgadmin
       oauth:
         type: secret
-        name: *app
+        name: pgadmin-secret
         globalMounts:
           - path: /pgadmin4/config_local.py
             subPath: config_local.py
