@@ -56,12 +56,12 @@ spec:
               PGADMIN_DEFAULT_EMAIL:
                 valueFrom:
                   secretKeyRef:
-                    name: *app
+                    name: pgadmin-secret
                     key: PGADMIN_DEFAULT_EMAIL
               PGADMIN_DEFAULT_PASSWORD:
                 valueFrom:
                   secretKeyRef:
-                    name: *app
+                    name: pgadmin-secret
                     key: PGADMIN_DEFAULT_PASSWORD
             probes:
               liveness: &probes
