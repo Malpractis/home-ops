@@ -8,6 +8,8 @@ spec:
   hostnames:
     - auth.${SECRET_DOMAIN}
   parentRefs:
+    - name: envoy-internal
+      namespace: network
     - name: envoy-external
       namespace: network
   rules:
