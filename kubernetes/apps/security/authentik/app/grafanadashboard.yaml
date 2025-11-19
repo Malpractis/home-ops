@@ -7,12 +7,8 @@ spec:
   allowCrossNamespaceImport: true
   instanceSelector:
     matchLabels:
-      grafana.home.arpa/instance: grafana
-  grafanaCom:
-    id: 14837
+      grafana.internal/instance: grafana
   datasources:
     - datasourceName: prometheus
       inputName: DS_PROMETHEUS
-  configMapRef:
-    name: authentik-grafana-dashboard
-    key: authentik.json
+  url: https://grafana.com/api/dashboards/14837/revisions/2/download
