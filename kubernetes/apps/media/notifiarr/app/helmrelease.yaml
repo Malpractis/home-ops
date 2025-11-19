@@ -21,7 +21,7 @@ spec:
               repository: ghcr.io/notifiarr/notifiarr
               tag: v0.9.1@sha256:10c9d20bc359f61d610461c11fb3b719cee75b7d4a0d8a3e5b3d00b9a31c48dd
             env:
-              DN_UPSTREAMS_0: "[10.42.0.0/16,10.43.0.0/16,192.168.20.0/24]"
+              DN_UPSTREAMS_0: "[10.42.0.0/16,10.43.0.0/16,192.168.0.0/16]"
               TMPDIR: /tmp
               DN_LOG_FILE: "/config/logs/notifiarr.log"
               DN_HTTP_LOG: "/config/logs/http.log"
