@@ -27,6 +27,11 @@ spec:
         - secretRef:
             name: *secret
       env:
+        # Use the right source IP
+        # TODO netpol to limit traffic to gateway pods
+        - name: AUTHENTIK_LISTEN__TRUSTED_PROXY_CIDRS
+          value: 10.42.0.0/16
+        # PostgreSQL SSL settings
         - name: AUTHENTIK_POSTGRESQL__SSLMODE
           value: verify-full
         - name: AUTHENTIK_POSTGRESQL__SSLROOTCERT
@@ -35,6 +40,23 @@ spec:
           value: /var/run/secrets/postgresql/tls.crt
         - name: AUTHENTIK_POSTGRESQL__SSLKEY
           value: /var/run/secrets/postgresql/tls.key
+        # Media file storage
+        - name: AUTHENTIK_STORAGE__MEDIA__BACKEND
+          value: s3
+        - name: AUTHENTIK_STORAGE__MEDIA__S3__USE_SSL
+          value: "true"
+        - name: AUTHENTIK_STORAGE__MEDIA__S3__SECURE_URLS
+          value: "true"
+        - name: AUTHENTIK_STORAGE__MEDIA__S3__ENDPOINT
+          value: https://$(B2_ENDPOINT)
+        - name: AUTHENTIK_STORAGE__MEDIA__S3__ACCESS_KEY
+          value: $(AWS_ACCESS_KEY_ID)
+        - name: AUTHENTIK_STORAGE__MEDIA__S3__SECRET_KEY
+          value: $(AWS_SECRET_ACCESS_KEY)
+        - name: AUTHENTIK_STORAGE__MEDIA__S3__BUCKET_NAME
+          value: $(AUTHENTIK_MEDIA_BUCKET_NAME)
+        - name: AUTHENTIK_STORAGE__MEDIA__S3__CUSTOM_DOMAIN
+          value: $(AUTHENTIK_MEDIA_S3_CUSTOM_DOMAIN)
       volumeMounts:
         - name: postgres-certs
           mountPath: /var/run/secrets/postgresql
@@ -80,23 +102,29 @@ spec:
           cpu: 300m
         limits:
           memory: 1Gi
+    geoip:
+      enabled: false
+      existingSecret:
+        secretName: *secret
+        accountId: "AUTHENTIK_GEOIP_ACCOUNT_ID"
+        licenseKey: "AUTHENTIK_GEOIP_LICENSE_KEY"
     prometheus:
       rules:
         enabled: true
   valuesFrom:
     - targetPath: authentik.email.host
       kind: Secret
-      name: authentik-secret
+      name: *secret
       valuesKey: EMAIL_SERVER
     - targetPath: authentik.email.username
       kind: Secret
-      name: authentik-secret
+      name: *secret
       valuesKey: EMAIL_USER
     - targetPath: authentik.email.from
       kind: Secret
-      name: authentik-secret
+      name: *secret
       valuesKey: EMAIL_FROM
     - targetPath: authentik.email.password
       kind: Secret
-      name: authentik-secret
+      name: *secret
       valuesKey: EMAIL_PASS
