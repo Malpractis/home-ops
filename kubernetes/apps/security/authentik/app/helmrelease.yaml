@@ -23,9 +23,6 @@ spec:
         runAsUser: 1000
         runAsGroup: 1000
         fsGroup: 1000
-      envFrom:
-        - secretRef:
-            name: *secret
       env:
         # Use the right source IP
         # TODO netpol to limit traffic to gateway pods
@@ -47,10 +44,9 @@ spec:
           value: "true"
         - name: AUTHENTIK_STORAGE__MEDIA__S3__SECURE_URLS
           value: "true"
-        - name: AUTHENTIK_STORAGE__MEDIA__S3__ENDPOINT
-          value: https://${B2_ENDPOINT}
-        - name: AUTHENTIK_STORAGE__MEDIA__S3__CUSTOM_DOMAIN
-          value: ${B2_ENDPOINT}/${AUTHENTIK_MEDIA_BUCKET_NAME}
+      envFrom:
+        - secretRef:
+            name: *secret
       volumeMounts:
         - name: postgres-certs
           mountPath: /var/run/secrets/postgresql
