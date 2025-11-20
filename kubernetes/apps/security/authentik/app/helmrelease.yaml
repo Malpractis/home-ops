@@ -49,6 +49,8 @@ spec:
           value: "true"
         - name: AUTHENTIK_STORAGE__MEDIA__S3__ENDPOINT
           value: https://$(B2_ENDPOINT)
+        - name: AUTHENTIK_STORAGE__MEDIA__S3__REGION
+          value: $(AUTHENTIK_STORAGE_MEDIA_S3_REGION)
         - name: AUTHENTIK_STORAGE__MEDIA__S3__ACCESS_KEY
           value: $(AWS_ACCESS_KEY_ID)
         - name: AUTHENTIK_STORAGE__MEDIA__S3__SECRET_KEY
