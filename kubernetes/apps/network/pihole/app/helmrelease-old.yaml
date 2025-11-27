@@ -17,7 +17,7 @@ spec:
   values:
     image:
       repository: "docker.io/pihole/pihole"
-      tag: "2025.11.0"
+      tag: "2025.11.1"
       pullPolicy: IfNotPresent
     replicaCount: 1
     revisionHistoryLimit: 2
