@@ -30,9 +30,16 @@ nodes:
     talosImageURL: factory.talos.dev/installer/eb42ac300ab39b1ff84e3e99ab6ebbffc77673845eaae7b97940544a20f5b1f0
     controlPlane: true
     networkInterfaces:
-      - deviceSelector:
-          hardwareAddr: "bc:24:11:a7:7e:af"
-          physical: true
+      - interface: bond0
+        bond:
+          mode: active-backup
+          xmitHashPolicy: layer3+4
+          miimon: 100
+          updelay: 200
+          downdelay: 200
+          deviceSelectors:
+            - hardwareAddr: "bc:24:11:a7:7e:af"
+              physical: true
         dhcp: false
         addresses:
           - "192.168.20.10/24"
