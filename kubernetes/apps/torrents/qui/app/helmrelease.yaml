@@ -19,7 +19,7 @@ spec:
             nameOverride: *app
             image:
               repository: ghcr.io/autobrr/qui
-              tag: main@sha256:358662b085ec59fe6dce4f1ff88b59e7f406b94f7ddc319a5cd47e2a4c13e96d
+              tag: main@sha256:4efc1767dd2e603d1476d6cc45439646b7cc023fa489fefe2f015c3055197a48
             env:
               QUI__HOST: 0.0.0.0
               QUI__PORT: &port 80
