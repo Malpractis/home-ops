@@ -25,7 +25,7 @@ spec:
             nameOverride: *app
             image:
               repository: ghcr.io/recyclarr/recyclarr
-              tag: 7.5.2@sha256:a83c84a5de04889b416dafd8cebae5f084f9c75a250b59b89581f3ab530fd0bf
+              tag: 7.5.2@sha256:2550848d43a453f2c6adf3582f2198ac719f76670691d76de0819053103ef2fb
             envFrom:
               - secretRef:
                   name: recyclarr-secret
