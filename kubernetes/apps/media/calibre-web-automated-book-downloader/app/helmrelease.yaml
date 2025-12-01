@@ -22,8 +22,8 @@ spec:
               tag: 20250815@sha256:6b25a35de28e31e91f13a86d1be227ef9eb61c034c4d7edf27f09c5c07ab29c0
             env:
               FLASK_PORT: &port 8084
-              UID: 568
-              GID: 568
+              UID: 1000
+              GID: 1000
               BOOK_LANGUAGE: en
               CUSTOM_DNS: cloudflare
               USE_DOH: true

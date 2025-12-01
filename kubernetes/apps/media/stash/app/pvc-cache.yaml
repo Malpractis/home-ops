@@ -35,7 +35,7 @@ spec:
     moverSecurityContext:
       runAsUser: 0
       runAsGroup: 0
-      fsGroup: 568
+      fsGroup: 1000
     enableFileDeletion: true
     # True for Rook-Ceph, false for Longhorn
     cleanupCachePVC: false
@@ -65,7 +65,7 @@ spec:
     moverSecurityContext:
       runAsUser: 0
       runAsGroup: 0
-      fsGroup: 568
+      fsGroup: 1000
     pruneIntervalDays: 7
     retain:
       daily: 7
