@@ -73,7 +73,7 @@ spec:
     route:
       app:
         hostnames:
-          - 'sabznbd.${SECRET_DOMAIN}'
+          - 'sabnzbd.${SECRET_DOMAIN}'
         parentRefs:
           - name: envoy-internal
             namespace: network
