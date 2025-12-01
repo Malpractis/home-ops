@@ -73,7 +73,7 @@ spec:
             namespace: network
     persistence:
       config:
-        existingClaim: "{{ .Release.Name }}"
+        existingClaim: "{{ .Release.Name }}-config"
         globalMounts:
           - path: /app/config
       tmp:
