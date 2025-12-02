@@ -45,12 +45,12 @@ spec:
               DN_RADARR_0_URL: http://radarr.media.svc.cluster.local
               DN_RADARR_0_INTERVAL: 5m
               DN_RADARR_0_TIMEOUT: 15s
-              DN_RADARR_1_NAME: "Radarr-Anime"
-              DN_RADARR_1_URL: http://radarr-anime.media.svc.cluster.local
+              DN_RADARR_1_NAME: "Radarr-4k"
+              DN_RADARR_1_URL: http://radarr-4k.media.svc.cluster.local
               DN_RADARR_1_INTERVAL: 5m
               DN_RADARR_1_TIMEOUT: 15s
-              DN_RADARR_2_NAME: "Radarr-4k"
-              DN_RADARR_2_URL: http://radarr-4k.media.svc.cluster.local
+              DN_RADARR_2_NAME: "Radarr-Anime"
+              DN_RADARR_2_URL: http://radarr-anime.media.svc.cluster.local
               DN_RADARR_2_INTERVAL: 5m
               DN_RADARR_2_TIMEOUT: 15s
             # Readarr Configuration
