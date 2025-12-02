@@ -17,5 +17,5 @@ resources:
   - ./overseerr/ks.yaml
   - ./plex/ks.yaml
   - ./sabnzbd/ks.yaml
-  - ./seerr/ks.yaml
+  # - ./seerr/ks.yaml
   - ./stash/ks.yaml
