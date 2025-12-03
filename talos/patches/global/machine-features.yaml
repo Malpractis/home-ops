@@ -6,8 +6,8 @@ machine:
       allowedKubernetesNamespaces: ['actions-runner-system', 'system-upgrade']
     hostDNS:
       enabled: true
+      forwardKubeDNSToHost: true # Requires Cilium socketLB features
       resolveMemberNames: true
-      forwardKubeDNSToHost: false
     kubePrism:
       enabled: true
       port: 7445
