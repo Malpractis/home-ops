@@ -92,4 +92,3 @@ spec:
       port: 6443
       protocol: TCP
       targetPort: 6443
-
