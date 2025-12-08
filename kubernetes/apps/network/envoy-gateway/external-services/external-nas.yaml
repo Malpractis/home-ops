@@ -22,6 +22,8 @@ metadata:
 spec:
   parentRefs:
     - name: envoy-internal
+      namespace: network
+      sectionName: https
   hostnames:
     - nas.${SECRET_DOMAIN}
   rules:
