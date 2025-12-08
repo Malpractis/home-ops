@@ -9,7 +9,7 @@ spec:
   endpoints:
     - fqdn:
         hostname: pi-1.internal
-        port: 443
+        port: 80
   tls:
     insecureSkipVerify: true
 ---
@@ -46,4 +46,4 @@ spec:
         - group: gateway.envoyproxy.io
           kind: Backend
           name: pi-1
-          port: 443
+          port: 80
