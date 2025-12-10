@@ -49,7 +49,7 @@ releases:
   - name: cert-manager
     namespace: security
     chart: oci://quay.io/jetstack/charts/cert-manager
-    version: v1.19.1
+    version: v1.19.2
     values: *template
     hooks:
       - # Apply cluster secret store configuration
