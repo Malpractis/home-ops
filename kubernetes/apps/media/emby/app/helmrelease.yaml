@@ -41,7 +41,7 @@ spec:
     defaultPodOptions:
       resourceClaims:
         - name: gpu
-          resourceClaimName: shared-intel-gpu
+          resourceClaimName: shared-intel-igpu
       terminationGracePeriodSeconds: 300
       securityContext:
         runAsNonRoot: false
