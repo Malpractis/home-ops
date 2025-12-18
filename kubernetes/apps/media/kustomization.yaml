@@ -19,4 +19,3 @@ resources:
   - ./sabnzbd/ks.yaml
   - ./seerr/ks.yaml
   - ./stash/ks.yaml
-  - ./resourceclaim.yaml
