@@ -58,7 +58,7 @@ spec:
     defaultPodOptions:
       resourceClaims:
         - name: gpu
-          resourceClaimTemplateName: plex
+          resourceClaimName: shared-intel-gpu
       terminationGracePeriodSeconds: 300
       securityContext:
         runAsNonRoot: true

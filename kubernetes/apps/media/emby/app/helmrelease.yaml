@@ -41,7 +41,7 @@ spec:
     defaultPodOptions:
       resourceClaims:
         - name: gpu
-          resourceClaimTemplateName: emby
+          resourceClaimName: shared-intel-gpu
       terminationGracePeriodSeconds: 300
       securityContext:
         runAsNonRoot: false

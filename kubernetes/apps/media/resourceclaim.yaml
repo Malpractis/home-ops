@@ -1,0 +1,10 @@
+apiVersion: resource.k8s.io/v1
+kind: ResourceClaim
+metadata:
+  name: shared-intel-igpu
+  namespace: media
+spec:
+  devices:
+    requests:
+      - name: gpu
+        deviceClassName: gpu.intel.com
