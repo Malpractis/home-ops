@@ -10,3 +10,4 @@ resources:
   - ./pvc-config.yaml
   - ./pvc-generated.yaml
   - ./pvc-metadata.yaml
+  - ./resourceclaimtemplate.yaml

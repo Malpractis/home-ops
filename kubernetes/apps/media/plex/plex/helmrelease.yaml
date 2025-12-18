@@ -48,13 +48,17 @@ spec:
               readOnlyRootFilesystem: true
               capabilities: { drop: ["ALL"] }
             resources:
+              claims:
+                - name: gpu
               requests:
                 cpu: 100m
               limits:
                 cpu: 4000m
                 memory: 8Gi
-                gpu.intel.com/i915: 1
     defaultPodOptions:
+      resourceClaims:
+        - name: gpu
+          resourceClaimTemplateName: plex
       terminationGracePeriodSeconds: 300
       securityContext:
         runAsNonRoot: true
@@ -75,7 +79,7 @@ spec:
     route:
       app:
         hostnames:
-          - 'plex.${SECRET_DOMAIN}'
+          - "plex.${SECRET_DOMAIN}"
         parentRefs:
           - name: envoy-external
             namespace: network

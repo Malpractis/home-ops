@@ -45,13 +45,17 @@ spec:
               readOnlyRootFilesystem: false
               capabilities: { drop: ["ALL"] }
             resources:
+              claims:
+                - name: gpu
               requests:
                 cpu: 100m
               limits:
                 cpu: 4000m
                 memory: 8Gi
-                gpu.intel.com/i915: 1
     defaultPodOptions:
+      resourceClaims:
+        - name: gpu
+          resourceClaimTemplateName: stash
       securityContext:
         runAsNonRoot: false
         runAsUser: 0
@@ -68,7 +72,7 @@ spec:
     route:
       app:
         hostnames:
-          - 'stash.${SECRET_DOMAIN}'
+          - "stash.${SECRET_DOMAIN}"
         parentRefs:
           - name: envoy-internal
             namespace: network

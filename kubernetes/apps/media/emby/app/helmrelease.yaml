@@ -31,13 +31,17 @@ spec:
               allowPrivilegeEscalation: false
               readOnlyRootFilesystem: false
             resources:
+              claims:
+                - name: gpu
               requests:
                 cpu: 100m
               limits:
                 cpu: 4000m
                 memory: 8Gi
-                gpu.intel.com/i915: 1
     defaultPodOptions:
+      resourceClaims:
+        - name: gpu
+          resourceClaimTemplateName: emby
       terminationGracePeriodSeconds: 300
       securityContext:
         runAsNonRoot: false
@@ -62,7 +66,7 @@ spec:
     route:
       app:
         hostnames:
-          - 'emby.${SECRET_DOMAIN}'
+          - "emby.${SECRET_DOMAIN}"
         parentRefs:
           - name: envoy-internal
             namespace: network
