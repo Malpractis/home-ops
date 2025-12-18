@@ -9,6 +9,5 @@ replacements:
   - path: ../../components/replacements/ks.yaml
 resources:
   - ./descheduler/ks.yaml
-  - ./intel-gpu-resource-driver/ks.yaml
   - ./reloader/ks.yaml
   - ./spegel/ks.yaml
