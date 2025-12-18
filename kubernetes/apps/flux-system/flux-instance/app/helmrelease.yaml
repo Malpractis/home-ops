@@ -15,6 +15,9 @@ spec:
         version: 2.x
       cluster:
         networkPolicy: false
+      web:
+        networkPolicy:
+          create: false
       components:
         - source-controller
         - kustomize-controller
