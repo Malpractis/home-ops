@@ -29,7 +29,7 @@ spec:
     #   auth_url: https://sso.${SECRET_DOMAIN}/application/o/authorize/
     #   token_url: https://sso.${SECRET_DOMAIN}/application/o/token/
     #   api_url: https://sso.${SECRET_DOMAIN}/application/o/userinfo/
-      # Optionally map user groups to Grafana roles
+    # Optionally map user groups to Grafana roles
     #   role_attribute_path: contains(groups[*], 'Grafana Admins') && 'Admin' || contains(groups[*], 'Grafana Editors') && 'Editor' || 'Viewer'
     log:
       mode: console
@@ -71,7 +71,7 @@ spec:
               securityContext:
                 allowPrivilegeEscalation: false
                 readOnlyRootFilesystem: true
-                capabilities: {drop: ["ALL"]}
+                capabilities: { drop: ["ALL"] }
           securityContext:
             runAsNonRoot: true
             runAsUser: 1000
@@ -82,6 +82,13 @@ spec:
             - name: grafana-data
               persistentVolumeClaim:
                 claimName: grafana-pvc
+  httpRoute:
+    spec:
+      parentRefs:
+        - name: envoy-internal
+          namespace: network
+      hostnames:
+        - grafana.${SECRET_DOMAIN}
   persistentVolumeClaim:
     spec:
       accessModes:
