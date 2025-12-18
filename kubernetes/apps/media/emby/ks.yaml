@@ -23,7 +23,7 @@ spec:
   timeout: 5m
   wait: true
   dependsOn:
-    - name: intel-device-plugin-gpu
+    - name: intel-gpu-resource-driver
       namespace: system
     - name: storage-ready
       namespace: flux-system
