@@ -24,7 +24,7 @@ spec:
   wait: true
   dependsOn:
     - name: intel-gpu-resource-driver
-      namespace: system
+      namespace: kube-system
     - name: storage-ready
       namespace: flux-system
   postBuild:
