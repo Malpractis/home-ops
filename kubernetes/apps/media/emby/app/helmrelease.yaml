@@ -31,17 +31,13 @@ spec:
               allowPrivilegeEscalation: false
               readOnlyRootFilesystem: false
             resources:
-              claims:
-                - name: gpu
               requests:
                 cpu: 100m
               limits:
                 cpu: 4000m
                 memory: 8Gi
+                gpu.intel.com/i915: 1
     defaultPodOptions:
-      resourceClaims:
-        - name: gpu
-          resourceClaimName: shared-intel-igpu
       terminationGracePeriodSeconds: 300
       securityContext:
         runAsNonRoot: false

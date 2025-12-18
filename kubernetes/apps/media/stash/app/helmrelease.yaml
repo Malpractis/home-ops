@@ -45,17 +45,13 @@ spec:
               readOnlyRootFilesystem: false
               capabilities: { drop: ["ALL"] }
             resources:
-              claims:
-                - name: gpu
               requests:
                 cpu: 100m
               limits:
                 cpu: 4000m
                 memory: 8Gi
+                gpu.intel.com/i915: 1
     defaultPodOptions:
-      resourceClaims:
-        - name: gpu
-          resourceClaimName: shared-intel-igpu
       securityContext:
         runAsNonRoot: false
         runAsUser: 0

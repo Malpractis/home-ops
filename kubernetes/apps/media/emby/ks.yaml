@@ -23,8 +23,8 @@ spec:
   timeout: 5m
   wait: true
   dependsOn:
-    - name: intel-gpu-resource-driver
-      namespace: kube-system
+    - name: intel-device-plugin-gpu
+      namespace: system
     - name: storage-ready
       namespace: flux-system
   postBuild:
