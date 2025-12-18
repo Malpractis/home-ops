@@ -10,6 +10,11 @@ spec:
     name: intel-gpu-resource-driver
   interval: 1h
   values:
+    containerSecurityContext:
+      privileged: true
+      readOnlyRootFilesystem: false
     cdi:
       staticPath: /var/cdi/static
       dynamicPath: /var/cdi/dynamic
+    nodeSelector:
+      intel.feature.node.kubernetes.io/gpu: "true"
