@@ -13,19 +13,19 @@ spec:
     requests:
       storage: "${PVC_CAPACITY:=10Gi}"
   storageClassName: "${PVC_STORAGECLASS:=longhorn}"
----
-apiVersion: v1
-kind: PersistentVolumeClaim
-metadata:
-  name: ${APP}
-spec:
-  accessModes:
-    - ${VOLSYNC_ACCESSMODES:=ReadWriteOnce}
-  dataSourceRef:
-    kind: ReplicationDestination
-    apiGroup: volsync.backube
-    name: ${APP}-dst
-  resources:
-    requests:
-      storage: ${VOLSYNC_CAPACITY:=5Gi}
-  storageClassName: ${VOLSYNC_STORAGECLASS:=ceph-block}
+# ---
+# apiVersion: v1
+# kind: PersistentVolumeClaim
+# metadata:
+#   name: ${APP}
+# spec:
+#   accessModes:
+#     - ${VOLSYNC_ACCESSMODES:=ReadWriteOnce}
+#   dataSourceRef:
+#     kind: ReplicationDestination
+#     apiGroup: volsync.backube
+#     name: ${APP}-dst
+#   resources:
+#     requests:
+#       storage: ${VOLSYNC_CAPACITY:=5Gi}
+#   storageClassName: ${VOLSYNC_STORAGECLASS:=ceph-block}
