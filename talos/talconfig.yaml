@@ -64,7 +64,7 @@ nodes:
             - siderolabs/util-linux-tools
             - siderolabs/intel-ucode
             - siderolabs/qemu-guest-agent
-            - siderolabs/nfsrahead        # NFS Performance
+            - siderolabs/nfsrahead # NFS Performance
     patches:
       - "@./patches/manifests/machine-uservolumes.yaml"
   - hostname: "matalos-c2"
@@ -113,12 +113,14 @@ nodes:
           officialExtensions:
             - siderolabs/iscsi-tools
             - siderolabs/util-linux-tools
-            - siderolabs/intel-ucode      # Intel iGPU
-            - siderolabs/i915             # Intel iGPU
-            - siderolabs/mei              # Intel iGPU
-            - siderolabs/nfsrahead        # NFS Performance
+            - siderolabs/intel-ucode # Intel iGPU
+            - siderolabs/i915 # Intel iGPU
+            - siderolabs/mei # Intel iGPU
+            - siderolabs/nfsrahead # NFS Performance
     patches:
       - "@./patches/manifests/machine-systemvolumes.yaml"
+    nodeLabels:
+      networking.home.arpa/vpn-capable: "true"
   - hostname: "matalos-c3"
     ipAddress: "192.168.20.12"
     installDiskSelector:
@@ -165,12 +167,14 @@ nodes:
           officialExtensions:
             - siderolabs/iscsi-tools
             - siderolabs/util-linux-tools
-            - siderolabs/intel-ucode      # Intel iGPU
-            - siderolabs/i915             # Intel iGPU
-            - siderolabs/mei              # Intel iGPU
-            - siderolabs/nfsrahead        # NFS Performance
+            - siderolabs/intel-ucode # Intel iGPU
+            - siderolabs/i915 # Intel iGPU
+            - siderolabs/mei # Intel iGPU
+            - siderolabs/nfsrahead # NFS Performance
     patches:
       - "@./patches/manifests/machine-systemvolumes.yaml"
+    nodeLabels:
+      networking.home.arpa/vpn-capable: "true"
 
 # Global patches
 patches:
