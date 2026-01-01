@@ -28,6 +28,7 @@ spec:
         url: "https://github.com/Malpractis/home-ops.git"
         ref: "refs/heads/main"
         path: kubernetes/flux/cluster
+        interval: 1h
       commonMetadata:
         labels:
           app.kubernetes.io/name: flux
