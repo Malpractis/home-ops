@@ -22,8 +22,8 @@ spec:
   prune: true
   timeout: 5m
   dependsOn:
-    - name: storage-ready
-      namespace: flux-system
+    - name: rook-ceph-cluster
+      namespace: rook-ceph
   postBuild:
     substitute:
       APP: *app
@@ -56,8 +56,8 @@ spec:
   prune: true
   timeout: 5m
   dependsOn:
-    - name: storage-ready
-      namespace: flux-system
+    - name: rook-ceph-cluster
+      namespace: rook-ceph
   postBuild:
     substitute:
       APP: *app
@@ -92,8 +92,8 @@ spec:
   dependsOn:
     - name: external-secrets-store
       namespace: security
-    - name: storage-ready
-      namespace: flux-system
+    - name: rook-ceph-cluster
+      namespace: rook-ceph
   postBuild:
     substitute:
       APP: *app
@@ -128,8 +128,8 @@ spec:
   dependsOn:
     - name: external-secrets-store
       namespace: security
-    - name: storage-ready
-      namespace: flux-system
+    - name: rook-ceph-cluster
+      namespace: rook-ceph
   postBuild:
     substitute:
       APP: *app
@@ -164,8 +164,8 @@ spec:
   dependsOn:
     - name: external-secrets-store
       namespace: security
-    - name: storage-ready
-      namespace: flux-system
+    - name: rook-ceph-cluster
+      namespace: rook-ceph
   postBuild:
     substitute:
       APP: *app
@@ -200,8 +200,8 @@ spec:
   dependsOn:
     - name: external-secrets-store
       namespace: security
-    - name: storage-ready
-      namespace: flux-system
+    - name: rook-ceph-cluster
+      namespace: rook-ceph
   postBuild:
     substitute:
       APP: *app
@@ -236,8 +236,8 @@ spec:
   dependsOn:
     - name: external-secrets-store
       namespace: security
-    - name: storage-ready
-      namespace: flux-system
+    - name: rook-ceph-cluster
+      namespace: rook-ceph
     - name: calibre-web-automated
       namespace: media
   postBuild:
@@ -274,8 +274,8 @@ spec:
   dependsOn:
     - name: external-secrets-store
       namespace: security
-    - name: storage-ready
-      namespace: flux-system
+    - name: rook-ceph-cluster
+      namespace: rook-ceph
   postBuild:
     substitute:
       APP: *app
@@ -310,8 +310,8 @@ spec:
   dependsOn:
     - name: external-secrets-store
       namespace: security
-    - name: storage-ready
-      namespace: flux-system
+    - name: rook-ceph-cluster
+      namespace: rook-ceph
   postBuild:
     substitute:
       APP: *app
@@ -346,8 +346,8 @@ spec:
   dependsOn:
     - name: external-secrets-store
       namespace: security
-    - name: storage-ready
-      namespace: flux-system
+    - name: rook-ceph-cluster
+      namespace: rook-ceph
   postBuild:
     substitute:
       APP: *app
@@ -382,8 +382,8 @@ spec:
   dependsOn:
     - name: external-secrets-store
       namespace: security
-    - name: storage-ready
-      namespace: flux-system
+    - name: rook-ceph-cluster
+      namespace: rook-ceph
   postBuild:
     substitute:
       APP: *app

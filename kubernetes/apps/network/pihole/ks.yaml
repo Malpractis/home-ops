@@ -21,8 +21,8 @@ spec:
   prune: true
   wait: true
   dependsOn:
-    - name: storage-ready
-      namespace: flux-system
+    - name: rook-ceph-cluster
+      namespace: rook-ceph
   postBuild:
     substitute:
       APP: *app

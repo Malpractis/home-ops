@@ -21,8 +21,8 @@ spec:
   dependsOn:
     - name: external-secrets-store
       namespace: security
-    - name: storage-ready
-      namespace: flux-system
+    - name: rook-ceph-cluster
+      namespace: rook-ceph
   postBuild:
     substitute:
       APP: *app

@@ -12,8 +12,8 @@
   dependsOn:
     - name: cnpg-crds
       namespace: *namespace
-    - name: storage-ready
-      namespace: flux-system
+    - name: rook-ceph-cluster
+      namespace: rook-ceph
   postBuild:
     substitute:
       APP: *app # required
