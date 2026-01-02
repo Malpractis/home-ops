@@ -78,41 +78,21 @@ spec:
               - name: *app
                 port: *port
     persistence:
-      config:
-        enabled: true
-        existingClaim: stash-config
+      app-data:
+        existingClaim: stash
         advancedMounts:
           stash:
             app:
-              - path: "/root/.stash"
-      cache:
-        enabled: true
-        existingClaim: stash-cache
-        advancedMounts:
-          stash:
-            app:
-              - path: "/cache"
-      generated:
-        enabled: true
-        existingClaim: stash-generated
-        advancedMounts:
-          stash:
-            app:
-              - path: "/generated"
-      metadata:
-        enabled: true
-        existingClaim: stash-metadata
-        advancedMounts:
-          stash:
-            app:
-              - path: "/metadata"
-      blobs:
-        enabled: true
-        existingClaim: stash-blobs
-        advancedMounts:
-          stash:
-            app:
-              - path: "/blobs"
+              - path: /root/.stash
+                subPath: config
+              - path: /blobs
+                subPath: blobs
+              - path: /cache
+                subPath: cache
+              - path: /generated
+                subPath: generated
+              - path: /metadata
+                subPath: metadata
       data:
         type: nfs
         server: nas.internal
