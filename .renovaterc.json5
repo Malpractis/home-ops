@@ -13,37 +13,33 @@
     "github>Malpractis/home-ops//.renovate/overrides.json5",
     "github>Malpractis/home-ops//.renovate/semanticCommits.json5",
     ":automergeBranch",
-    ":dependencyDashboard",
     ":disableRateLimiting",
+    ":dependencyDashboard",
     ":semanticCommits",
     ":timezone(Australia/Melbourne)",
   ],
-  dependencyDashboard: true,
   dependencyDashboardTitle: "Renovate Dashboard 🤖",
-  ignorePaths: [
-    "**/*.sops.*",
-    "**/resources/**",
-  ],
   suppressNotifications: [
     "prEditedNotification",
     "prIgnoreNotification",
   ],
+  ignorePaths: [
+    "**/*.sops.*",
+    "**/resources/**",
+  ],
   flux: {
-    managerFilePatterns: ["/(^|/)kubernetes/.+\\.ya?ml(?:\\.j2)?$/"],
-  },
-  helmfile: {
     managerFilePatterns: [
-      "/(^|/)helmfile\\.ya?ml(?:\\.gotmpl)?(?:\\.j2)?$/",
-      "/(^|/)helmfile\\.d/.+\\.ya?ml(?:\\.gotmpl)?(?:\\.j2)?$/",
+      "/\\.yaml(?:\\.j2)?$/"
     ],
   },
   "helm-values": {
-    managerFilePatterns: ["/\\.yaml(?:\\.j2)?$/"],
+    managerFilePatterns: [
+      "/\\.yaml(?:\\.j2)?$/"
+    ],
   },
   kubernetes: {
-    managerFilePatterns: ["/(^|/)kubernetes/.+\\.ya?ml(?:\\.j2)?$/"],
-  },
-  kustomize: {
-    managerFilePatterns: ["/^kustomization\\.ya?ml(?:\\.j2)?$/"],
+    managerFilePatterns: [
+      "/\\.yaml(?:\\.j2)?$/"
+    ],
   },
 }
