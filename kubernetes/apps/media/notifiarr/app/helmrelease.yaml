@@ -30,17 +30,17 @@ spec:
               DN_LOG_FILES: "5"
               DN_FILE_MODE: "0600"
               DN_TIMEOUT: "60s"
-            # Lidarr Configuration
+              # Lidarr Configuration
               DN_LIDARR_0_NAME: "Lidarr"
               DN_LIDARR_0_URL: http://lidarr.media.svc.cluster.local
               DN_LIDARR_0_INTERVAL: 5m
               DN_LIDARR_0_TIMEOUT: 15s
-            # Prowlarr Configuration
+              # Prowlarr Configuration
               DN_PROWLARR_0_NAME: "Prowlarr"
               DN_PROWLARR_0_URL: http://prowlarr.media.svc.cluster.local
               DN_PROWLARR_0_INTERVAL: 5m
               DN_PROWLARR_0_TIMEOUT: 15s
-            # Radarr Configuration
+              # Radarr Configuration
               DN_RADARR_0_NAME: "Radarr"
               DN_RADARR_0_URL: http://radarr.media.svc.cluster.local
               DN_RADARR_0_INTERVAL: 5m
@@ -53,12 +53,12 @@ spec:
               DN_RADARR_2_URL: http://radarr-anime.media.svc.cluster.local
               DN_RADARR_2_INTERVAL: 5m
               DN_RADARR_2_TIMEOUT: 15s
-            # Readarr Configuration
+              # Readarr Configuration
               DN_READARR_0_NAME: "Readarr"
               DN_READARR_0_URL: http://readarr.media.svc.cluster.local
               DN_READARR_0_INTERVAL: 5m
               DN_READARR_0_TIMEOUT: 15s
-            # Sonarr Configuration
+              # Sonarr Configuration
               DN_SONARR_0_NAME: "Sonarr"
               DN_SONARR_0_URL: http://sonarr.media.svc.cluster.local
               DN_SONARR_0_INTERVAL: 5m
@@ -67,21 +67,21 @@ spec:
               DN_SONARR_1_URL: http://sonarr-anime.media.svc.cluster.local
               DN_SONARR_1_INTERVAL: 5m
               DN_SONARR_1_TIMEOUT: 15s
-            # qBittorrent Configuration
+              # qBittorrent Configuration
               DN_QBIT_0_NAME: "qBittorrent"
               DN_QBIT_0_URL: http://qbittorrent.torrents.svc.cluster.local
               DN_QBIT_0_INTERVAL: 5m
               DN_QBIT_0_TIMEOUT: 60s
-            # SABnzbd Configuration
+              # SABnzbd Configuration
               DN_SABNZBD_0_NAME: "SABnzbd"
               DN_SABNZBD_0_URL: http://sabnzbd.media.svc.cluster.local
               DN_SABNZBD_0_INTERVAL: 5m
               DN_SABNZBD_0_TIMEOUT: 15s
-            # Plex Configuration
+              # Plex Configuration
               DN_PLEX_URL: http://plex.media.svc.cluster.local:32400
               DN_PLEX_INTERVAL: 5m
               DN_PLEX_TIMEOUT: 15s
-            # Tautulli Configuration
+              # Tautulli Configuration
               DN_TAUTULLI_NAME: "Tautulli"
               DN_TAUTULLI_URL: http://tautulli.media.svc.cluster.local:8181
               DN_TAUTULLI_INTERVAL: 5m
@@ -125,7 +125,7 @@ spec:
     route:
       app:
         hostnames:
-          - 'notifiarr.${SECRET_DOMAIN}'
+          - "notifiarr.${SECRET_DOMAIN}"
         parentRefs:
           - name: envoy-internal
             namespace: network
@@ -135,13 +135,9 @@ spec:
                 port: *port
     persistence:
       config:
-        type: persistentVolumeClaim
-        accessMode: ReadWriteOnce
-        size: 10Gi
-        storageClass: longhorn
+        existingClaim: "{{ .Release.Name }}"
         globalMounts:
           - path: /config
-            readOnly: false
       tmp:
         type: emptyDir
         medium: Memory
