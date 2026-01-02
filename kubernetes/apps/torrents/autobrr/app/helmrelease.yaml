@@ -46,7 +46,7 @@ spec:
             securityContext:
               allowPrivilegeEscalation: false
               readOnlyRootFilesystem: true
-              capabilities: {drop: ["ALL"]}
+              capabilities: { drop: ["ALL"] }
             resources:
               requests:
                 cpu: 10m
@@ -79,7 +79,7 @@ spec:
             namespace: network
     persistence:
       config:
-        existingClaim: "{{ .Release.Name }}-config"
+        existingClaim: "{{ .Release.Name }}"
       tmpfs:
         type: emptyDir
         advancedMounts:
