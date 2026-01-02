@@ -28,7 +28,7 @@ spec:
     substitute:
       APP: *app
       VOLSYNC_CAPACITY: 5Gi
-      VOLSYNC_SCHEDULE: ${BAZARR_CONFIG_VOLSYNC_SCHEDULE}
+      VOLSYNC_SCHEDULE: ${BAZARR_VOLSYNC_SCHEDULE}
 ---
 # yaml-language-server: $schema=https://kubernetes-schemas.pages.dev/kustomize.toolkit.fluxcd.io/kustomization_v1.json
 apiVersion: kustomize.toolkit.fluxcd.io/v1
@@ -59,7 +59,7 @@ spec:
     substitute:
       APP: *app
       VOLSYNC_CAPACITY: 5Gi
-      VOLSYNC_SCHEDULE: ${BAZARR_ANIME_CONFIG_VOLSYNC_SCHEDULE}
+      VOLSYNC_SCHEDULE: ${BAZARR_ANIME_VOLSYNC_SCHEDULE}
 ---
 # yaml-language-server: $schema=https://kubernetes-schemas.pages.dev/kustomize.toolkit.fluxcd.io/kustomization_v1.json
 apiVersion: kustomize.toolkit.fluxcd.io/v1
@@ -92,7 +92,7 @@ spec:
     substitute:
       APP: *app
       VOLSYNC_CAPACITY: 5Gi
-      VOLSYNC_SCHEDULE: ${LIDARR_CONFIG_VOLSYNC_SCHEDULE}
+      VOLSYNC_SCHEDULE: ${LIDARR_VOLSYNC_SCHEDULE}
 ---
 # yaml-language-server: $schema=https://kubernetes-schemas.pages.dev/kustomize.toolkit.fluxcd.io/kustomization_v1.json
 apiVersion: kustomize.toolkit.fluxcd.io/v1
@@ -125,7 +125,7 @@ spec:
     substitute:
       APP: *app
       VOLSYNC_CAPACITY: 5Gi
-      VOLSYNC_SCHEDULE: ${PROWLARR_CONFIG_VOLSYNC_SCHEDULE}
+      VOLSYNC_SCHEDULE: ${PROWLARR_VOLSYNC_SCHEDULE}
 ---
 # yaml-language-server: $schema=https://kubernetes-schemas.pages.dev/kustomize.toolkit.fluxcd.io/kustomization_v1.json
 apiVersion: kustomize.toolkit.fluxcd.io/v1
@@ -158,7 +158,7 @@ spec:
     substitute:
       APP: *app
       VOLSYNC_CAPACITY: 10Gi
-      VOLSYNC_SCHEDULE: ${RADARR_CONFIG_VOLSYNC_SCHEDULE}
+      VOLSYNC_SCHEDULE: ${RADARR_VOLSYNC_SCHEDULE}
 ---
 # yaml-language-server: $schema=https://kubernetes-schemas.pages.dev/kustomize.toolkit.fluxcd.io/kustomization_v1.json
 apiVersion: kustomize.toolkit.fluxcd.io/v1
@@ -191,7 +191,7 @@ spec:
     substitute:
       APP: *app
       VOLSYNC_CAPACITY: 5Gi
-      VOLSYNC_SCHEDULE: ${RADARR_ANIME_CONFIG_VOLSYNC_SCHEDULE}
+      VOLSYNC_SCHEDULE: ${RADARR_ANIME_VOLSYNC_SCHEDULE}
 ---
 # yaml-language-server: $schema=https://kubernetes-schemas.pages.dev/kustomize.toolkit.fluxcd.io/kustomization_v1.json
 apiVersion: kustomize.toolkit.fluxcd.io/v1
@@ -224,7 +224,7 @@ spec:
     substitute:
       APP: *app
       VOLSYNC_CAPACITY: 5Gi
-      VOLSYNC_SCHEDULE: ${RADARR_4K_CONFIG_VOLSYNC_SCHEDULE}
+      VOLSYNC_SCHEDULE: ${RADARR_4K_VOLSYNC_SCHEDULE}
 ---
 # yaml-language-server: $schema=https://kubernetes-schemas.pages.dev/kustomize.toolkit.fluxcd.io/kustomization_v1.json
 apiVersion: kustomize.toolkit.fluxcd.io/v1
@@ -259,7 +259,7 @@ spec:
     substitute:
       APP: *app
       VOLSYNC_CAPACITY: 5Gi
-      VOLSYNC_SCHEDULE: ${READARR_CONFIG_VOLSYNC_SCHEDULE}
+      VOLSYNC_SCHEDULE: ${READARR_VOLSYNC_SCHEDULE}
 ---
 # yaml-language-server: $schema=https://kubernetes-schemas.pages.dev/kustomize.toolkit.fluxcd.io/kustomization_v1.json
 apiVersion: kustomize.toolkit.fluxcd.io/v1
@@ -292,7 +292,7 @@ spec:
     substitute:
       APP: *app
       VOLSYNC_CAPACITY: 5Gi
-      VOLSYNC_SCHEDULE: ${RECYCLARR_CONFIG_VOLSYNC_SCHEDULE}
+      VOLSYNC_SCHEDULE: ${RECYCLARR_VOLSYNC_SCHEDULE}
 ---
 # yaml-language-server: $schema=https://kubernetes-schemas.pages.dev/kustomize.toolkit.fluxcd.io/kustomization_v1.json
 apiVersion: kustomize.toolkit.fluxcd.io/v1
@@ -325,7 +325,7 @@ spec:
     substitute:
       APP: *app
       VOLSYNC_CAPACITY: 10Gi
-      VOLSYNC_SCHEDULE: ${SONARR_CONFIG_VOLSYNC_SCHEDULE}
+      VOLSYNC_SCHEDULE: ${SONARR_VOLSYNC_SCHEDULE}
 ---
 # yaml-language-server: $schema=https://kubernetes-schemas.pages.dev/kustomize.toolkit.fluxcd.io/kustomization_v1.json
 apiVersion: kustomize.toolkit.fluxcd.io/v1
@@ -358,4 +358,4 @@ spec:
     substitute:
       APP: *app
       VOLSYNC_CAPACITY: 5Gi
-      VOLSYNC_SCHEDULE: ${SONARR_ANIME_CONFIG_VOLSYNC_SCHEDULE}
+      VOLSYNC_SCHEDULE: ${SONARR_ANIME_VOLSYNC_SCHEDULE}

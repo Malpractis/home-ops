@@ -31,7 +31,7 @@ spec:
     substitute:
       APP: *app
       VOLSYNC_CAPACITY: 50Gi
-      VOLSYNC_SCHEDULE: ${PLEX_CONFIG_VOLSYNC_SCHEDULE}
+      VOLSYNC_SCHEDULE: ${PLEX_VOLSYNC_SCHEDULE}
 ---
 # yaml-language-server: $schema=https://datreeio.github.io/CRDs-catalog/kustomize.toolkit.fluxcd.io/kustomization_v1.json
 apiVersion: kustomize.toolkit.fluxcd.io/v1
@@ -62,4 +62,4 @@ spec:
     substitute:
       APP: *app
       VOLSYNC_CAPACITY: 10Gi
-      VOLSYNC_SCHEDULE: ${TAUTULLI_CONFIG_VOLSYNC_SCHEDULE}
+      VOLSYNC_SCHEDULE: ${TAUTULLI_VOLSYNC_SCHEDULE}
