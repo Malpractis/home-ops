@@ -20,7 +20,7 @@
       CNPG_REPLICAS: '1 '# default
       CNPG_IMAGE: ghcr.io/cloudnative-pg/postgresql:17.6-standard-trixie@sha256:e185037ad4c926fece1d3cfd1ec99680a862d7d02b160354e263a04a2d46b5f5 # required
       CNPG_SIZE: 2Gi # default
-      CNPG_STORAGECLASS: longhorn # default
+      CNPG_STORAGECLASS: ceph-block # default
       CNPG_REQUESTS_CPU: 500m # default
       CNPG_LIMITS_MEMORY: 2Gi # default
       CNPG_MAX_CONNECTIONS: '600' # default

@@ -1,15 +1,6 @@
 ---
 apiVersion: v1alpha1
 kind: UserVolumeConfig
-name: longhorn-data
-provisioning:
-  diskSelector:
-    match: "!system_disk"
-  minSize: 800GiB
-  grow: true
----
-apiVersion: v1alpha1
-kind: UserVolumeConfig
 name: local-hostpath
 provisioning:
   diskSelector:

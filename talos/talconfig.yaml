@@ -23,11 +23,10 @@ nodes:
   - hostname: "matalos-c1"
     ipAddress: "192.168.20.10"
     installDiskSelector:
-      model: "QEMU*"
-      size: "<=100G"
+      model: "QEMU HARDDISK"
     machineSpec:
       secureboot: false
-    talosImageURL: factory.talos.dev/installer/eb42ac300ab39b1ff84e3e99ab6ebbffc77673845eaae7b97940544a20f5b1f0
+    talosImageURL: factory.talos.dev/installer/1470888f5d8755091c5d79199c1df242933a90d38c010d233ea3af5b4899982c
     controlPlane: true
     networkInterfaces:
       - interface: bond0
@@ -65,8 +64,6 @@ nodes:
             - siderolabs/intel-ucode
             - siderolabs/qemu-guest-agent
             - siderolabs/nfsrahead # NFS Performance
-    patches:
-      - "@./patches/manifests/machine-uservolumes.yaml"
   - hostname: "matalos-c2"
     ipAddress: "192.168.20.11"
     installDiskSelector:
@@ -75,7 +72,8 @@ nodes:
       secureboot: false
     # Additional kernel commands needed for bonding
     # kernelArgs: bond=bond0:enp3s0,enp4s0:mode=802.3ad,xmit_hash_policy=layer3+4:9000 talos.network.interface.ignore=eno1 ip=192.168.20.11::192.168.20.1:255.255.255.0::bond0
-    talosImageURL: factory.talos.dev/installer/3a9b4e0827232f357f3baa6c4a704929ab06d83d7572c3b7ed93701743b725d1
+    # kernelArge: -init_on_alloc -init_on_free -selinux apparmor=0 i915.enable_guc=3 init_on_alloc=0 init_on_free=0 intel_iommu=on iommu=pt mitigations=off security=none sysctl.kernel.kexec_load_disabled=1 talos.auditd.disabled=1
+    talosImageURL: factory.talos.dev/installer/a5d0c037d27754228c7ba3fe522b8d2fb6e4082ce5511af612568ad2c2c9a826
     controlPlane: true
     networkInterfaces:
       - interface: bond0
@@ -117,8 +115,6 @@ nodes:
             - siderolabs/i915 # Intel iGPU
             - siderolabs/mei # Intel iGPU
             - siderolabs/nfsrahead # NFS Performance
-    patches:
-      - "@./patches/manifests/machine-systemvolumes.yaml"
     nodeLabels:
       networking.home.arpa/vpn-capable: "true"
   - hostname: "matalos-c3"
@@ -129,7 +125,8 @@ nodes:
       secureboot: false
     # Additional kernel commands needed for bonding
     # kernelArgs: bond=bond0:enp3s0,enp4s0:mode=802.3ad,xmit_hash_policy=layer3+4:9000 talos.network.interface.ignore=eno1 ip=192.168.20.12::192.168.20.1:255.255.255.0::bond0
-    talosImageURL: factory.talos.dev/installer/b96735e7e75b5ec48d75ec858bd5e9f0ff48eaafd7d24efe75119b151d831118
+    # kernelArge: -init_on_alloc -init_on_free -selinux apparmor=0 i915.enable_guc=3 init_on_alloc=0 init_on_free=0 intel_iommu=on iommu=pt mitigations=off security=none sysctl.kernel.kexec_load_disabled=1 talos.auditd.disabled=1
+    talosImageURL: factory.talos.dev/installer/51842a7a5300aa9a4827649bad81916c5a6aac19f4752d6856f6515c66a782a9
     controlPlane: true
     networkInterfaces:
       - interface: bond0
@@ -171,8 +168,6 @@ nodes:
             - siderolabs/i915 # Intel iGPU
             - siderolabs/mei # Intel iGPU
             - siderolabs/nfsrahead # NFS Performance
-    patches:
-      - "@./patches/manifests/machine-systemvolumes.yaml"
     nodeLabels:
       networking.home.arpa/vpn-capable: "true"
 
@@ -181,10 +176,10 @@ patches:
   - "@./patches/global/machine-features.yaml"
   - "@./patches/global/machine-files.yaml"
   - "@./patches/global/machine-kubelet.yaml"
-  - "@./patches/global/machine-longhorn.yaml"
   - "@./patches/global/machine-network.yaml"
   - "@./patches/global/machine-sysctls.yaml"
   - "@./patches/global/machine-time.yaml"
+  - "@./patches/manifests/uservolumes.yaml"
   - "@./patches/manifests/watchdogtimerconfig.yaml"
 
 # Controller patches
