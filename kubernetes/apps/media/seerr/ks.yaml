@@ -27,7 +27,5 @@ spec:
   postBuild:
     substitute:
       APP: *app
-      PVC_NAME: config
-      PVC_CAPACITY: 10Gi
-      VOLSYNC_CAPACITY: 10Gi
+      VOLSYNC_CAPACITY: 5Gi
       VOLSYNC_SCHEDULE: ${SEERR_CONFIG_VOLSYNC_SCHEDULE}

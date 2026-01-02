@@ -14,7 +14,6 @@ resources:
   - ./emby/ks.yaml
   - ./flaresolverr/ks.yaml
   - ./notifiarr/ks.yaml
-  - ./overseerr/ks.yaml
   - ./plex/ks.yaml
   - ./sabnzbd/ks.yaml
   - ./seerr/ks.yaml
