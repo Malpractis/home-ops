@@ -34,5 +34,5 @@ spec:
   wait: false
   dependsOn:
     - name: actions-runner-controller
-    - name: longhorn
-      namespace: storage
+    - name: rook-ceph-cluster
+      namespace: rook-ceph

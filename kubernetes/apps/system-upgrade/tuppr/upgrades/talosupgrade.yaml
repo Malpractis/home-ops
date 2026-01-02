@@ -15,9 +15,7 @@ spec:
       kind: ReplicationSource
       expr: |-
         status.conditions.filter(c, c.type == "Synchronizing").all(c, c.status == "False")
-    - apiVersion: apps/v1
-      kind: DaemonSet
-      name: longhorn-manager
-      namespace: storage
+    - apiVersion: ceph.rook.io/v1
+      kind: CephCluster
       expr: |-
-        status.numberReady > 0 && status.numberReady == status.desiredNumberScheduled
+        status.ceph.health in ['HEALTH_OK']

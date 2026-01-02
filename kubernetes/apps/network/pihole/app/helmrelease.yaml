@@ -17,7 +17,7 @@ spec:
       *app :
         type: statefulset
         annotations:
-          reloader.stakater.com/auto: 'true'
+          reloader.stakater.com/auto: "true"
         replicas: 3
         strategy: RollingUpdate
         rollingUpdate:
@@ -57,11 +57,11 @@ spec:
               - ${NAS_IP}
             options:
               - name: ndots
-                value: '1'
+                value: "1"
         statefulset:
           volumeClaimTemplates:
             - name: config
-              storageClass: longhorn
+              storageClass: ceph-block
               accessMode: ReadWriteOnce
               size: 10Gi
               advancedMounts:
@@ -74,7 +74,7 @@ spec:
               tag: 2025.11.1@sha256:91dc91ddd413bf461c283204558f8f21839851e9824799075a7ceff7c77eea40
             env:
               FTLCONF_dns_listeningMode: all
-              FTLCONF_dns_dnssec: 'false'
+              FTLCONF_dns_dnssec: "false"
               FTLCONF_dns_upstreams: ${DNSCRYPT_IP};${NAS_IP}
               FTLCONF_webserver_interface_boxed: false
               FTLCONF_webserver_interface_theme: default-auto
@@ -135,7 +135,7 @@ spec:
             securityContext:
               allowPrivilegeEscalation: false
               readOnlyRootFileSystem: true
-              capabilities: { drop: ['ALL'] }
+              capabilities: { drop: ["ALL"] }
               runAsNonRoot: true
               runAsUser: 1000
               runAsGroup: 1000
@@ -175,7 +175,7 @@ spec:
     route:
       app:
         hostnames:
-          - '{{ .Release.Name }}.${SECRET_DOMAIN}'
+          - "{{ .Release.Name }}.${SECRET_DOMAIN}"
         parentRefs:
           - name: internal-envoy
             namespace: network
