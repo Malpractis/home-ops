@@ -10,7 +10,9 @@ spec:
     labels:
       app.kubernetes.io/name: *app
   components:
+    - ../../../../components/common
     - ../../../../components/nfs-scaler
+    # - ../../../../components/volsync
   path: ./kubernetes/apps/media/stash/app
   sourceRef:
     kind: GitRepository
@@ -29,7 +31,7 @@ spec:
   postBuild:
     substitute:
       APP: *app
-      VOLSYNC_CAPACITY: 100Gi
+      VOLSYNC_CAPACITY: 50Gi
       VOLSYNC_SCHEDULE: ${STASH_CONFIG_VOLSYNC_SCHEDULE}
       VOLSYNC_PUID: "0"
       VOLSYNC_PGID: "0"
