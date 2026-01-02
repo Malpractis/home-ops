@@ -9,5 +9,5 @@ components:
 replacements:
   - path: ../../components/replacements/ks.yaml
 resources:
-  - ./longhorn/ks.yaml
+  # - ./longhorn/ks.yaml
   #- ./volsync/ks.yaml
