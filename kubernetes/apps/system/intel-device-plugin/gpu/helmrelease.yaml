@@ -10,6 +10,6 @@ spec:
     name: intel-device-plugins-gpu
   interval: 1h
   values:
-    name: intel-gpu-plugin
-    sharedDevNum: 3
+    name: i915
+    sharedDevNum: 5
     nodeFeatureRule: true
