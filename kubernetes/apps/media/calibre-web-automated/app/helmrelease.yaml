@@ -75,7 +75,7 @@ spec:
     route:
       app:
         hostnames:
-          - 'calibre.${SECRET_DOMAIN}'
+          - "calibre.${SECRET_DOMAIN}"
         parentRefs:
           - name: envoy-internal
             namespace: network
@@ -85,7 +85,7 @@ spec:
                 port: *port
     persistence:
       config:
-        existingClaim: "{{ .Release.Name }}-config"
+        existingClaim: "{{ .Release.Name }}"
         globalMounts:
           - path: /config
       transcode:
