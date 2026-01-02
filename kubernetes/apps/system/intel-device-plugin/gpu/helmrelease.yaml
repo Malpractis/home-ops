@@ -11,5 +11,5 @@ spec:
   interval: 1h
   values:
     name: intel-gpu-plugin
-    sharedDevNum: 5
+    sharedDevNum: 3
     nodeFeatureRule: true
