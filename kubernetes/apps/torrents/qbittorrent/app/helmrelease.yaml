@@ -13,7 +13,7 @@ spec:
     controllers:
       qbittorrent:
         annotations:
-          reloader.stakater.com/auto: 'true'
+          reloader.stakater.com/auto: "true"
         containers:
           app:
             nameOverride: *app
@@ -79,7 +79,7 @@ spec:
     route:
       app:
         hostnames:
-          - '{{ .Release.Name }}.${SECRET_DOMAIN}'
+          - "{{ .Release.Name }}.${SECRET_DOMAIN}"
         parentRefs:
           - name: envoy-internal
             namespace: network
@@ -96,7 +96,7 @@ spec:
     persistence:
       config:
         enabled: true
-        existingClaim: "{{ .Release.Name }}-config"
+        existingClaim: "{{ .Release.Name }}"
         advancedMounts:
           qbittorrent:
             app:

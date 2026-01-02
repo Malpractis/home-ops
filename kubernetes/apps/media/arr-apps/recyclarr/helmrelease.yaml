@@ -48,6 +48,6 @@ spec:
         fsGroupChangePolicy: OnRootMismatch
     persistence:
       config:
-        existingClaim: "{{ .Release.Name }}-config"
+        existingClaim: "{{ .Release.Name }}"
         globalMounts:
           - path: /config

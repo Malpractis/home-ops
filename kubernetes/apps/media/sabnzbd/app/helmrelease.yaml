@@ -73,7 +73,7 @@ spec:
     route:
       app:
         hostnames:
-          - 'sabnzbd.${SECRET_DOMAIN}'
+          - "sabnzbd.${SECRET_DOMAIN}"
         parentRefs:
           - name: envoy-internal
             namespace: network
@@ -84,7 +84,7 @@ spec:
     persistence:
       config:
         enabled: true
-        existingClaim: "{{ .Release.Name }}-config"
+        existingClaim: "{{ .Release.Name }}"
         advancedMounts:
           sabnzbd:
             app:

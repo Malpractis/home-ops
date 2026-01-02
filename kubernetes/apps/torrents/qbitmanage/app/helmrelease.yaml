@@ -13,7 +13,7 @@ spec:
     controllers:
       qbitmanage:
         annotations:
-          reloader.stakater.com/auto: 'true'
+          reloader.stakater.com/auto: "true"
         containers:
           app:
             nameOverride: *app
@@ -55,7 +55,12 @@ spec:
             lifecycle:
               postStart:
                 exec:
-                  command: ["/bin/sh", "-c", "cp /secret/config.yaml /config/config.yaml"]
+                  command:
+                    [
+                      "/bin/sh",
+                      "-c",
+                      "cp /secret/config.yaml /config/config.yaml",
+                    ]
     defaultPodOptions:
       securityContext:
         runAsNonRoot: true
@@ -65,7 +70,7 @@ spec:
         fsGroupChangePolicy: OnRootMismatch
     persistence:
       config:
-        existingClaim: "{{ .Release.Name }}-config"
+        existingClaim: "{{ .Release.Name }}"
         advancedMounts:
           qbitmanage:
             app:

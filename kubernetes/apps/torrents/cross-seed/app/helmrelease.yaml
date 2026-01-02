@@ -61,7 +61,7 @@ spec:
             port: *port
     persistence:
       config:
-        existingClaim: "{{ .Release.Name }}-config"
+        existingClaim: "{{ .Release.Name }}"
         advancedMounts:
           cross-seed:
             app:

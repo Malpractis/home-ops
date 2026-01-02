@@ -17,7 +17,7 @@ spec:
     controllers:
       bazarr-anime:
         annotations:
-          reloader.stakater.com/auto: 'true'
+          reloader.stakater.com/auto: "true"
         containers:
           app:
             nameOverride: *app
@@ -40,7 +40,7 @@ spec:
             securityContext:
               allowPrivilegeEscalation: false
               readOnlyRootFilesystem: true
-              capabilities: { drop: ['ALL'] }
+              capabilities: { drop: ["ALL"] }
             resources:
               requests:
                 cpu: 100m
@@ -62,7 +62,7 @@ spec:
     route:
       app:
         hostnames:
-          - 'bazarr-anime.${SECRET_DOMAIN}'
+          - "bazarr-anime.${SECRET_DOMAIN}"
         parentRefs:
           - name: envoy-internal
             namespace: network
@@ -72,7 +72,7 @@ spec:
                 port: *port
     persistence:
       config:
-        existingClaim: "{{ .Release.Name }}-config"
+        existingClaim: "{{ .Release.Name }}"
         globalMounts:
           - path: /config
       data:

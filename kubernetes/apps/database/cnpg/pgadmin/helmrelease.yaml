@@ -22,7 +22,7 @@ spec:
     controllers:
       *app :
         annotations:
-          reloader.stakater.com/auto: 'true'
+          reloader.stakater.com/auto: "true"
         initContainers:
           init:
             image: &image
@@ -48,10 +48,10 @@ spec:
           main:
             image: *image
             env:
-              PGADMIN_DISABLE_POSTFIX: 'True'
+              PGADMIN_DISABLE_POSTFIX: "True"
               PGADMIN_LISTEN_PORT: &port 80
-              PGADMIN_REPLACE_SERVERS_ON_STARTUP: 'True'
-              PGADMIN_CONFIG_SERVER_MODE: 'True'
+              PGADMIN_REPLACE_SERVERS_ON_STARTUP: "True"
+              PGADMIN_CONFIG_SERVER_MODE: "True"
               PGPASS_FILE: &pgpass /pgadmin4/pgpass
               PGADMIN_DEFAULT_EMAIL:
                 valueFrom:
@@ -96,7 +96,7 @@ spec:
           - backendRefs: [{}]
     persistence:
       config:
-        existingClaim: "{{ .Release.Name }}-config"
+        existingClaim: "{{ .Release.Name }}"
         globalMounts:
           - path: /var/lib/pgadmin
       oauth:

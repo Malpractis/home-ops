@@ -63,7 +63,7 @@ spec:
     route:
       app:
         hostnames:
-          - 'overseerr.${SECRET_DOMAIN}'
+          - "overseerr.${SECRET_DOMAIN}"
         parentRefs:
           - name: envoy-external
             namespace: network
@@ -74,7 +74,7 @@ spec:
     persistence:
       config:
         enabled: true
-        existingClaim: "{{ .Release.Name }}-config"
+        existingClaim: "{{ .Release.Name }}"
         advancedMounts:
           overseerr:
             app:

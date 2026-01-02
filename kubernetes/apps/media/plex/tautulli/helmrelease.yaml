@@ -61,7 +61,7 @@ spec:
     route:
       app:
         hostnames:
-          - 'tautulli.${SECRET_DOMAIN}'
+          - "tautulli.${SECRET_DOMAIN}"
         parentRefs:
           - name: envoy-internal
             namespace: network
@@ -71,7 +71,7 @@ spec:
                 port: *port
     persistence:
       config:
-        existingClaim: "{{ .Release.Name }}-config"
+        existingClaim: "{{ .Release.Name }}"
       backup:
         type: nfs
         server: nas.internal
