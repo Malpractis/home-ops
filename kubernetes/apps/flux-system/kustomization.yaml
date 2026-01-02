@@ -7,4 +7,3 @@ components:
 resources:
   - ./flux-instance/ks.yaml
   - ./flux-operator/ks.yaml
-  - ./healthcheck/ks.yaml
