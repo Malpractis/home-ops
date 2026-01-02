@@ -10,4 +10,3 @@ resources:
   - ./cilium/ks.yaml
   - ./coredns/ks.yaml
   - ./metrics-server/ks.yaml
-  - ./snapshot-controller/ks.yaml
