@@ -27,8 +27,5 @@ spec:
   postBuild:
     substitute:
       APP: *app
-      PVC_NAME: config
-      GATUS_SUBDOMAIN: autobrr
-      PVC_CAPACITY: 10Gi
-      VOLSYNC_CAPACITY: 10Gi
+      VOLSYNC_CAPACITY: 1Gi
       VOLSYNC_SCHEDULE: ${AUTOBRR_CONFIG_VOLSYNC_SCHEDULE}

@@ -30,8 +30,5 @@ spec:
   postBuild:
     substitute:
       APP: *app
-      PVC_NAME: config
-      GATUS_SUBDOMAIN: sabnzbd
-      PVC_CAPACITY: 100Gi
-      VOLSYNC_CAPACITY: 100Gi
+      VOLSYNC_CAPACITY: 10Gi
       VOLSYNC_SCHEDULE: ${SABNZBD_CONFIG_VOLSYNC_SCHEDULE}

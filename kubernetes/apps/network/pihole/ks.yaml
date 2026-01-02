@@ -26,8 +26,5 @@ spec:
   postBuild:
     substitute:
       APP: *app
-      PVC_NAME: config
-      GATUS_SUBDOMAIN: pihole
-      PVC_CAPACITY: 10Gi
       VOLSYNC_CAPACITY: 10Gi
       VOLSYNC_SCHEDULE: ${PIHOLE_CONFIG_VOLSYNC_SCHEDULE}

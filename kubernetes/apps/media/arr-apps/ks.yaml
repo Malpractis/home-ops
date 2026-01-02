@@ -27,10 +27,7 @@ spec:
   postBuild:
     substitute:
       APP: *app
-      PVC_NAME: config
-      GATUS_SUBDOMAIN: bazarr
-      PVC_CAPACITY: 100Gi
-      VOLSYNC_CAPACITY: 100Gi
+      VOLSYNC_CAPACITY: 5Gi
       VOLSYNC_SCHEDULE: ${BAZARR_CONFIG_VOLSYNC_SCHEDULE}
 ---
 # yaml-language-server: $schema=https://kubernetes-schemas.pages.dev/kustomize.toolkit.fluxcd.io/kustomization_v1.json
@@ -61,10 +58,7 @@ spec:
   postBuild:
     substitute:
       APP: *app
-      PVC_NAME: config
-      GATUS_SUBDOMAIN: bazarr
-      PVC_CAPACITY: 100Gi
-      VOLSYNC_CAPACITY: 100Gi
+      VOLSYNC_CAPACITY: 5Gi
       VOLSYNC_SCHEDULE: ${BAZARR_ANIME_CONFIG_VOLSYNC_SCHEDULE}
 ---
 # yaml-language-server: $schema=https://kubernetes-schemas.pages.dev/kustomize.toolkit.fluxcd.io/kustomization_v1.json
@@ -97,10 +91,7 @@ spec:
   postBuild:
     substitute:
       APP: *app
-      PVC_NAME: config
-      GATUS_SUBDOMAIN: lidarr
-      PVC_CAPACITY: 100Gi
-      VOLSYNC_CAPACITY: 100Gi
+      VOLSYNC_CAPACITY: 5Gi
       VOLSYNC_SCHEDULE: ${LIDARR_CONFIG_VOLSYNC_SCHEDULE}
 ---
 # yaml-language-server: $schema=https://kubernetes-schemas.pages.dev/kustomize.toolkit.fluxcd.io/kustomization_v1.json
@@ -133,10 +124,7 @@ spec:
   postBuild:
     substitute:
       APP: *app
-      PVC_NAME: config
-      GATUS_SUBDOMAIN: prowlarr
-      PVC_CAPACITY: 100Gi
-      VOLSYNC_CAPACITY: 100Gi
+      VOLSYNC_CAPACITY: 5Gi
       VOLSYNC_SCHEDULE: ${PROWLARR_CONFIG_VOLSYNC_SCHEDULE}
 ---
 # yaml-language-server: $schema=https://kubernetes-schemas.pages.dev/kustomize.toolkit.fluxcd.io/kustomization_v1.json
@@ -169,10 +157,7 @@ spec:
   postBuild:
     substitute:
       APP: *app
-      PVC_NAME: config
-      GATUS_SUBDOMAIN: radarr
-      PVC_CAPACITY: 100Gi
-      VOLSYNC_CAPACITY: 100Gi
+      VOLSYNC_CAPACITY: 10Gi
       VOLSYNC_SCHEDULE: ${RADARR_CONFIG_VOLSYNC_SCHEDULE}
 ---
 # yaml-language-server: $schema=https://kubernetes-schemas.pages.dev/kustomize.toolkit.fluxcd.io/kustomization_v1.json
@@ -205,11 +190,41 @@ spec:
   postBuild:
     substitute:
       APP: *app
-      PVC_NAME: config
-      GATUS_SUBDOMAIN: radarr
-      PVC_CAPACITY: 100Gi
-      VOLSYNC_CAPACITY: 100Gi
+      VOLSYNC_CAPACITY: 5Gi
       VOLSYNC_SCHEDULE: ${RADARR_ANIME_CONFIG_VOLSYNC_SCHEDULE}
+---
+# yaml-language-server: $schema=https://kubernetes-schemas.pages.dev/kustomize.toolkit.fluxcd.io/kustomization_v1.json
+apiVersion: kustomize.toolkit.fluxcd.io/v1
+kind: Kustomization
+metadata:
+  name: &app radarr-4k
+  namespace: media
+spec:
+  commonMetadata:
+    labels:
+      app.kubernetes.io/name: *app
+  components:
+    - ../../../../components/volsync
+  path: ./kubernetes/apps/media/arr-apps/radarr-4k
+  sourceRef:
+    kind: GitRepository
+    name: flux-system
+    namespace: flux-system
+  interval: 30m
+  retryInterval: 5m
+  wait: false
+  prune: true
+  timeout: 5m
+  dependsOn:
+    - name: external-secrets-store
+      namespace: security
+    - name: rook-ceph-cluster
+      namespace: rook-ceph
+  postBuild:
+    substitute:
+      APP: *app
+      VOLSYNC_CAPACITY: 5Gi
+      VOLSYNC_SCHEDULE: ${RADARR_4K_CONFIG_VOLSYNC_SCHEDULE}
 ---
 # yaml-language-server: $schema=https://kubernetes-schemas.pages.dev/kustomize.toolkit.fluxcd.io/kustomization_v1.json
 apiVersion: kustomize.toolkit.fluxcd.io/v1
@@ -243,47 +258,8 @@ spec:
   postBuild:
     substitute:
       APP: *app
-      PVC_NAME: config
-      GATUS_SUBDOMAIN: radarr
-      PVC_CAPACITY: 100Gi
-      VOLSYNC_CAPACITY: 100Gi
+      VOLSYNC_CAPACITY: 5Gi
       VOLSYNC_SCHEDULE: ${READARR_CONFIG_VOLSYNC_SCHEDULE}
----
-# yaml-language-server: $schema=https://kubernetes-schemas.pages.dev/kustomize.toolkit.fluxcd.io/kustomization_v1.json
-apiVersion: kustomize.toolkit.fluxcd.io/v1
-kind: Kustomization
-metadata:
-  name: &app radarr-4k
-  namespace: media
-spec:
-  commonMetadata:
-    labels:
-      app.kubernetes.io/name: *app
-  components:
-    - ../../../../components/volsync
-  path: ./kubernetes/apps/media/arr-apps/radarr-4k
-  sourceRef:
-    kind: GitRepository
-    name: flux-system
-    namespace: flux-system
-  interval: 30m
-  retryInterval: 5m
-  wait: false
-  prune: true
-  timeout: 5m
-  dependsOn:
-    - name: external-secrets-store
-      namespace: security
-    - name: rook-ceph-cluster
-      namespace: rook-ceph
-  postBuild:
-    substitute:
-      APP: *app
-      PVC_NAME: config
-      GATUS_SUBDOMAIN: radarr
-      PVC_CAPACITY: 100Gi
-      VOLSYNC_CAPACITY: 100Gi
-      VOLSYNC_SCHEDULE: ${RADARR_4K_CONFIG_VOLSYNC_SCHEDULE}
 ---
 # yaml-language-server: $schema=https://kubernetes-schemas.pages.dev/kustomize.toolkit.fluxcd.io/kustomization_v1.json
 apiVersion: kustomize.toolkit.fluxcd.io/v1
@@ -315,10 +291,7 @@ spec:
   postBuild:
     substitute:
       APP: *app
-      PVC_NAME: config
-      GATUS_SUBDOMAIN: recyclarr
-      PVC_CAPACITY: 100Gi
-      VOLSYNC_CAPACITY: 100Gi
+      VOLSYNC_CAPACITY: 5Gi
       VOLSYNC_SCHEDULE: ${RECYCLARR_CONFIG_VOLSYNC_SCHEDULE}
 ---
 # yaml-language-server: $schema=https://kubernetes-schemas.pages.dev/kustomize.toolkit.fluxcd.io/kustomization_v1.json
@@ -351,10 +324,7 @@ spec:
   postBuild:
     substitute:
       APP: *app
-      PVC_NAME: config
-      GATUS_SUBDOMAIN: sonarr
-      PVC_CAPACITY: 100Gi
-      VOLSYNC_CAPACITY: 100Gi
+      VOLSYNC_CAPACITY: 10Gi
       VOLSYNC_SCHEDULE: ${SONARR_CONFIG_VOLSYNC_SCHEDULE}
 ---
 # yaml-language-server: $schema=https://kubernetes-schemas.pages.dev/kustomize.toolkit.fluxcd.io/kustomization_v1.json
@@ -387,8 +357,5 @@ spec:
   postBuild:
     substitute:
       APP: *app
-      PVC_NAME: config
-      GATUS_SUBDOMAIN: sonarr
-      PVC_CAPACITY: 100Gi
-      VOLSYNC_CAPACITY: 100Gi
+      VOLSYNC_CAPACITY: 5Gi
       VOLSYNC_SCHEDULE: ${SONARR_ANIME_CONFIG_VOLSYNC_SCHEDULE}

@@ -30,8 +30,5 @@ spec:
   postBuild:
     substitute:
       APP: *app
-      PVC_NAME: config
-      GATUS_SUBDOMAIN: emby
-      PVC_CAPACITY: 100Gi
-      VOLSYNC_CAPACITY: 100Gi
+      VOLSYNC_CAPACITY: 50Gi
       VOLSYNC_SCHEDULE: ${EMBY_CONFIG_VOLSYNC_SCHEDULE}

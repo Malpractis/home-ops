@@ -29,9 +29,6 @@ spec:
   postBuild:
     substitute:
       APP: *app
-      PVC_NAME: config
-      GATUS_SUBDOMAIN: stash
-      PVC_CAPACITY: 100Gi
       VOLSYNC_CAPACITY: 100Gi
       VOLSYNC_SCHEDULE: ${STASH_CONFIG_VOLSYNC_SCHEDULE}
       VOLSYNC_PUID: "0"
