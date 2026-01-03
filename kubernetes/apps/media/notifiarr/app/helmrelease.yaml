@@ -119,6 +119,8 @@ spec:
     service:
       app:
         controller: *app
+        annotations:
+          lbipam.cilium.io/ips: "${NOTIFIARR_IP:=192.168.10.113}"
         ports:
           http:
             port: &port 5454
