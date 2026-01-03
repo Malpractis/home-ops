@@ -75,7 +75,7 @@ spec:
     route:
       app:
         hostnames:
-          - "calibre.${SECRET_DOMAIN}"
+          - "calibre.${SECRET_DOMAIN:=flux.local}"
         parentRefs:
           - name: envoy-internal
             namespace: network

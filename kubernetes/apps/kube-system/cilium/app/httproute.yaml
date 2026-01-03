@@ -4,10 +4,10 @@ metadata:
   name: hubble-ui
 spec:
   hostnames:
-    - hubble.${SECRET_DOMAIN}
+    - hubble.${SECRET_DOMAIN:=flux.local}
   parentRefs:
-  - name: envoy-internal
-    namespace: network
+    - name: envoy-internal
+      namespace: network
   rules:
     - backendRefs:
         - name: hubble-ui

@@ -22,7 +22,7 @@ spec:
             env:
               KOPIA_WEB_ENABLED: true
               KOPIA_WEB_PORT: &port 80
-              TZ: ${TIMEZONE}
+              TZ: ${TIMEZONE:-Etc/UTC}
             envFrom:
               - secretRef:
                   name: kopia-secret
@@ -65,7 +65,7 @@ spec:
     route:
       app:
         hostnames:
-          - "{{ .Release.Name }}.${SECRET_DOMAIN}"
+          - "{{ .Release.Name }}.${SECRET_DOMAIN:=flux.local}"
         parentRefs:
           - name: envoy-internal
             namespace: network

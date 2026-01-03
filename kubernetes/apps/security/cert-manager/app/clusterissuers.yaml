@@ -16,7 +16,7 @@ spec:
               name: cloudflare-issuer-secret
               key: CLOUDFLARE_DNS_TOKEN
         selector:
-          dnsZones: ["${SECRET_DOMAIN}"]
+          dnsZones: ["${SECRET_DOMAIN:=flux.local}"]
 ---
 # yaml-language-server: $schema=https://schemas.tholinka.dev/cert-manager.io/clusterissuer_v1.json
 apiVersion: cert-manager.io/v1
@@ -36,7 +36,7 @@ spec:
   commonName: *name
   subject:
     organizations:
-      - '${SECRET_DOMAIN}'
+      - "${SECRET_DOMAIN:=flux.local}"
   secretName: cluster-signed-issuer-tls
   privateKey:
     algorithm: ECDSA
@@ -67,7 +67,7 @@ spec:
   secretName: postgres-cluster-client-ca-secret
   secretTemplate:
     labels:
-      cnpg.io/reload: ''
+      cnpg.io/reload: ""
   privateKey:
     algorithm: ECDSA
     size: 256

@@ -43,7 +43,7 @@ spec:
     route:
       app:
         hostnames:
-          - 'calibre-book-downloader.${SECRET_DOMAIN}'
+          - "calibre-book-downloader.${SECRET_DOMAIN:=flux.local}"
         parentRefs:
           - name: envoy-internal
             namespace: network

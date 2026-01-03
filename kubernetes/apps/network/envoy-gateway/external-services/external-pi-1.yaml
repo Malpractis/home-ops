@@ -23,7 +23,7 @@ spec:
       namespace: network
       sectionName: https
   hostnames:
-    - pi-1.${SECRET_DOMAIN}
+    - pi-1.${SECRET_DOMAIN:=flux.local}
   rules:
     - matches:
         - path:

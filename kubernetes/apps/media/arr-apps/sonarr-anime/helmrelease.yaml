@@ -67,7 +67,7 @@ spec:
     route:
       app:
         hostnames:
-          - "sonarr-anime.${SECRET_DOMAIN}"
+          - "sonarr-anime.${SECRET_DOMAIN:=flux.local}"
         parentRefs:
           - name: envoy-internal
             namespace: network

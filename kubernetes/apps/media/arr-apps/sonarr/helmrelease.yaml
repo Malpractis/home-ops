@@ -67,7 +67,7 @@ spec:
     route:
       app:
         hostnames:
-          - "sonarr.${SECRET_DOMAIN}"
+          - "sonarr.${SECRET_DOMAIN:=flux.local}"
         parentRefs:
           - name: envoy-internal
             namespace: network

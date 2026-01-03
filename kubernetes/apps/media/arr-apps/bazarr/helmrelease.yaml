@@ -58,7 +58,7 @@ spec:
     route:
       app:
         hostnames:
-          - "bazarr.${SECRET_DOMAIN}"
+          - "bazarr.${SECRET_DOMAIN:=flux.local}"
         parentRefs:
           - name: envoy-internal
             namespace: network

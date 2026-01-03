@@ -23,7 +23,7 @@ spec:
     controllers:
       *app :
         annotations:
-          reloader.stakater.com/auto: 'true'
+          reloader.stakater.com/auto: "true"
         containers:
           *app :
             image:
@@ -34,7 +34,7 @@ spec:
               RUN_GRAVITY: "false"
               CRON: "*/10 * * * *"
               CLIENT_SKIP_TLS_VERIFICATION: "true"
-              TZ: ${TIMEZONE}
+              TZ: ${TIMEZONE:-Etc/UTC}
               SYNC_CONFIG_DNS: "true"
               SYNC_CONFIG_DHCP: "false"
               SYNC_CONFIG_NTP: "true"
@@ -57,7 +57,7 @@ spec:
             securityContext:
               allowPrivilegeEscalation: false
               readOnlyRootFileSystem: true
-              capabilities: { drop: ['ALL'] }
+              capabilities: { drop: ["ALL"] }
             resources:
               requests:
                 cpu: 10m

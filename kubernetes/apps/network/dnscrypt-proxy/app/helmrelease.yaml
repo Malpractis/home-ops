@@ -16,7 +16,7 @@ spec:
         enabled: true
         type: deployment
         annotations:
-          reloader.stakater.com/auto: 'true'
+          reloader.stakater.com/auto: "true"
         labels: {}
         replicas: 3
         strategy: RollingUpdate
@@ -38,7 +38,7 @@ spec:
                     command:
                       - /usr/local/bin/dnsprobe
                       - localhost
-                      - '127.0.0.1'
+                      - "127.0.0.1"
               readiness: *dnscrypt-probes
             resources:
               requests:
@@ -48,7 +48,7 @@ spec:
             securityContext:
               allowPrivilegeEscalation: false
               readOnlyRootFileSystem: true
-              capabilities: { drop: ['ALL'] }
+              capabilities: { drop: ["ALL"] }
     defaultPodOptions:
       affinity:
         podAffinity:
@@ -87,14 +87,14 @@ spec:
           - 1.1.1.1
         options:
           - name: ndots
-            value: '1'
+            value: "1"
     service:
       *app :
         type: LoadBalancer
         ipFamilies: [IPv4]
         ipFamilyPolicy: SingleStack
         annotations:
-          lbipam.cilium.io/ips: ${DNSCRYPT_IP}
+          lbipam.cilium.io/ips: ${DNSCRYPT_IP:=192.168.10.2}
         ports:
           dns-udp:
             primary: false

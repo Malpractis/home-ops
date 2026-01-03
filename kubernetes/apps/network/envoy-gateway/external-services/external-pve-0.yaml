@@ -25,7 +25,7 @@ spec:
       namespace: network
       sectionName: https
   hostnames:
-    - pve-0.${SECRET_DOMAIN}
+    - pve-0.${SECRET_DOMAIN:=flux.local}
   rules:
     - matches:
         - path:

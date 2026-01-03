@@ -68,7 +68,7 @@ spec:
     route:
       app:
         hostnames:
-          - "stash.${SECRET_DOMAIN}"
+          - "stash.${SECRET_DOMAIN:=flux.local}"
         parentRefs:
           - name: envoy-internal
             namespace: network

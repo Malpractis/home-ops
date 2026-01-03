@@ -25,7 +25,7 @@ spec:
       namespace: network
       sectionName: https
   hostnames:
-    - pikvm.${SECRET_DOMAIN}
+    - pikvm.${SECRET_DOMAIN:=flux.local}
   rules:
     - matches:
         - path:

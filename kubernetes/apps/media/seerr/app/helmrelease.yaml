@@ -68,8 +68,8 @@ spec:
           gatus.home-operations.com/endpoint: |-
             conditions: ["[STATUS] == 200"]
         hostnames:
-          - "{{ .Release.Name }}.${SECRET_DOMAIN}"
-          - requests.${SECRET_DOMAIN}
+          - "{{ .Release.Name }}.${SECRET_DOMAIN:=flux.local}"
+          - requests.${SECRET_DOMAIN:=flux.local}
         parentRefs:
           - name: envoy-external
             namespace: network

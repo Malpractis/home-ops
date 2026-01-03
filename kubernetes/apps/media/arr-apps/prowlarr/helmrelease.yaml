@@ -67,7 +67,7 @@ spec:
     route:
       app:
         hostnames:
-          - "prowlarr.${SECRET_DOMAIN}"
+          - "prowlarr.${SECRET_DOMAIN:=flux.local}"
         parentRefs:
           - name: envoy-internal
             namespace: network

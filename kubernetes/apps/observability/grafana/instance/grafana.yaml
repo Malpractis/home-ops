@@ -14,7 +14,7 @@ spec:
       feedback_links_enabled: "false"
       reporting_enabled: "false"
     auth:
-      signout_redirect_url: https://sso.${SECRET_DOMAIN}/application/o/grafana/end-session/
+      signout_redirect_url: https://sso.${SECRET_DOMAIN:=flux.local}/application/o/grafana/end-session/
       oauth_auto_login: "false"
       oauth_allow_insecure_email_lookup: "true"
     auth.anonymous:
@@ -26,9 +26,9 @@ spec:
     #   name: authentik
     #   enabled: "true"
     #   scopes: openid email profile
-    #   auth_url: https://sso.${SECRET_DOMAIN}/application/o/authorize/
-    #   token_url: https://sso.${SECRET_DOMAIN}/application/o/token/
-    #   api_url: https://sso.${SECRET_DOMAIN}/application/o/userinfo/
+    #   auth_url: https://sso.${SECRET_DOMAIN:=flux.local}/application/o/authorize/
+    #   token_url: https://sso.${SECRET_DOMAIN:=flux.local}/application/o/token/
+    #   api_url: https://sso.${SECRET_DOMAIN:=flux.local}/application/o/userinfo/
     # Optionally map user groups to Grafana roles
     #   role_attribute_path: contains(groups[*], 'Grafana Admins') && 'Admin' || contains(groups[*], 'Grafana Editors') && 'Editor' || 'Viewer'
     log:
@@ -43,7 +43,7 @@ spec:
       angular_support_enabled: "true"
     server:
       enable_gzip: "true"
-      root_url: https://grafana.${SECRET_DOMAIN}
+      root_url: https://grafana.${SECRET_DOMAIN:=flux.local}
   deployment:
     spec:
       strategy:
@@ -88,7 +88,7 @@ spec:
         - name: envoy-internal
           namespace: network
       hostnames:
-        - grafana.${SECRET_DOMAIN}
+        - grafana.${SECRET_DOMAIN:=flux.local}
       rules:
         - backendRefs:
             - name: grafana-service

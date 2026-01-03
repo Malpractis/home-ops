@@ -67,7 +67,7 @@ spec:
     route:
       app:
         hostnames:
-          - "lidarr.${SECRET_DOMAIN}"
+          - "lidarr.${SECRET_DOMAIN:=flux.local}"
         parentRefs:
           - name: envoy-internal
             namespace: network

@@ -6,7 +6,7 @@ metadata:
   name: authentik
 spec:
   hostnames:
-    - auth.${SECRET_DOMAIN}
+    - auth.${SECRET_DOMAIN:=flux.local}
   parentRefs:
     - name: envoy-internal
       namespace: network
