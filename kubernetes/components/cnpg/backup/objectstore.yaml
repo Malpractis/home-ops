@@ -10,7 +10,7 @@ spec:
   configuration:
     wal:
       compression: bzip2
-      maxParallel: 8
+      maxParallel: 4
       encryption: AES256
     data:
       compression: bzip2
