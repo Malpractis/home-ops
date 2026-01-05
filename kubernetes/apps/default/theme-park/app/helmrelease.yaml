@@ -47,7 +47,7 @@ spec:
     route:
       app:
         hostnames:
-          - "theme-park.${SECRET_DOMAIN}"
+          - "{{ .Release.Name }}.${SECRET_DOMAIN}"
         parentRefs:
           - name: envoy-external
             namespace: network
