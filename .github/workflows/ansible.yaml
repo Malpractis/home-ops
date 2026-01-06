@@ -5,10 +5,14 @@ on:
   workflow_dispatch:
   pull_request:
     branches: ["main"]
-    paths: ["infrastructure/**"]
+    paths:
+      - "infrastructure/**"
+      - "!infrastructure/**/*.md"
   push:
     branches: ["main"]
-    paths: ["infrastructure/**"]
+    paths:
+      - "infrastructure/**"
+      - "!infrastructure/**/*.md"
 
 jobs:
   # Job 1: Dry Run (Runs on PRs and Main)
