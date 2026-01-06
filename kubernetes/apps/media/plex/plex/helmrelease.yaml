@@ -85,7 +85,7 @@ spec:
     route:
       app:
         hostnames:
-          - "plex.${SECRET_DOMAIN:=flux.local}"
+          - "{{ .Release.Name }}.${SECRET_DOMAIN:=flux.local}"
         parentRefs:
           - name: envoy-external
             namespace: network

@@ -61,7 +61,7 @@ spec:
     route:
       app:
         hostnames:
-          - "tautulli.${SECRET_DOMAIN:=flux.local}"
+          - "{{ .Release.Name }}.${SECRET_DOMAIN:=flux.local}"
         parentRefs:
           - name: envoy-internal
             namespace: network

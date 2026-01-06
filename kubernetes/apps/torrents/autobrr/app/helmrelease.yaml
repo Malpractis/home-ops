@@ -73,7 +73,7 @@ spec:
     route:
       app:
         hostnames:
-          - "autobrr.${SECRET_DOMAIN:=flux.local}"
+          - "{{ .Release.Name }}.${SECRET_DOMAIN:=flux.local}"
         parentRefs:
           - name: envoy-internal
             namespace: network

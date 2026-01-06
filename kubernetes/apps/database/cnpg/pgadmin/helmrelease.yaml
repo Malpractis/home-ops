@@ -88,7 +88,7 @@ spec:
     route:
       app:
         hostnames:
-          - pg.${SECRET_DOMAIN:=flux.local}
+          - "{{ .Release.Name }}.${SECRET_DOMAIN:=flux.local}"
         parentRefs:
           - name: envoy-internal
             namespace: network

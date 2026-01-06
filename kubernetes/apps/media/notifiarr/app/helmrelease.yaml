@@ -128,7 +128,7 @@ spec:
     route:
       app:
         hostnames:
-          - "notifiarr.${SECRET_DOMAIN:=flux.local}"
+          - "{{ .Release.Name }}.${SECRET_DOMAIN:=flux.local}"
         parentRefs:
           - name: envoy-internal
             namespace: network
