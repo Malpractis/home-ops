@@ -1,0 +1,72 @@
+---
+name: Configure Infrastructure
+
+on:
+  workflow_dispatch:
+  pull_request:
+    branches: ["main"]
+    paths: ["infrastructure/**"]
+  push:
+    branches: ["main"]
+    paths: ["infrastructure/**"]
+
+jobs:
+  # Job 1: Dry Run (Runs on PRs and Main)
+  check:
+    name: Ansible Check (Dry Run)
+    runs-on: home-ops-runner
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install Ansible
+        run: pip install ansible
+
+      - name: Install Ansible Galaxy Roles
+        run: ansible-galaxy install -r infrastructure/requirements.yaml
+
+      - name: Setup SSH Key
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.ANSIBLE_PRIVATE_KEY }}" > ~/.ssh/id_ed25519
+          chmod 600 ~/.ssh/id_ed25519
+          echo "StrictHostKeyChecking no" >> ~/.ssh/config
+
+      - name: Run Ansible Playbook (Check Mode)
+        working-directory: infrastructure
+        run: |
+          ansible-playbook -i inventory/hosts.yaml playbook.yaml --check --diff
+
+  # Job 2: Apply (Runs ONLY on push to main, after Check passes)
+  apply:
+    name: Ansible Apply
+    needs: check
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    runs-on: home-ops-runner
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Install Ansible
+        run: pip install ansible
+      - name: Install Galaxy Roles
+        run: ansible-galaxy install -r infrastructure/requirements.yaml
+      - name: Setup SSH Key
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.ANSIBLE_PRIVATE_KEY }}" > ~/.ssh/id_ed25519
+          chmod 600 ~/.ssh/id_ed25519
+          echo "StrictHostKeyChecking no" >> ~/.ssh/config
+
+      - name: Run Ansible Playbook (Apply)
+        working-directory: infrastructure
+        run: |
+          ansible-playbook -i inventory/hosts.yaml playbook.yaml

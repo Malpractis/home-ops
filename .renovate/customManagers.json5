@@ -29,5 +29,15 @@
       ],
       datasourceTemplate: "docker",
     },
+    {
+      description: "Process Ansible",
+      customType: "regex",
+      "fileMatch": [
+        "^infrastructure/inventory/group_vars/.*\\.yaml$"
+      ],
+      matchStrings: [
+        "#\\s*renovate:\\s*datasource=(?<datasource>.*?) depName=(?<depName>.*?)(?:\\s+versioning=(?<versioning>.*?))?\\s+[a-zA-Z0-9_]+_version:\\s*\"(?<currentValue>.*?)\""
+      ]
+    }
   ],
 }

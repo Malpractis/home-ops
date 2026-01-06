@@ -1,0 +1,15 @@
+all:
+  vars:
+    ansible_user: ansible
+    ansible_become: true # Always use sudo
+  children:
+    proxmox:
+      hosts:
+        pve-0:
+          ansible_host: pve-0.internal
+    raspberry_pis:
+      hosts:
+        pi-0:
+          ansible_host: pi-0.internal
+        pi-1:
+          ansible_host: pi-1.internal

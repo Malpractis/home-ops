@@ -1,0 +1,8 @@
+---
+- name: Configure Infrastructure Observability
+  hosts: all
+  become: true
+
+  roles:
+    - role: prometheus.prometheus.node_exporter
+    - role: prometheus.prometheus.smartctl_exporter
