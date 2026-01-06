@@ -88,7 +88,7 @@ spec:
         - name: envoy-internal
           namespace: network
       hostnames:
-        - "{{ .Release.Name }}.${SECRET_DOMAIN:=flux.local}"
+        - grafana.${SECRET_DOMAIN:=flux.local}
       rules:
         - backendRefs:
             - name: grafana-service
