@@ -3,6 +3,18 @@
   hosts: all
   become: true
 
+  pre_tasks:
+    - name: Update apt cache (Debian/Ubuntu only)
+      ansible.builtin.apt:
+        update_cache: yes
+        cache_valid_time: 3600
+      when: ansible_os_family == 'Debian'
+
+    - name: Ensure smartmontools is installed
+      ansible.builtin.package:
+        name: smartmontools
+        state: present
+
   roles:
     - role: prometheus.prometheus.node_exporter
     - role: prometheus.prometheus.smartctl_exporter
