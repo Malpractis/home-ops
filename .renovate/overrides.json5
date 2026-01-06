@@ -3,15 +3,36 @@
   packageRules: [
     {
       description: "Override Helmfile Dependency Name",
-      matchDatasources: ["docker"],
-      matchManagers: ["helmfile"],
+      matchDatasources: [
+        "docker"
+      ],
+      matchManagers: [
+        "helmfile"
+      ],
       overrideDepName: "{{packageName}}",
     },
     {
       description: "Override Talos Installer Package Name",
-      matchDatasources: ["docker"],
-      matchPackageNames: ["/factory\\.talos\\.dev/"],
+      matchDatasources: [
+        "docker"
+      ],
+      matchPackageNames: [
+        "/factory\\.talos\\.dev/"
+      ],
       overridePackageName: "ghcr.io/siderolabs/installer",
+    },
+    {
+      description: "Restrict Python versions in GitHub Actions",
+      matchManagers: [
+        "github-actions"
+      ],
+      matchPackageNames: [
+        "python"
+      ],
+      // Forces Renovate to ignore > 3.11 entirely
+      allowedVersions: "< 3.12",
+      // Ensures it generally avoids alpha/beta releases
+      ignoreUnstable: true,
     },
   ],
 }
