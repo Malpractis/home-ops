@@ -17,10 +17,10 @@ spec:
           - /bin/sh
           - "-c"
           - |
-            kubectl config set-cluster matalos --server=https://matalos.materia.k8s --certificate-authority=/var/run/secrets/kubernetes.io/serviceaccount/ca.crt
-            kubectl config set-credentials matalos --token=$(cat /tmp/sa-token/token)
-            kubectl config set-context matalos --cluster=matalos --user=admin@matalos
-            kubectl config use-context admin@matalos
+            kubectl config set-cluster main --server=https://kubernetes.default.svc --certificate-authority=/var/run/secrets/kubernetes.io/serviceaccount/ca.crt
+            kubectl config set-credentials main --token=$(cat /tmp/sa-token/token)
+            kubectl config set-context main --cluster=main --user=main
+            kubectl config use-context main
         env:
           - name: KUBERNETES_SERVICE_HOST
             valueFrom:
