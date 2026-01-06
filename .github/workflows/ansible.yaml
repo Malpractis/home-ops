@@ -41,7 +41,7 @@ jobs:
       - name: Run Ansible Playbook (Check Mode)
         working-directory: infrastructure
         run: |
-          ansible-playbook -i inventory/hosts.yaml playbook.yaml --check --diff
+          ansible-playbook -i inventory/hosts.yaml playbook.yaml --check --diff -e 'ansible_python_interpreter=/usr/bin/python3'
 
   # Job 2: Apply (Runs ONLY on push to main, after Check passes)
   apply:
@@ -71,4 +71,4 @@ jobs:
       - name: Run Ansible Playbook (Apply)
         working-directory: infrastructure
         run: |
-          ansible-playbook -i inventory/hosts.yaml playbook.yaml
+          ansible-playbook -i inventory/hosts.yaml playbook.yaml -e 'ansible_python_interpreter=/usr/bin/python3'
