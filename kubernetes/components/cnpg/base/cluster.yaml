@@ -20,11 +20,17 @@ spec:
   enableSuperuserAccess: true
   probes:
     startup:
-      failureThreshold: 600
       periodSeconds: 10
+      failureThreshold: 300
+      timeoutSeconds: 5
     liveness:
-      failureThreshold: 10
-      timeoutSeconds: 30
+      periodSeconds: 10
+      timeoutSeconds: 5
+      failureThreshold: 3
+    readiness:
+      periodSeconds: 10
+      timeoutSeconds: 5
+      failureThreshold: 3
   resources:
     requests:
       cpu: ${CNPG_REQUESTS_CPU:=2}
