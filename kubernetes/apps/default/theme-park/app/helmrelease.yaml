@@ -36,11 +36,6 @@ spec:
         runAsGroup: 1000
     service:
       app:
-        annotations:
-          gatus.home-operations.com/endpoint: |
-            group: external
-            alerts:
-              - type: pushover
         ports:
           http:
             port: &port 8080
