@@ -11,7 +11,7 @@ spec:
   interval: 1h
   values:
     nodeSelector:
-      networking.home.arpa/vpn-capable: "true"
+      networking.home.arpa/vpn-capable: "false"
     fullnameOverride: blackbox-exporter-vpn
     strategy:
       type: Recreate
