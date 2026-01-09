@@ -22,6 +22,14 @@ endpoints:
     interval: 1m
     conditions:
       - "[CONNECTED] == true"
+  - name: plex-internal
+    group: media
+    url: http://plex.media.svc.cluster.local:32400/identity
+    interval: 1m
+    conditions:
+      - "[STATUS] == 200"
+    alerts:
+      - type: discord
 metrics: true
 storage:
   type: sqlite
