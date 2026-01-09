@@ -53,8 +53,6 @@ spec:
               limits:
                 memory: 12Gi
     defaultPodOptions:
-      nodeSelector:
-        networking.home.arpa/vpn-capable: "true"
       annotations:
         k8s.v1.cni.cncf.io/networks: |-
           [{
