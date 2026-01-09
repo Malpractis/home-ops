@@ -21,7 +21,7 @@ spec:
               repository: ghcr.io/home-operations/plex
               tag: 1.42.2.10156@sha256:9ad8a3506e1d8ebda873a668603c1a2c10e6887969564561be669efd65ae8871
             env:
-              PLEX_ADVERTISE_URL: "https://plex.${SECRET_DOMAIN:=flux.local}:443,http://plex.${SECRET_DOMAIN:=flux.local}:32400,https://plex.${SECRET_DOMAIN:=flux.local}:32400,http://192.168.20.111:32400,https://192.168.20.111:32400,http://192.168.20.200:32400,https://192.168.20.200:32400,http://192.168.20.40:32400,https://192.168.20.40:32400"
+              PLEX_ADVERTISE_URL: "https://plex.${SECRET_DOMAIN:=flux.local}:443,http://${PLEX_IP}:32400,http://plex.media.svc.cluster.local:32400"
               PLEX_NO_AUTH_NETWORKS: 192.168.1.0/24, 192.168.20.0/24
               PLEX_UID: 1000
               PLEX_GID: 1000
@@ -32,7 +32,7 @@ spec:
                 spec:
                   httpGet:
                     path: /identity
-                    port: 32400
+                    port: &port 32400
                   initialDelaySeconds: 0
                   periodSeconds: 10
                   timeoutSeconds: 1
@@ -81,15 +81,31 @@ spec:
           lbipam.cilium.io/ips: "${PLEX_IP:=192.168.10.111}"
         ports:
           http:
-            port: &port 32400
+            port: *port
     route:
       app:
+        annotations:
+          gatus.home-operations.com/endpoint: |-
+            conditions: ["[STATUS] == 401"]
         hostnames:
           - "{{ .Release.Name }}.${SECRET_DOMAIN:=flux.local}"
         parentRefs:
           - name: envoy-external
             namespace: network
         rules:
+          - # Ref: https://forums.plex.tv/t/external-srt-subtitles-are-not-working-w-reverse-proxy/886540
+            backendRefs:
+              - identifier: app
+                port: *port
+            filters:
+              - type: RequestHeaderModifier
+                requestHeaderModifier:
+                  remove:
+                    - Range
+            matches:
+              - path:
+                  type: PathPrefix
+                  value: /library/streams
           - backendRefs:
               - name: *app
                 port: *port
