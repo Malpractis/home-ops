@@ -68,14 +68,14 @@ spec:
           limits:
             memory: 1Gi # default
           requests:
-            cpu: 200m # 500m is default
+            cpu: 500m # 500m is default
             memory: 768Mi #512Mi is default
         mon:
           limits:
             memory: 2Gi # default
           requests:
             cpu: 500m # 1000m is default
-            memory: 512Mi # 1Gi is default
+            memory: 1Gi # 1Gi is default
         osd:
           limits:
             memory: 4Gi # default
