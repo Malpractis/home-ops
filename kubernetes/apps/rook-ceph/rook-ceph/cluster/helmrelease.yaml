@@ -60,7 +60,7 @@ spec:
       storage:
         useAllNodes: true
         useAllDevices: false
-        devicePathFilter: /dev/disk/by-id/.*(MTFDKBA960TFR|24334AA93E00).*
+        devicePathFilter: /dev/disk/by-id/nvme-Micron_7450_MTFDKBA960TFR_.*
         config:
           osdsPerDevice: "1"
       resources:
