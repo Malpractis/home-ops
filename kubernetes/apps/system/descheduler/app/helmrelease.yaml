@@ -27,16 +27,14 @@ spec:
                     - SystemCriticalPods
             - name: LowNodeUtilization
               args:
-                metricsUtilization:
-                  source: KubernetesMetrics
                 thresholds:
-                  cpu: 20
-                  memory: 20
-                  pods: 20
-                targetThresholds:
                   cpu: 50
-                  memory: 50
-                  pods: 50
+                  memory: 60
+                  pods: 60
+                targetThresholds:
+                  cpu: 85
+                  memory: 70
+                  pods: 85
             - name: RemoveFailedPods
               args:
                 reasons:
@@ -54,6 +52,7 @@ spec:
               args:
                 nodeAffinityType:
                   - requiredDuringSchedulingIgnoredDuringExecution
+                  - preferredDuringSchedulingIgnoredDuringExecution
             - name: RemovePodsViolatingNodeTaints
             - name: RemovePodsViolatingTopologySpreadConstraint
           plugins:
