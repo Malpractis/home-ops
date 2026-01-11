@@ -12,3 +12,12 @@ spec:
   values:
     controllerExtraArgs: |
       - --devices=gpu
+    manager:
+      devices:
+        gpu: true
+        fpga: false
+        sgx: false
+        qat: false
+        dlb: false
+        dsa: false
+        iaa: false
