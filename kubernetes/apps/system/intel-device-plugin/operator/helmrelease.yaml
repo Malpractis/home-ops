@@ -10,8 +10,8 @@ spec:
     name: intel-device-plugins-operator
   interval: 15m
   values:
-    controllerExtraArgs: |
-      - --devices=gpu
+    # controllerExtraArgs: |
+    #   - --devices=gpu
     manager:
       devices:
         gpu: true
