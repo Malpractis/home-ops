@@ -10,5 +10,145 @@ spec:
     name: intel-device-plugins-operator
   interval: 15m
   values:
-    # controllerExtraArgs: |
-    #   - --devices=gpu
+    controllerExtraArgs: |
+      - --devices=gpu
+  postRenderers:
+    - kustomize:
+        patches:
+          # MutatingWebhookConfigurations
+          - target:
+              kind: MutatingWebhookConfiguration
+              name: ".*dlb.*"
+            patch: |-
+              $patch: delete
+              apiVersion: admissionregistration.k8s.io/v1
+              kind: MutatingWebhookConfiguration
+              metadata:
+                name: inteldeviceplugins-mutating-webhook-configuration
+          - target:
+              kind: MutatingWebhookConfiguration
+              name: ".*dsa.*"
+            patch: |-
+              $patch: delete
+              apiVersion: admissionregistration.k8s.io/v1
+              kind: MutatingWebhookConfiguration
+              metadata:
+                name: inteldeviceplugins-mutating-webhook-configuration
+          - target:
+              kind: MutatingWebhookConfiguration
+              name: ".*fpga.*"
+            patch: |-
+              $patch: delete
+              apiVersion: admissionregistration.k8s.io/v1
+              kind: MutatingWebhookConfiguration
+              metadata:
+                name: inteldeviceplugins-mutating-webhook-configuration
+          - target:
+              kind: MutatingWebhookConfiguration
+              name: ".*iaa.*"
+            patch: |-
+              $patch: delete
+              apiVersion: admissionregistration.k8s.io/v1
+              kind: MutatingWebhookConfiguration
+              metadata:
+                name: inteldeviceplugins-mutating-webhook-configuration
+          - target:
+              kind: MutatingWebhookConfiguration
+              name: ".*sgx.*"
+            patch: |-
+              $patch: delete
+              apiVersion: admissionregistration.k8s.io/v1
+              kind: MutatingWebhookConfiguration
+              metadata:
+                name: inteldeviceplugins-mutating-webhook-configuration
+          - target:
+              kind: MutatingWebhookConfiguration
+              name: ".*npu.*"
+            patch: |-
+              $patch: delete
+              apiVersion: admissionregistration.k8s.io/v1
+              kind: MutatingWebhookConfiguration
+              metadata:
+                name: inteldeviceplugins-mutating-webhook-configuration
+          - target:
+              kind: MutatingWebhookConfiguration
+              name: ".*qat.*"
+            patch: |-
+              $patch: delete
+              apiVersion: admissionregistration.k8s.io/v1
+              kind: MutatingWebhookConfiguration
+              metadata:
+                name: inteldeviceplugins-mutating-webhook-configuration
+          - target:
+              kind: MutatingWebhookConfiguration
+              name: ".*sgx.*"
+            patch: |-
+              $patch: delete
+              apiVersion: admissionregistration.k8s.io/v1
+              kind: MutatingWebhookConfiguration
+              metadata:
+                name: inteldeviceplugins-mutating-webhook-configuration
+          # ValidatingWebhookConfigurations
+          - target:
+              kind: ValidatingWebhookConfiguration
+              name: ".*dlb.*"
+            patch: |-
+              $patch: delete
+              apiVersion: admissionregistration.k8s.io/v1
+              kind: ValidatingWebhookConfiguration
+              metadata:
+                name: inteldeviceplugins-validating-webhook-configuration
+          - target:
+              kind: ValidatingWebhookConfiguration
+              name: ".*dsa.*"
+            patch: |-
+              $patch: delete
+              apiVersion: admissionregistration.k8s.io/v1
+              kind: ValidatingWebhookConfiguration
+              metadata:
+                name: inteldeviceplugins-validating-webhook-configuration
+          - target:
+              kind: ValidatingWebhookConfiguration
+              name: ".*fpga.*"
+            patch: |-
+              $patch: delete
+              apiVersion: admissionregistration.k8s.io/v1
+              kind: ValidatingWebhookConfiguration
+              metadata:
+                name: inteldeviceplugins-validating-webhook-configuration
+          - target:
+              kind: ValidatingWebhookConfiguration
+              name: ".*iaa.*"
+            patch: |-
+              $patch: delete
+              apiVersion: admissionregistration.k8s.io/v1
+              kind: ValidatingWebhookConfiguration
+              metadata:
+                name: inteldeviceplugins-validating-webhook-configuration
+          - target:
+              kind: ValidatingWebhookConfiguration
+              name: ".*npu.*"
+            patch: |-
+              $patch: delete
+              apiVersion: admissionregistration.k8s.io/v1
+              kind: ValidatingWebhookConfiguration
+              metadata:
+                name: inteldeviceplugins-validating-webhook-configuration
+          - target:
+              kind: ValidatingWebhookConfiguration
+              name: ".*qat.*"
+            patch: |-
+              $patch: delete
+              apiVersion: admissionregistration.k8s.io/v1
+              kind: ValidatingWebhookConfiguration
+              metadata:
+                name: inteldeviceplugins-validating-webhook-configuration
+          - target:
+              kind: ValidatingWebhookConfiguration
+              name: ".*sgx.*"
+            patch: |-
+              $patch: delete
+              apiVersion: admissionregistration.k8s.io/v1
+              kind: ValidatingWebhookConfiguration
+              metadata:
+                name: inteldeviceplugins-validating-webhook-configuration
