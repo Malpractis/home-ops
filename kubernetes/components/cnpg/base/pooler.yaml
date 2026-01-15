@@ -11,6 +11,8 @@ spec:
   type: rw
   pgbouncer:
     poolMode: session
+    authQuerySecret:
+      name: postgres-${APP}-pgbouncer
     parameters:
       max_client_conn: "1000"
       default_pool_size: "10"

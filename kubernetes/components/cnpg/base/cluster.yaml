@@ -12,6 +12,11 @@ spec:
   managed:
     services:
       disabledDefaultServices: ${CNPG_DISABLED_SERVICES:=['ro', 'r']}
+    roles:
+      - name: pgbouncer
+        login: true
+        superuser: false
+        disablePassword: true
   storage:
     size: ${CNPG_SIZE:=2Gi}
     storageClass: ${CNPG_STORAGECLASS:=ceph-block}
