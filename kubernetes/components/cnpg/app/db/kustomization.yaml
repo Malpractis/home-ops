@@ -5,5 +5,4 @@ kind: Kustomization
 resources:
   - ./certificate.yaml
   - ./ks.yaml
-  - ../../base/pooler.yaml
   - ./secret.yaml
