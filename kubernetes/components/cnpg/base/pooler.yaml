@@ -11,6 +11,7 @@ spec:
   type: rw
   pgbouncer:
     poolMode: session
+    authQuery: "SELECT usename, passwd FROM pg_catalog.pg_shadow WHERE usename=$1"
     authQuerySecret:
       name: postgres-${APP}-pgbouncer
     parameters:
