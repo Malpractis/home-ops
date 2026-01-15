@@ -11,9 +11,8 @@ spec:
   type: rw
   pgbouncer:
     poolMode: session
-    authQuery: "SELECT usename, passwd FROM pg_catalog.pg_shadow WHERE usename=$1"
-    authQuerySecret:
-      name: postgres-${APP}-pgbouncer
     parameters:
+      auth_type: cert
+      auth_user: pgbouncer
       max_client_conn: "1000"
       default_pool_size: "10"

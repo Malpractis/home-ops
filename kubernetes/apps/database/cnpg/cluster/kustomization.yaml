@@ -19,6 +19,7 @@ patches:
           replicationTLSSecret: postgres-cluster-client-cert
         postgresql:
           pg_hba:
+            - hostssl all pgbouncer 10.42.0.0/16  cert clientcert=verify-full
             - hostnossl all all 10.42.0.0/16      scram-sha-256
             - hostssl   all all all               cert clientcert=verify-full
         managed:
@@ -31,8 +32,8 @@ patches:
             - name: pgbouncer
               ensure: present
               login: true
-              superuser: true
-              disablePassword: false
+              superuser: false
+              disablePassword: true
 
 #         bootstrap:
 #           recovery:
