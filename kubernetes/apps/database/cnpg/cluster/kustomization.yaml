@@ -28,6 +28,12 @@ patches:
               login: true
               superuser: false
               disablePassword: true
+            - name: pgbouncer
+              ensure: present
+              login: true
+              superuser: true
+              disablePassword: false
+
 #         bootstrap:
 #           recovery:
 #             recoveryTarget:
