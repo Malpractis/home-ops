@@ -70,7 +70,7 @@ spec:
                       path: ca.crt
     authentik:
       postgresql:
-        host: postgres-authentik-pooler-rw.database.svc.cluster.local
+        host: postgres-authentik-pooler.database.svc.cluster.local
         port: 5432
       email:
         port: 587

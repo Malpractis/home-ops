@@ -6,7 +6,7 @@ metadata:
   name: postgres-${APP}-pooler
 spec:
   cluster:
-    name: postgres-cluster # Or postgres-${APP} depending on your naming convention
+    name: postgres-${APP}
   instances: ${CNPG_POOLER_REPLICAS:=2}
   type: rw
   pgbouncer:
