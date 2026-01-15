@@ -15,8 +15,8 @@ spec:
     roles:
       - name: pgbouncer
         login: true
-        superuser: false
-        disablePassword: true
+        superuser: true
+        disablePassword: false
   storage:
     size: ${CNPG_SIZE:=2Gi}
     storageClass: ${CNPG_STORAGECLASS:=ceph-block}
