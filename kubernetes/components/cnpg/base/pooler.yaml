@@ -13,6 +13,5 @@ spec:
     poolMode: session
     parameters:
       auth_type: cert
-      auth_user: pgbouncer
       max_client_conn: "1000"
       default_pool_size: "10"
