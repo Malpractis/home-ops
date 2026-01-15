@@ -64,7 +64,7 @@ spec:
                     - key: tls.key
                       path: tls.key
               - secret:
-                  name: postgres-cluster-ca-secret
+                  name: postgres-cluster-client-ca-secret
                   items:
                     - key: ca.crt
                       path: ca.crt
