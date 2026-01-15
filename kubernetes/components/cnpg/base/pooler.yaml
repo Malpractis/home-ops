@@ -1,0 +1,16 @@
+---
+# yaml-language-server: $schema=https://schemas.tholinka.dev/postgresql.cnpg.io/pooler_v1.json
+apiVersion: postgresql.cnpg.io/v1
+kind: Pooler
+metadata:
+  name: postgres-${APP}-pooler
+spec:
+  cluster:
+    name: postgres-cluster # Or postgres-${APP} depending on your naming convention
+  instances: ${CNPG_POOLER_REPLICAS:=2}
+  type: rw
+  pgbouncer:
+    poolMode: session
+    parameters:
+      max_client_conn: "1000"
+      default_pool_size: "10"

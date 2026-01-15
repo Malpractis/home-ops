@@ -42,9 +42,12 @@ spec:
     enablePodAntiAffinity: true
     topologyKey: kubernetes.io/hostname
     podAntiAffinityType: required
+  certificates:
+    clientCASecret: postgres-cluster-client-ca-secret
+    serverCASecret: postgres-cluster-server-ca-secret
   postgresql:
     parameters:
-      max_connections: '${CNPG_MAX_CONNECTIONS:="600"}'
+      max_connections: '${CNPG_MAX_CONNECTIONS:="100"}'
       shared_buffers: ${CNPG_SHARED_BUFFERS:=512MB}
   monitoring:
     enablePodMonitor: false # deprecated - https://github.com/cloudnative-pg/cloudnative-pg/pull/8753
