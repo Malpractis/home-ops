@@ -10,11 +10,43 @@
         cache_valid_time: 3600
       when: ansible_os_family == 'Debian'
 
-    - name: Ensure smartmontools is installed
+    - name: Manage smartmontools package
       ansible.builtin.package:
         name: smartmontools
-        state: present
+        state: "{{ smartmontools_state | default('present') }}"
 
   roles:
     - role: prometheus.prometheus.node_exporter
     - role: prometheus.prometheus.smartctl_exporter
+
+  post_tasks:
+    - name: Cleanup Smartctl Exporter
+      when: perform_smartctl_cleanup | default(false)
+      block:
+        - name: Stop and disable smartctl_exporter service
+          ansible.builtin.systemd:
+            name: smartctl_exporter
+            state: stopped
+            enabled: false
+          failed_when: false
+
+        - name: Remove smartctl_exporter systemd unit
+          ansible.builtin.file:
+            path: /etc/systemd/system/smartctl_exporter.service
+            state: absent
+          notify: Reload Systemd
+
+        - name: Remove smartctl_exporter override directory
+          ansible.builtin.file:
+            path: /etc/systemd/system/smartctl_exporter.service.d
+            state: absent
+
+        - name: Remove smartctl_exporter binary
+          ansible.builtin.file:
+            path: /usr/local/bin/smartctl_exporter
+            state: absent
+
+  handlers:
+    - name: Reload Systemd
+      ansible.builtin.systemd:
+        daemon_reload: true

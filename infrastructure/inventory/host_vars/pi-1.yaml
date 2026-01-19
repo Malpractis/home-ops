@@ -1,2 +1,4 @@
 # host_vars/pi-1.yml
 smartctl_exporter_enabled: false
+smartmontools_state: absent
+perform_smartctl_cleanup: true
