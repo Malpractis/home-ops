@@ -28,7 +28,6 @@ spec:
         - nas.internal:9633
         - pve-0.internal:9633
         - pi-0.internal:9633
-        - pi-1.internal:9633
   metricsPath: /metrics
   relabelings:
     - action: replace
