@@ -1,0 +1,2 @@
+# host_vars/pi-1.yml
+smartctl_exporter_enabled: false
