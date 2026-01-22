@@ -72,3 +72,9 @@ spec:
     persistence:
       config:
         existingClaim: "{{ .Release.Name }}"
+      data:
+        type: nfs
+        server: nas.internal
+        path: /mnt/tank/data
+        globalMounts:
+          - path: /data
