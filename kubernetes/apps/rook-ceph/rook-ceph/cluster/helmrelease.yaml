@@ -25,6 +25,8 @@ spec:
           - name: envoy-internal
             namespace: network
     cephClusterSpec:
+      cephVersion:
+        imagePullPolicy: IfNotPresent
       cephConfig:
         global:
           bdev_enable_discard: "true" # quote
