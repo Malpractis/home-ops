@@ -10,6 +10,10 @@ spec:
     name: rook-ceph-cluster
   interval: 1h
   values:
+    cephImage:
+      repository: quay.io/ceph/ceph
+      tag: v19.2.3@sha256:af0c5903e901e329adabe219dfc8d0c3efc1f05102a753902f33ee16c26b6cee
+      imagePullPolicy: IfNotPresent
     monitoring:
       enabled: true
       createPrometheusRules: true
@@ -25,8 +29,6 @@ spec:
           - name: envoy-internal
             namespace: network
     cephClusterSpec:
-      cephVersion:
-        imagePullPolicy: IfNotPresent
       cephConfig:
         global:
           bdev_enable_discard: "true" # quote
