@@ -13,7 +13,34 @@ spec:
     controllers:
       cross-seed:
         annotations:
-          reloader.stakater.com/auto: "true"
+          secret.reloader.stakater.com/reload: cross-seed-secret
+        pod:
+          annotations:
+            k8s.ksgate.org/qbittorrent-deployment: |-
+              {
+                "apiVersion": "apps/v1",
+                "kind": "Deployment",
+                "name": "qbittorrent",
+                "namespace": "torrents",
+                "expression": "resource.status.readyReplicas >= 1"
+              }
+            k8s.ksgate.org/prowlarr-deployment: |-
+              {
+                "apiVersion": "apps/v1",
+                "kind": "Deployment",
+                "name": "prowlarr",
+                "namespace": "media",
+                "expression": "resource.status.readyReplicas >= 1"
+              }
+          schedulingGates:
+            - name: k8s.ksgate.org/qbittorrent-deployment
+            - name: k8s.ksgate.org/prowlarr-deployment
+          securityContext:
+            runAsNonRoot: true
+            runAsUser: 1000
+            runAsGroup: 1000
+            fsGroup: 1000
+            fsGroupChangePolicy: OnRootMismatch
         containers:
           app:
             nameOverride: *app
@@ -46,13 +73,6 @@ spec:
                 memory: 128Mi
               limits:
                 memory: 1Gi
-    defaultPodOptions:
-      securityContext:
-        runAsNonRoot: true
-        runAsUser: 1000
-        runAsGroup: 1000
-        fsGroup: 1000
-        fsGroupChangePolicy: OnRootMismatch
     service:
       app:
         controller: *app
