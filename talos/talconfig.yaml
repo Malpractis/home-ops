@@ -23,7 +23,7 @@ nodes:
   - hostname: "matalos-c1"
     ipAddress: "192.168.20.10"
     installDiskSelector:
-      model: "QEMU HARDDISK"
+      model: "INTEL SSDPE21D280GA"
     machineSpec:
       secureboot: false
     talosImageURL: factory.talos.dev/installer/1470888f5d8755091c5d79199c1df242933a90d38c010d233ea3af5b4899982c
@@ -115,8 +115,6 @@ nodes:
             - siderolabs/i915 # Intel iGPU
             - siderolabs/mei # Intel iGPU
             - siderolabs/nfsrahead # NFS Performance
-    nodeLabels:
-      networking.home.arpa/vpn-capable: "true"
   - hostname: "matalos-c3"
     ipAddress: "192.168.20.12"
     installDiskSelector:
@@ -168,8 +166,6 @@ nodes:
             - siderolabs/i915 # Intel iGPU
             - siderolabs/mei # Intel iGPU
             - siderolabs/nfsrahead # NFS Performance
-    nodeLabels:
-      networking.home.arpa/vpn-capable: "true"
 
 # Global patches
 patches:
