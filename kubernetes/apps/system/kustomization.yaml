@@ -10,5 +10,6 @@ replacements:
 resources:
   - ./descheduler/ks.yaml
   - ./intel-device-plugin/ks.yaml
+  - ./ksgate/ks.yaml
   - ./reloader/ks.yaml
   - ./spegel/ks.yaml
