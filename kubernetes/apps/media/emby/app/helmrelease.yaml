@@ -19,7 +19,7 @@ spec:
             nameOverride: *app
             image:
               repository: ghcr.io/home-operations/emby
-              tag: 4.9.3.0@sha256:d038117c88af265865a1169e555a95a9bf74f61b82c7e658460f7848f6bddd6a
+              tag: 4.9.3.0@sha256:7c33d88d0186ad7abcc6e53566e9db8766687daa5510cddc13094e25bc5a5dfb
             probes:
               liveness: &probes
                 type: HTTP
