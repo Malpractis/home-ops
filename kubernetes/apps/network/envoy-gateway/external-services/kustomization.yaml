@@ -3,6 +3,7 @@
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 resources:
+  - ./external-garage.yaml
   - ./external-nas.yaml
   - ./external-pi-0.yaml
   - ./external-pi-1.yaml
