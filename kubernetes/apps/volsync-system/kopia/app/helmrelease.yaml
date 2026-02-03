@@ -95,7 +95,7 @@ spec:
       repository:
         type: nfs
         server: nas.internal
-        path: /mnt/tank/volsynckopia
+        path: /mnt/apps/volsynckopia
         globalMounts:
           - path: /repository
       tmpfs:
