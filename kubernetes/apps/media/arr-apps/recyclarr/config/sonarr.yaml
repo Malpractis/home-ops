@@ -27,7 +27,7 @@ sonarr:
       - template: sonarr-v4-quality-profile-web-2160p
       - template: sonarr-v4-custom-formats-web-2160p
       # Custom 720p profile
-      - config: /config/configs/includes/web-720p-v4.yml
+      - config: /config/configs/includes/sonarr/web-720p-v4.yml
 
     delete_old_custom_formats: true
 

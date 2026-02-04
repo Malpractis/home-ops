@@ -56,13 +56,33 @@ spec:
       configs:
         type: configMap
         name: recyclarr-configs
-        globalMounts:
-          - path: /config/configs
+        advancedMounts:
+          recyclarr:
+            app:
+              - path: /config/configs/radarr-4k.yaml
+                subPath: radarr-4k.yaml
+                readOnly: true
+              - path: /config/configs/radarr-anime.yaml
+                subPath: radarr-anime.yaml
+                readOnly: true
+              - path: /config/configs/radarr.yaml
+                subPath: radarr.yaml
+                readOnly: true
+              - path: /config/configs/sonarr-anime.yaml
+                subPath: sonarr-anime.yaml
+                readOnly: true
+              - path: /config/configs/sonarr.yaml
+                subPath: sonarr.yaml
+                readOnly: true
       includes:
         type: configMap
         name: recyclarr-includes
-        globalMounts:
-          - path: /config/configs/includes/sonarr
+        advancedMounts:
+          recyclarr:
+            app:
+              - path: /config/configs/includes/sonarr/web-720p-v4.yaml
+                subPath: web-720p-v4.yaml
+                readOnly: true
       custom-formats:
         type: configMap
         name: recyclarr-custom-formats
