@@ -47,6 +47,8 @@ spec:
             - name: envoy-internal
               namespace: network
       prometheusSpec:
+        annotations:
+          secret.reloader.stakater.com/reload: "prometheus-notifiarr-scrape-secret,alertmanager-secret"
         externalUrl: https://prometheus.${SECRET_DOMAIN:=flux.local}
         podMonitorSelectorNilUsesHelmValues: false
         probeSelectorNilUsesHelmValues: false
