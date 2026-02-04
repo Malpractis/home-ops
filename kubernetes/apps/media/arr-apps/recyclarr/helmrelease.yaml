@@ -24,6 +24,9 @@ spec:
               CRON_SCHEDULE: "@daily"
               RECYCLARR_CREATE_CONFIG: "true"
               TZ: ${TIMEZONE:-Etc/UTC}
+            envFrom:
+              - secretRef:
+                  name: recyclarr-secret
             securityContext:
               allowPrivilegeEscalation: false
               readOnlyRootFilesystem: false
@@ -45,10 +48,10 @@ spec:
         existingClaim: "{{ .Release.Name }}"
         globalMounts:
           - path: /config
-      secret-file:
-        type: secret
-        name: recyclarr-secret
-        globalMounts:
-          - path: /config/secrets.yaml
-            subPath: secrets.yaml
-            readOnly: true
+      # config-file:
+      #   type: configMap
+      #   name: recyclarr-configmap
+      #   globalMounts:
+      #     - path: /config/recyclarr.yaml
+      #       subPath: recyclarr.yaml
+      #       readOnly: true
