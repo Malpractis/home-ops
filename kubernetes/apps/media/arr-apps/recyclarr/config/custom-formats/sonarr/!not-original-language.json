@@ -1,0 +1,15 @@
+{
+    "name": "!Not Original Language",
+    "includeCustomFormatWhenRenaming": false,
+    "specifications": [
+        {
+            "name": "Not Original Language",
+            "implementation": "LanguageSpecification",
+            "negate": true,
+            "required": false,
+            "fields": {
+                "value": -2
+            }
+        }
+    ]
+}

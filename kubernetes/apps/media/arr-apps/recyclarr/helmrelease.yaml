@@ -48,10 +48,18 @@ spec:
         existingClaim: "{{ .Release.Name }}"
         globalMounts:
           - path: /config
-      # config-file:
-      #   type: configMap
-      #   name: recyclarr-configmap
-      #   globalMounts:
-      #     - path: /config/recyclarr.yaml
-      #       subPath: recyclarr.yaml
-      #       readOnly: true
+      configs:
+        type: configMap
+        name: recyclarr-configs
+        globalMounts:
+          - path: /config/configs
+      includes:
+        type: configMap
+        name: recyclarr-includes
+        globalMounts:
+          - path: /config/configs/includes/sonarr
+      custom-formats:
+        type: configMap
+        name: recyclarr-custom-formats
+        globalMounts:
+          - path: /config/configs/custom_formats/sonarr

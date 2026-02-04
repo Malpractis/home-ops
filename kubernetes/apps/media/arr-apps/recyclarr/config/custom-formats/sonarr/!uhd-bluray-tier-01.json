@@ -1,0 +1,60 @@
+{
+    "name": "!UHD Bluray Tier 01",
+    "includeCustomFormatWhenRenaming": false,
+    "specifications": [
+        {
+            "name": "BLURAY",
+            "implementation": "SourceSpecification",
+            "negate": false,
+            "required": true,
+            "fields": {
+                "value": 6
+            }
+        },
+        {
+            "name": "Not REMUX",
+            "implementation": "SourceSpecification",
+            "negate": true,
+            "required": true,
+            "fields": {
+                "value": 7
+            }
+        },
+        {
+            "name": "2160p",
+            "implementation": "ResolutionSpecification",
+            "negate": false,
+            "required": true,
+            "fields": {
+                "value": 2160
+            }
+        },
+        {
+            "name": "DON",
+            "implementation": "ReleaseGroupSpecification",
+            "negate": false,
+            "required": false,
+            "fields": {
+                "value": "\\b(DON)\\b"
+            }
+        },
+        {
+            "name": "Not WEBDL",
+            "implementation": "SourceSpecification",
+            "negate": true,
+            "required": true,
+            "fields": {
+                "value": 3
+            }
+        },
+        {
+            "name": "Not WEBRIP",
+            "implementation": "SourceSpecification",
+            "negate": true,
+            "required": true,
+            "fields": {
+                "value": 4
+            }
+        }
+    ]
+}
