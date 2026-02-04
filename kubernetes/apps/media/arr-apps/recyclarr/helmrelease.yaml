@@ -12,24 +12,18 @@ spec:
   values:
     controllers:
       recyclarr:
-        # type: cronjob
         annotations:
           reloader.stakater.com/auto: "true"
-        # cronjob:
-        #   timeZone: &timeZone ${TIMEZONE:-Etc/UTC}
-        #   schedule: "@daily"
-        #   successfulJobsHistory: 1
-        #   failedJobsHistory: 1
         containers:
           app:
             nameOverride: *app
             image:
               repository: ghcr.io/recyclarr/recyclarr
               tag: 7.5.2@sha256:2550848d43a453f2c6adf3582f2198ac719f76670691d76de0819053103ef2fb
-            envFrom:
-              - secretRef:
-                  name: recyclarr-secret
-            # args: ["sync"]
+            env:
+              CRON_SCHEDULE: "@daily"
+              RECYCLARR_CREATE_CONFIG: "true"
+              TZ: ${TIMEZONE:-Etc/UTC}
             securityContext:
               allowPrivilegeEscalation: false
               readOnlyRootFilesystem: false
@@ -51,3 +45,10 @@ spec:
         existingClaim: "{{ .Release.Name }}"
         globalMounts:
           - path: /config
+      secret-file:
+        type: secret
+        name: recyclarr-secret
+        globalMounts:
+          - path: /config/secrets.yaml
+            subPath: secrets.yaml
+            readOnly: true
