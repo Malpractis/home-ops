@@ -17,7 +17,7 @@ configMapGenerator:
       - sonarr.yaml=./config/sonarr.yaml
   - name: recyclarr-includes
     files:
-      - web-720p-v4.yaml=./config/includes/web-720p-v4.yaml
+      - web-720p-v4.yaml=./config/includes/sonarr/web-720p-v4.yaml
   - name: recyclarr-custom-formats
     files:
       - "!bhdstudio.json=./config/custom-formats/sonarr/!bhdstudio.json"
