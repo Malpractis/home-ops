@@ -51,3 +51,24 @@ spec:
   scheme: HTTPS
   tlsConfig:
     insecureSkipVerify: true
+---
+# yaml-language-server: $schema=https://kubernetes-schemas.pages.dev/monitoring.coreos.com/scrapeconfig_v1alpha1.json
+apiVersion: monitoring.coreos.com/v1alpha1
+kind: ScrapeConfig
+metadata:
+  name: notifiarr
+spec:
+  staticConfigs:
+    - targets:
+        - notifiarr.media.svc.cluster.local:5454
+  scrapeInterval: 60s
+  metricsPath: /metrics
+  authorization:
+    type: ApiKey
+    credentials:
+      name: notifiarr-secret
+      key: NOTIFIARR_METRICS_KEY
+  relabelings:
+    - action: replace
+      targetLabel: job
+      replacement: notifiarr
