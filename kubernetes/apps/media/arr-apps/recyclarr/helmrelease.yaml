@@ -48,6 +48,10 @@ spec:
         existingClaim: "{{ .Release.Name }}"
         globalMounts:
           - path: /config
+      configs-dir:
+        type: emptyDir
+        globalMounts:
+          - path: /config/configs
       configs:
         type: configMap
         name: recyclarr-configs
@@ -66,7 +70,10 @@ spec:
             app:
               - path: /config/configs/custom_formats/sonarr/!bhdstudio.json
                 subPath: bhdstudio.json
+                readOnly: true
               - path: /config/configs/custom_formats/sonarr/!not-original-language.json
                 subPath: not-original-language.json
+                readOnly: true
               - path: /config/configs/custom_formats/sonarr/!uhd-bluray-tier-01.json
                 subPath: uhd-bluray-tier-01.json
+                readOnly: true
