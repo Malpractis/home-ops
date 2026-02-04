@@ -75,13 +75,13 @@ spec:
       backup:
         type: nfs
         server: nas.internal
-        path: /mnt/tank/backup/apps/tautulli
+        path: /mnt/apps/backup/apps/tautulli
         globalMounts:
           - path: /backup
       logs:
         type: nfs
         server: nas.internal
-        path: /mnt/tank/apps-nfs/plex-logs
+        path: /mnt/apps/apps-nfs/plex-logs
         globalMounts:
           - path: "/plex-logs"
       tmp:

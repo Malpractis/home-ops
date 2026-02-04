@@ -91,6 +91,6 @@ spec:
       backup:
         type: nfs
         server: nas.internal
-        path: /mnt/tank/backup/apps/sonarr-anime
+        path: /mnt/apps/backup/arr-apps/sonarr-anime
         globalMounts:
           - path: /backup

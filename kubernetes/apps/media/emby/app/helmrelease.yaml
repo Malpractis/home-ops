@@ -103,6 +103,6 @@ spec:
       backup:
         type: nfs
         server: nas.internal
-        path: /mnt/tank/backup/apps/emby
+        path: /mnt/apps/backup/apps/emby
         globalMounts:
           - path: /backup

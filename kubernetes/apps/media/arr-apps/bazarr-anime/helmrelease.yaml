@@ -86,6 +86,6 @@ spec:
       backup:
         type: nfs
         server: nas.internal
-        path: /mnt/tank/backup/apps/bazarr-anime
+        path: /mnt/apps/backup/arr-apps/bazarr-anime
         globalMounts:
           - path: /backup

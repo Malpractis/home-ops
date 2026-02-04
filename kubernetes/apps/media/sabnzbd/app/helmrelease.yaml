@@ -106,6 +106,6 @@ spec:
       backup:
         type: nfs
         server: nas.internal
-        path: /mnt/tank/backup/apps/sabnzbd
+        path: /mnt/apps/backup/apps/sabnzbd
         globalMounts:
           - path: /backup

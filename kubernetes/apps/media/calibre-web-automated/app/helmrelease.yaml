@@ -104,7 +104,7 @@ spec:
       ingest:
         type: nfs
         server: nas.internal
-        path: /mnt/tank/data/torrents/ebooks_watch
+        path: /mnt/apps/apps-nfs/torrents/ebooks_watch
         globalMounts:
           - path: /cws-book-ingest
       cache:

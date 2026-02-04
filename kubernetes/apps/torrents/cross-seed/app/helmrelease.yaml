@@ -103,6 +103,12 @@ spec:
           - path: /config/config.js
             subPath: config.js
             readOnly: true
+      cross-seed:
+        type: nfs
+        server: nas.internal
+        path: /mnt/apps/apps-nfs/torrents/cross-seed
+        globalMounts:
+          - path: /cross-seed
       data:
         type: nfs
         server: nas.internal
@@ -112,7 +118,7 @@ spec:
       torrents:
         type: nfs
         server: nas.internal
-        path: /mnt/tank/data/torrents/BT_backup
+        path: /mnt/apps/apps-nfs/torrents/BT_backup
         globalMounts:
           - path: /torrents
       logs:

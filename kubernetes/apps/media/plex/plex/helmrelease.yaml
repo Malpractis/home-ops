@@ -133,12 +133,12 @@ spec:
       logs:
         type: nfs
         server: nas.internal
-        path: /mnt/tank/apps-nfs/plex-logs
+        path: /mnt/apps/apps-nfs/plex-logs
         globalMounts:
           - path: "/config/Library/Application Support/Plex Media Server/Logs"
       backup:
         type: nfs
         server: nas.internal
-        path: /mnt/tank/backup/apps/plex
+        path: /mnt/apps/backup/apps/plex
         globalMounts:
           - path: /backup

@@ -85,6 +85,6 @@ spec:
       backup:
         type: nfs
         server: nas.internal
-        path: /mnt/tank/backup/apps/prowlarr
+        path: /mnt/apps/backup/arr-apps/prowlarr
         globalMounts:
           - path: /backup

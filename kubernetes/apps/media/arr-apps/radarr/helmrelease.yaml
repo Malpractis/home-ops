@@ -91,6 +91,6 @@ spec:
       backup:
         type: nfs
         server: nas.internal
-        path: /mnt/tank/backup/apps/radarr
+        path: /mnt/apps/backup/arr-apps/radarr
         globalMounts:
           - path: /backup

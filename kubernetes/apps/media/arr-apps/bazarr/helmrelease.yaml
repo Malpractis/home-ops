@@ -83,6 +83,6 @@ spec:
       backup:
         type: nfs
         server: nas.internal
-        path: /mnt/tank/backup/apps/bazarr
+        path: /mnt/apps/backup/arr-apps/bazarr
         globalMounts:
           - path: /backup

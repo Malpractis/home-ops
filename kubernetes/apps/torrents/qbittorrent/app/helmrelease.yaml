@@ -114,6 +114,6 @@ spec:
       backup:
         type: nfs
         server: nas.internal
-        path: /mnt/tank/data/torrents/BT_backup
+        path: /mnt/apps/apps-nfs/torrents/BT_backup
         globalMounts:
           - path: /config/qBittorrent/BT_backup
