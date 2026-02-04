@@ -61,5 +61,12 @@ spec:
       custom-formats:
         type: configMap
         name: recyclarr-custom-formats
-        globalMounts:
-          - path: /config/configs/custom_formats/sonarr
+        advancedMounts:
+          recyclarr:
+            app:
+              - path: /config/configs/custom_formats/sonarr/!bhdstudio.json
+                subPath: bhdstudio.json
+              - path: /config/configs/custom_formats/sonarr/!not-original-language.json
+                subPath: not-original-language.json
+              - path: /config/configs/custom_formats/sonarr/!uhd-bluray-tier-01.json
+                subPath: uhd-bluray-tier-01.json
