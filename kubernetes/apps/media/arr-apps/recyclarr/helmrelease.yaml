@@ -12,9 +12,9 @@ spec:
   values:
     controllers:
       recyclarr:
-        strategy: Recreate
         annotations:
           reloader.stakater.com/auto: "true"
+        strategy: Recreate
         containers:
           app:
             nameOverride: *app
