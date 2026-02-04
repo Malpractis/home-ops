@@ -67,6 +67,10 @@ spec:
               resources:
                 requests:
                   storage: 75Gi
+        additionalScrapeConfigsSecret:
+          enabled: true
+          name: prometheus-notifiarr-scrape-secret
+          key: notifiarr.yaml
     prometheus-node-exporter:
       fullnameOverride: node-exporter
     kube-state-metrics:
