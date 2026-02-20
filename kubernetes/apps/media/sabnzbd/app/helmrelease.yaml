@@ -89,14 +89,12 @@ spec:
           sabnzbd:
             app:
               - path: /config
-      temporary:
+      tmpfs:
         type: emptyDir
         medium: Memory
         globalMounts:
           - path: /config/logs
-            subPath: config/logs
           - path: /tmp
-            subPath: tmp
       data:
         type: nfs
         server: nas.internal

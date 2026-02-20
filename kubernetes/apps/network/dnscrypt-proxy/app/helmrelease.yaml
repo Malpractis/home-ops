@@ -107,9 +107,9 @@ spec:
     persistence:
       tmpfs:
         type: emptyDir
+        medium: Memory
         globalMounts:
           - path: /config
-            subPath: config
       config-map:
         type: configMap
         name: dnscrypt-proxy-configmap

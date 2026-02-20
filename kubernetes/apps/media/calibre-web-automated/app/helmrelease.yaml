@@ -88,12 +88,11 @@ spec:
         existingClaim: "{{ .Release.Name }}"
         globalMounts:
           - path: /config
-      transcode:
+      tmpfs:
         type: emptyDir
         medium: Memory
         globalMounts:
-          - path: /transcode
-            subPath: transcode
+          - path: /tmp
       ebooks:
         type: nfs
         server: nas.internal
