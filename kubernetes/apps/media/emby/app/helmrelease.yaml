@@ -90,9 +90,7 @@ spec:
         medium: Memory
         globalMounts:
           - path: /tmp
-            subPath: tmp
           - path: /transcode
-            subPath: transcode
       data:
         type: nfs
         server: nas.internal
