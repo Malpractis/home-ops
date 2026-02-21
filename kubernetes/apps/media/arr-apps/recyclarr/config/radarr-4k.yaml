@@ -47,7 +47,6 @@ radarr:
             - 5c44f52a8714fdd79bb4d98e2673be1f # Retags
             - f537cf427b64c38c8e36298f657e4828 # Scene
             - f700d29429c023a5734505e77daeaea7 # DV (Disk)
-            - 839bea857ed2c0a8e084f3cbdbd65ecb # x265 (no HDR/DV)
             - 11cd1db7165d6a7ad9a83bc97b8b1060 # VC-1
             - ae4cfaa9283a4f2150ac3da08e388723 # VP9
             - 73613461ac2cea99d52c4cd6e177ab82 # HFR
