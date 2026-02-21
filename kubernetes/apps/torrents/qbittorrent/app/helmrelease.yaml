@@ -117,3 +117,8 @@ spec:
         path: /mnt/apps/apps-nfs/torrents/BT_backup
         globalMounts:
           - path: /config/qBittorrent/BT_backup
+      tmpfs:
+        type: emptyDir
+        medium: Memory
+        globalMounts:
+          - path: /tmp
