@@ -80,7 +80,7 @@ spec:
         advancedMounts:
           recyclarr:
             app:
-              - path: /config/configs/includes/sonarr/web-720p-v4.yaml
+              - path: /config/includes/sonarr/web-720p-v4.yaml
                 subPath: web-720p-v4.yaml
                 readOnly: true
       custom-formats:

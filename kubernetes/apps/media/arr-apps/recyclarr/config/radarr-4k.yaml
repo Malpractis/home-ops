@@ -19,7 +19,7 @@ radarr:
 
     include:
       # Quality sizes (only needed once)
-      - template: radarr-quality-definition-sqp-uhd
+      - template: /config/includes/radarr-quality-definition-sqp-uhd.yaml
       # SQP-2
       - template: radarr-quality-profile-sqp-2
       - template: radarr-custom-formats-sqp-2
