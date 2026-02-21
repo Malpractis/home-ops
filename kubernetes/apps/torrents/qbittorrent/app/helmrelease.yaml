@@ -119,6 +119,7 @@ spec:
           - path: /config/qBittorrent/BT_backup
       tmpfs:
         type: emptyDir
-        medium: Memory
-        globalMounts:
-          - path: /tmp
+        advancedMounts:
+          qbittorrent:
+            app:
+              - path: /tmp
