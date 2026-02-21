@@ -15,7 +15,7 @@
 #  /      Y88b |    Y888 888 /          Y888b 888___
 #
 # Recyclarr Configuration Template: Anime Radarr
-# Updated: 2026-02-04
+# Updated: 2026-02-21
 radarr:
   anime-movies:
     base_url: http://radarr-anime.media.svc.cluster.local

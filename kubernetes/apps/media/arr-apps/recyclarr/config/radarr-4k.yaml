@@ -8,8 +8,8 @@
 # |____| |___|____|  |____|________.'|____|  |____|____| |___|____| |___|
 #
 #
-# Recyclarr Configuration Template: SQP-2-5
-# Updated: 2026-02-04
+# Recyclarr Configuration Template: [SQP] SQP-2-5
+# Updated: 2026-02-21
 radarr:
   movies-4k:
     base_url: http://radarr-4k.media.svc.cluster.local
