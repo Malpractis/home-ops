@@ -23,27 +23,18 @@ radarr:
 
     delete_old_custom_formats: true
 
-    include:
-      - template: radarr-quality-definition-anime
-      - template: radarr-quality-profile-anime
-      - template: radarr-custom-formats-anime
+    quality_definition:
+      type: anime
 
-    # Custom Formats: https://recyclarr.dev/reference/configuration/custom-formats/
-    custom_formats:
-      - trash_ids:
-          - 064af5f084a0a24458cc8ecd3220f93f # Uncensored
-        assign_scores_to:
-          - name: Remux-1080p - Anime
-            score: 10 # Adjust scoring as desired
+    quality_profiles:
+      - trash_id: 722b624f9af1e492284c4bc842153a38 # [Anime] Remux-1080p
+        reset_unmatched_scores:
+          enabled: true
 
-      - trash_ids:
-          - a5d148168c4506b55cf53984107c396e # 10bit
-        assign_scores_to:
-          - name: Remux-1080p - Anime
-            score: 10 # Adjust scoring as desired
-
-      - trash_ids:
-          - 4a3b087eea2ce012fcc1ce319259a3be # Anime Dual Audio
-        assign_scores_to:
-          - name: Remux-1080p - Anime
-            score: 10 # Adjust scoring as desired
+    custom_format_groups:
+      add:
+        - trash_id: 9337080378236ce4c0b183e35790d2a7 # [Optional] Miscellaneous
+        - trash_id: b22449f789b16a4163b59f1b70cbc580 # [Streaming Services] Asian
+        # - trash_id: 088a792e0561c927fb396664b0db5c8f  # [Streaming Services] Dutch
+        - trash_id: 9fc645b3cef52b149ec13ba3972245d1 # [Streaming Services] Miscellaneous
+        - trash_id: f737e18b5824d6ebb2d57b957ae2fd6c # [Streaming Services] UK
