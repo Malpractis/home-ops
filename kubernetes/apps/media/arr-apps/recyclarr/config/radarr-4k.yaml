@@ -55,12 +55,6 @@ radarr:
             - 390455c22a9cac81a738f6cbad705c3c # x266
         - trash_id: 9337080378236ce4c0b183e35790d2a7 # [Optional] Miscellaneous
           select:
-            - b2be17d608fc88818940cd1833b0b24c # 720p
-            - 820b09bb9acbfde9c35c71e0e565dad8 # 1080p
-            - fb392fb0d61a010ae38e49ceaa24a1ef # 2160p
-            - e7718d7a3ce595f289bfee26adc178f5 # Repack/Proper
-            - ae43b294509409a6a13919dedd4764c4 # Repack2
-            - 5caaaa1c08c1742aa4342d8c4cc463f2 # Repack3
             - 2899d84dc9372de3408e6d8cc18e9666 # x264
         - trash_id: f4f1474b963b24cf983455743aa9906c # [Optional] Movie Versions
           select:

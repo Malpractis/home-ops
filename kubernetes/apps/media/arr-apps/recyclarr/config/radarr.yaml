@@ -36,9 +36,6 @@ radarr:
         - trash_id: 1616617ab3a14397a2b2321bcbda44d1 # [HDR Formats] DV Boost
         - trash_id: 9337080378236ce4c0b183e35790d2a7 # [Optional] Miscellaneous
           select:
-            - b2be17d608fc88818940cd1833b0b24c # 720p
-            - 820b09bb9acbfde9c35c71e0e565dad8 # 1080p
-            - fb392fb0d61a010ae38e49ceaa24a1ef # 2160p
             - b6832f586342ef70d9c128d40c07b872 # Bad Dual Groups
             - cc444569854e9de0b084ab2b8b1532b2 # Black and White Editions
             - ae9b7c9ebde1f3bd336a8cbd1ec4c5e5 # No-RlsGroup
@@ -46,13 +43,9 @@ radarr:
             - 5c44f52a8714fdd79bb4d98e2673be1f # Retags
             - f537cf427b64c38c8e36298f657e4828 # Scene
             - f700d29429c023a5734505e77daeaea7 # DV (Disk)
-            - 839bea857ed2c0a8e084f3cbdbd65ecb # x265 (no HDR/DV)
             - 11cd1db7165d6a7ad9a83bc97b8b1060 # VC-1
             - ae4cfaa9283a4f2150ac3da08e388723 # VP9
             - 73613461ac2cea99d52c4cd6e177ab82 # HFR
-            - e7718d7a3ce595f289bfee26adc178f5 # Repack/Proper
-            - ae43b294509409a6a13919dedd4764c4 # Repack2
-            - 5caaaa1c08c1742aa4342d8c4cc463f2 # Repack3
             - 2899d84dc9372de3408e6d8cc18e9666 # x264
             - 9170d55c319f4fe40da8711ba9d8050d # x265
             - 390455c22a9cac81a738f6cbad705c3c # x266
