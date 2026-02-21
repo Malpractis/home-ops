@@ -8,10 +8,8 @@
 # |_______.'\.____.'|_____|\____|____|  |____|____| |___|____| |___|
 #
 #
-# Recyclarr Configuration Template: WEB-1080p (V4)
-# Updated: 2026-02-04
-# Recyclarr Configuration Template: WEB-2160p (V4)
-# Updated: 2026-02-04
+# Recyclarr Configuration Template: WEB-2160p (Combined)
+# Updated: 2026-02-21
 sonarr:
   tv:
     base_url: http://sonarr.media.svc.cluster.local
@@ -27,15 +25,37 @@ sonarr:
 
     custom_format_groups:
       add:
-        - trash_id: e9a1944a254e6f8a9da63083f7ae15cb # [Audio] Audio Formats
         - trash_id: d776a1ea912a117d66d83b880ff2055d # [HDR Formats] DV (w/o HDR fallback)
         - trash_id: e0b2774083df4265f25c9e5bc6c80940 # [HDR Formats] DV Boost
         - trash_id: 7d366c213e5c23a052b157356fac1921 # [HDR Formats] HDR10+ Boost
         - trash_id: f4a0410a1df109a66d6e47dcadcce014 # [Optional] Miscellaneous
+          select:
+            - 32b367365729d530ca1c124a0b180c64 # Bad Dual Groups
+            - ef4963043b0987f8485bc9106f16db38 # DV (Disk)
+            - 1bd69272e23c5e6c5b1d6c8a36fce95e # HFR
+            - 82d40da2bc6923f41e14394075dd4b03 # No-RlsGroup
+            - e1a997ddb54e3ecbfe06341ad323c458 # Obfuscated
+            - 06d66ab109d4d2eddb2794d21526d140 # Retags
+            - 1b3994c551cbb92a2c781af061f4ab44 # Scene
+            - 7470a681e6205243983c4410ee4c920f # VC-1
+            - 90501962793d580d011511155c97e4e5 # VP9
+            - cddfb4e32db826151d97352b8e37c648 # x264
+            - c9eafd50846d299b862ca9bb6ea91950 # x265
+            - 041d90b435ebd773271cea047a457a6a # x266
         - trash_id: e1053c0ef622df3749fa43c22865663a # [Optional] SDR
+          select:
+            - 83304f261cf516bb208c18c54c0adf97 # SDR (no WEBDL)
         - trash_id: d920fd959d220306888f40b6f38e1578 # [Optional] Season Packs
         - trash_id: 35fb4585dcd9e2a5ac732e4309f5a45a # [Streaming Services] Asian
         - trash_id: f60f4401ce880aad62e9d21c8bb6b91a # [Streaming Services] Dutch
         - trash_id: 848fd356c200568fc5a6248150e7e7ea # [Streaming Services] French
-        - trash_id: 7832db22b71ab669458c17a2850d6913 # [Streaming Services] Miscellaneous
         - trash_id: ddab3095a5d2f436f369263840af34f9 # [Streaming Services] UK
+
+    custom_formats:
+      # Raise FLUX
+      - trash_ids:
+          - e098247bc6652dd88c76644b275260ed # FLUX
+        assign_scores_to:
+          - name: "[SQP] SQP-1 WEB (1080p)"
+          - name: "[SQP] SQP-1 WEB (2160p)"
+            score: 600
