@@ -12,7 +12,7 @@ spec:
   values:
     fullnameOverride: reloader
     reloader:
-      readOnlyRootFileSystem: true
+      readOnlyRootFilesystem: true
       podMonitor:
         enabled: true
         namespace: "{{ .Release.Namespace }}"
