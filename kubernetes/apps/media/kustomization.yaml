@@ -21,7 +21,7 @@ resources:
 patches:
   - target:
       kind: Namespace
-      name: media
+      name: not-used
     patch: |-
       - op: add
         path: /metadata/labels/resource.kubernetes.io~1admin-access
