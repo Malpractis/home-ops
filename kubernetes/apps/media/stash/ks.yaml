@@ -10,6 +10,7 @@ spec:
     labels:
       app.kubernetes.io/name: *app
   components:
+    - ../../../../components/gpu
     - ../../../../components/nfs-scaler
     - ../../../../components/volsync
   path: ./kubernetes/apps/media/stash/app
@@ -23,8 +24,8 @@ spec:
   timeout: 5m
   wait: true
   dependsOn:
-    - name: intel-device-plugin-gpu
-      namespace: system
+    - name: intel-gpu-resource-driver
+      namespace: kube-system
     - name: rook-ceph-cluster
       namespace: rook-ceph
   postBuild:

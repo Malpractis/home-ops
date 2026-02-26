@@ -45,12 +45,16 @@ spec:
               readOnlyRootFilesystem: false
               capabilities: { drop: ["ALL"] }
             resources:
+              claims:
+                - name: gpu
               requests:
-                cpu: 500m
-                memory: 512Mi
+                cpu: 100m
               limits:
                 memory: 2Gi
-                gpu.intel.com/i915: 1
+        pod:
+          resourceClaims:
+            - name: gpu
+              resourceClaimTemplateName: stash-gpu
     defaultPodOptions:
       securityContext:
         runAsNonRoot: false
