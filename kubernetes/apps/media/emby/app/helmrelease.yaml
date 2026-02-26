@@ -20,6 +20,8 @@ spec:
             image:
               repository: ghcr.io/home-operations/emby
               tag: 4.9.3.0@sha256:7c33d88d0186ad7abcc6e53566e9db8766687daa5510cddc13094e25bc5a5dfb
+            env:
+              DOTNET_SYSTEM_IO_DISABLEFILELOCKING: "true"
             probes:
               liveness: &probes
                 type: HTTP
@@ -31,12 +33,16 @@ spec:
               allowPrivilegeEscalation: false
               readOnlyRootFilesystem: false
             resources:
+              claims:
+                - name: gpu
               requests:
-                cpu: 500m
-                memory: 2Gi
+                cpu: 100m
               limits:
                 memory: 8Gi
-                gpu.intel.com/i915: 1
+        pod:
+          resourceClaims:
+            - name: gpu
+              resourceClaimTemplateName: emby-gpu
     defaultPodOptions:
       affinity:
         podAntiAffinity:
