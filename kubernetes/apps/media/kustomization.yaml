@@ -13,6 +13,7 @@ resources:
   - ./calibre-web-automated-book-downloader/ks.yaml
   - ./emby/ks.yaml
   - ./flaresolverr/ks.yaml
+  - ./namespace.yaml
   - ./notifiarr/ks.yaml
   - ./plex/ks.yaml
   - ./sabnzbd/ks.yaml
