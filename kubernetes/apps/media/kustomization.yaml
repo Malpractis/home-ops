@@ -13,9 +13,16 @@ resources:
   - ./calibre-web-automated-book-downloader/ks.yaml
   - ./emby/ks.yaml
   - ./flaresolverr/ks.yaml
-  - ./namespace.yaml
   - ./notifiarr/ks.yaml
   - ./plex/ks.yaml
   - ./sabnzbd/ks.yaml
   - ./seerr/ks.yaml
   - ./stash/ks.yaml
+patches:
+  - target:
+      kind: Namespace
+      name: media
+    patch: |-
+      - op: add
+        path: /metadata/labels/resource.kubernetes.io~1admin-access
+        value: "true"
