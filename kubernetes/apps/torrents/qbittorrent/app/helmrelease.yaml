@@ -40,7 +40,7 @@ spec:
               startup:
                 enabled: true
                 spec:
-                  failureThreshold: 240
+                  failureThreshold: 600
                   periodSeconds: 30
             securityContext:
               allowPrivilegeEscalation: false
