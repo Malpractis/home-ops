@@ -1,38 +1,48 @@
 ---
-# yaml-language-server: $schema=https://raw.githubusercontent.com/datreeio/CRDs-catalog/main/gateway.envoyproxy.io/backend_v1alpha1.json
-apiVersion: gateway.envoyproxy.io/v1alpha1
-kind: Backend
+apiVersion: discovery.k8s.io/v1
+kind: EndpointSlice
 metadata:
-  name: garage
+  name: internal-garage
+  namespace: network
+  labels:
+    kubernetes.io/service-name: internal-garage
+addressType: IPv4
+endpoints:
+  - addresses:
+      - "${TRUENAS_IP:=192.168.20.22}"
+ports:
+  - port: 30186
+    name: https
+    protocol: TCP
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: internal-garage
   namespace: network
 spec:
-  endpoints:
-    - fqdn:
-        hostname: garage.internal
-        port: 30186
-  tls:
-    insecureSkipVerify: true
+  type: ClusterIP
+  clusterIP: None # Headless service for the EndpointSlice
+  ports:
+    - port: 30186
+      targetPort: 30186
+      name: https
 ---
-# yaml-language-server: $schema=https://raw.githubusercontent.com/datreeio/CRDs-catalog/main/gateway.networking.k8s.io/httproute_v1.json
-apiVersion: gateway.networking.k8s.io/v1
-kind: HTTPRoute
+apiVersion: gateway.networking.k8s.io/v1alpha2
+kind: TLSRoute
 metadata:
-  name: external-garage
+  name: external-service-tlsroute-garage
   namespace: network
+  annotations:
+    external-dns.alpha.kubernetes.io/target: "internal-tls.${SECRET_DOMAIN:=flux.local}"
 spec:
   parentRefs:
-    - name: envoy-internal
+    - name: envoy-internal-tls
       namespace: network
-      sectionName: https
+      sectionName: tls
   hostnames:
-    - "garage.${SECRET_DOMAIN:=flux.local}"
+    - "nas.${SECRET_DOMAIN:=flux.local}"
   rules:
-    - matches:
-        - path:
-            type: PathPrefix
-            value: /
-      backendRefs:
-        - group: gateway.envoyproxy.io
-          kind: Backend
-          name: garage
+    - backendRefs:
+        - name: internal-garage
           port: 30186

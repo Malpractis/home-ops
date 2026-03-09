@@ -1,38 +1,48 @@
 ---
-# yaml-language-server: $schema=https://raw.githubusercontent.com/datreeio/CRDs-catalog/main/gateway.envoyproxy.io/backend_v1alpha1.json
-apiVersion: gateway.envoyproxy.io/v1alpha1
-kind: Backend
+apiVersion: discovery.k8s.io/v1
+kind: EndpointSlice
 metadata:
-  name: pikvm
+  name: internal-pikvm
+  namespace: network
+  labels:
+    kubernetes.io/service-name: internal-pikvm
+addressType: IPv4
+endpoints:
+  - addresses:
+      - "${TRUENAS_IP:=192.168.20.22}"
+ports:
+  - port: 443
+    name: https
+    protocol: TCP
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: internal-pikvm
   namespace: network
 spec:
-  endpoints:
-    - fqdn:
-        hostname: pikvm.internal
-        port: 443
-  tls:
-    insecureSkipVerify: true
+  type: ClusterIP
+  clusterIP: None # Headless service for the EndpointSlice
+  ports:
+    - port: 443
+      targetPort: 443
+      name: https
 ---
-# yaml-language-server: $schema=https://raw.githubusercontent.com/datreeio/CRDs-catalog/main/gateway.networking.k8s.io/httproute_v1.json
-apiVersion: gateway.networking.k8s.io/v1
-kind: HTTPRoute
+apiVersion: gateway.networking.k8s.io/v1alpha2
+kind: TLSRoute
 metadata:
-  name: external-pikvm
+  name: external-service-tlsroute-pikvm
   namespace: network
+  annotations:
+    external-dns.alpha.kubernetes.io/target: "internal-tls.${SECRET_DOMAIN:=flux.local}"
 spec:
   parentRefs:
-    - name: envoy-internal
+    - name: envoy-internal-tls
       namespace: network
-      sectionName: https
+      sectionName: tls
   hostnames:
-    - pikvm.${SECRET_DOMAIN:=flux.local}
+    - "nas.${SECRET_DOMAIN:=flux.local}"
   rules:
-    - matches:
-        - path:
-            type: PathPrefix
-            value: /
-      backendRefs:
-        - group: gateway.envoyproxy.io
-          kind: Backend
-          name: pikvm
+    - backendRefs:
+        - name: internal-pikvm
           port: 443
