@@ -1,24 +1,40 @@
 ---
-# yaml-language-server: $schema=https://raw.githubusercontent.com/datreeio/CRDs-catalog/main/gateway.envoyproxy.io/backend_v1alpha1.json
-apiVersion: gateway.envoyproxy.io/v1alpha1
-kind: Backend
+apiVersion: discovery.k8s.io/v1
+kind: EndpointSlice
 metadata:
-  name: nas
+  name: truenas-gui
+  namespace: network
+  labels:
+    kubernetes.io/service-name: truenas-gui
+addressType: IPv4
+endpoints:
+  - addresses:
+      - "${TRUENAS_IP:=192.168.20.22}"
+ports:
+  - port: 443
+    name: https
+    protocol: TCP
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: truenas-gui
   namespace: network
 spec:
-  endpoints:
-    - fqdn:
-        hostname: nas.internal
-        port: 443
-  tls:
-    insecureSkipVerify: true
+  type: ClusterIP
+  clusterIP: None # Headless service for the EndpointSlice
+  ports:
+    - port: 443
+      targetPort: 443
+      name: https
 ---
-# yaml-language-server: $schema=https://raw.githubusercontent.com/datreeio/CRDs-catalog/main/gateway.networking.k8s.io/httproute_v1.json
-apiVersion: gateway.networking.k8s.io/v1
-kind: HTTPRoute
+apiVersion: gateway.networking.k8s.io/v1alpha2
+kind: TLSRoute
 metadata:
-  name: external-nas
+  name: truenas-tls
   namespace: network
+  annotations:
+    external-dns.alpha.kubernetes.io/target: "internal.${SECRET_DOMAIN:=flux.local}"
 spec:
   parentRefs:
     - name: envoy-internal
@@ -27,12 +43,6 @@ spec:
   hostnames:
     - "nas.${SECRET_DOMAIN:=flux.local}"
   rules:
-    - matches:
-        - path:
-            type: PathPrefix
-            value: /
-      backendRefs:
-        - group: gateway.envoyproxy.io
-          kind: Backend
-          name: nas
+    - backendRefs:
+        - name: truenas-gui
           port: 443
