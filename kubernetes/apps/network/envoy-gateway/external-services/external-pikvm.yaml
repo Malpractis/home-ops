@@ -41,7 +41,7 @@ spec:
       namespace: network
       sectionName: tls
   hostnames:
-    - "nas.${SECRET_DOMAIN:=flux.local}"
+    - "pikvm.${SECRET_DOMAIN:=flux.local}"
   rules:
     - backendRefs:
         - name: internal-pikvm
