@@ -9,7 +9,7 @@ metadata:
 addressType: IPv4
 endpoints:
   - addresses:
-      - "${TRUENAS_IP:=192.168.20.22}"
+      - "${PIKVM_IP:=192.168.1.22}"
 ports:
   - port: 443
     name: https
