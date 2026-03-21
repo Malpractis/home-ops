@@ -29,6 +29,7 @@ spec:
                 enabled: true
                 custom: true
                 spec:
+                  tcpSocket: null
                   httpGet:
                     path: /api/v2/app/version
                     port: *port
@@ -41,6 +42,7 @@ spec:
                 enabled: true
                 custom: true
                 spec:
+                  tcpSocket: null
                   httpGet:
                     path: /api/v2/app/version
                     port: *port
