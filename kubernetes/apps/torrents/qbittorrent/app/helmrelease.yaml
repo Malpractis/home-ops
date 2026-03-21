@@ -27,26 +27,15 @@ spec:
             probes:
               liveness: &probes
                 enabled: true
-                custom: true
-                spec:
-                  tcpSocket: null
-                  httpGet:
-                    path: /api/v2/app/version
-                    port: *port
-                  initialDelaySeconds: 0
-                  timeoutSeconds: 10
-                  periodSeconds: 15
-                  failureThreshold: 5
+                type: HTTP
+                path: /api/v2/app/version
               readiness: *probes
               startup:
                 enabled: true
-                custom: true
+                type: HTTP
+                path: /api/v2/app/version
                 spec:
-                  tcpSocket: null
-                  httpGet:
-                    path: /api/v2/app/version
-                    port: *port
-                  initialDelaySeconds: 0
+                  initialDelaySeconds: 30
                   timeoutSeconds: 10
                   periodSeconds: 30
                   failureThreshold: 60
