@@ -29,6 +29,10 @@ spec:
                 enabled: true
                 type: HTTP
                 path: /api/v2/app/version
+                spec:
+                  periodSeconds: 30
+                  failureThreshold: 6
+                  timeoutSeconds: 10
               readiness: *probes
               startup:
                 enabled: true
