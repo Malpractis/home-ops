@@ -34,5 +34,12 @@
       // Ensures it generally avoids alpha/beta releases
       ignoreUnstable: true,
     },
+    {
+      description: "Restrict Ceph image to v19 track",
+      matchPackageNames: [
+        "quay.io/ceph/ceph"
+      ],
+      allowedVersions: "< 20.0.0"
+    },
   ],
 }
