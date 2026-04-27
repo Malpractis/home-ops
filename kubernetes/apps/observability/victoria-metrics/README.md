@@ -1,4 +1,4 @@
-# kube-prometheus-stack
+# VM Stack
 
 ## NAS Deployments
 
