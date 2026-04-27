@@ -11,5 +11,4 @@ replacements:
 resources:
   - ./k8tz/ks.yaml
   - ./kube-cleanup-operator/ks.yaml
-  - ./node-feature-discovery/ks.yaml
   - ./snapshot-controller/ks.yaml
