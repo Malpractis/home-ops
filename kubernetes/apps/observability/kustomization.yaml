@@ -5,6 +5,7 @@ kind: Kustomization
 namespace: observability
 components:
   - ../../components/common
+  - ../../components/alerts
 replacements:
   - path: ../../components/replacements/ks.yaml
 resources:
