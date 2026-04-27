@@ -1,0 +1,25 @@
+# yaml-language-server: $schema=https://kubernetes-schemas.materia.wtf/helm.toolkit.fluxcd.io/helmrelease_v2.json
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: &app crd-schema-publisher
+spec:
+  interval: 15m
+  chartRef:
+    kind: OCIRepository
+    name: *app
+  values:
+    config:
+      cfPagesProject: k8s-schemas
+    existingSecret:
+      name: crd-schema-publisher-secret
+    externalSecret:
+      enabled: false
+    grafana:
+      dashboard:
+        enabled: true
+    metrics:
+      podMonitor:
+        enabled: true
+      prometheusRule:
+        enabled: true
