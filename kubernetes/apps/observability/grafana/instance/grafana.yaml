@@ -13,10 +13,10 @@ spec:
       check_for_plugin_updates: "false"
       feedback_links_enabled: "false"
       reporting_enabled: "false"
-    # auth:
-    #   signout_redirect_url: https://sso.${SECRET_DOMAIN:=flux.local}/application/o/grafana/end-session/
-    #   oauth_auto_login: "false"
-    #   oauth_allow_insecure_email_lookup: "true"
+    auth:
+      signout_redirect_url: https://sso.${SECRET_DOMAIN:=flux.local}/application/o/grafana/end-session/
+      oauth_auto_login: "false"
+      oauth_allow_insecure_email_lookup: "true"
     auth.anonymous:
       enabled: "true"
       org_name: Main Org.
