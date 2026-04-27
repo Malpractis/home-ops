@@ -3,7 +3,7 @@
 apiVersion: grafana.integreatly.org/v1beta1
 kind: GrafanaDashboard
 metadata:
-  name: grafana-operator
+  name: victoria-logs-single-node
 spec:
   allowCrossNamespaceImport: true
   instanceSelector:
@@ -13,5 +13,5 @@ spec:
     - datasourceName: VictoriaMetrics
       inputName: DS_PROMETHEUS
   configMapRef:
-    name: grafana-operator-dashboard
-    key: grafana-operator.json
+    name: victoria-logs-single-node
+    key: victorialogs-single-node.json

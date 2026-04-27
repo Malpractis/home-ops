@@ -11,7 +11,9 @@ resources:
   - ./exporters/ks.yaml
   - ./gatus/ks.yaml
   - ./grafana/ks.yaml
-  - ./headlamp/ks.yaml
+  # - ./headlamp/ks.yaml
   - ./keda/ks.yaml
-  - ./kube-prometheus-stack/ks.yaml
+  # - ./kube-prometheus-stack/ks.yaml
+  - ./silence-operator/ks.yaml
   - ./victoria-logs/ks.yaml
+  - ./victoria-metrics/ks.yaml
