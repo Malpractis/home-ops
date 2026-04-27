@@ -10,6 +10,6 @@ spec:
     matchLabels:
       grafana.internal/instance: grafana
   datasources:
-    - datasourceName: prometheus
+    - datasourceName: VictoriaMetrics
       inputName: DS_PROMETHEUS
   url: https://raw.githubusercontent.com/Notifiarr/notifiarr/main/examples/dashboard.json

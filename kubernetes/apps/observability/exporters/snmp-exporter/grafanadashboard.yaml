@@ -10,6 +10,6 @@ spec:
     matchLabels:
       grafana.internal/instance: grafana
   datasources:
-    - datasourceName: prometheus
+    - datasourceName: VictoriaMetrics
       inputName: DS_THINKY
   url: https://grafana.com/api/dashboards/12340/revisions/1/download
