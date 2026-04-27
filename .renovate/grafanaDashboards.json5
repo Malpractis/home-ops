@@ -4,14 +4,18 @@
     "grafana-dashboards": {
       defaultRegistryUrlTemplate: "https://grafana.com/api/dashboards/{{packageName}}",
       format: "json",
-      transformTemplates: ['{"releases":[{"version": $string(revision)}], "sourceDirectory": name}'],
+      transformTemplates: [
+        '{"releases":[{"version": $string(revision)}], "sourceDirectory": name}'
+      ],
     },
   },
   customManagers: [
     {
       description: "Process Grafana dashboards",
       customType: "regex",
-      managerFilePatterns: ["/grafanadashboard\\.yaml(?:\\.j2)?$/",],
+      managerFilePatterns: [
+        "/grafanadashboard\\.yaml(?:\\.j2)?$/",
+      ],
       matchStrings: [
         "dashboards\\/(?<depName>\\d+)\\/revisions\\/(?<currentValue>\\d+)\\/download",
       ],
@@ -22,14 +26,20 @@
   ],
   packageRules: [
     {
-      addLabels: ["renovate/grafana-dashboard"],
+      addLabels: [
+        "renovate/grafana-dashboard"
+      ],
       automerge: true,
       automergeType: "branch",
       commitMessageExtra: "({{currentVersion}} ➔ {{newVersion}})",
       commitMessageTopic: "dashboard {{sourceDirectory}}",
       ignoreTests: true,
-      matchDatasources: ["custom.grafana-dashboards"],
-      matchUpdateTypes: ["major"],
+      matchDatasources: [
+        "custom.grafana-dashboards"
+      ],
+      matchUpdateTypes: [
+        "major"
+      ],
       semanticCommitScope: "grafana-dashboards",
       semanticCommitType: "chore",
     },
