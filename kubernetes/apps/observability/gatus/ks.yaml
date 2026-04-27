@@ -15,7 +15,7 @@ spec:
     name: flux-system
     namespace: flux-system
   dependsOn:
-    - name: kube-prometheus-stack
+    - name: prometheus-operator-crds
       namespace: observability
   interval: 1h
   retryInterval: 2m

@@ -7,7 +7,7 @@ spec:
   targetNamespace: kube-system
   path: ./kubernetes/apps/kube-system/crd-schema-publisher/app
   dependsOn:
-    - name: kube-prometheus-stack
+    - name: prometheus-operator-crds
       namespace: observability
     - name: grafana
       namespace: observability
