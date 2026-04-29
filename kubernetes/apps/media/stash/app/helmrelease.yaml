@@ -51,14 +51,10 @@ spec:
                 cpu: 100m
               limits:
                 memory: 2Gi
-        pod:
-          resourceClaims:
-            - name: gpu
-              resourceClaimTemplateName: stash-gpu
     defaultPodOptions:
       resourceClaims:
         - name: gpu
-          resourceClaimTemplateName: stash
+          resourceClaimTemplateName: stash-gpu
       securityContext:
         runAsNonRoot: false
         runAsUser: 0

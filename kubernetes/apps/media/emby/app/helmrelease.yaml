@@ -40,14 +40,10 @@ spec:
                 cpu: 100m
               limits:
                 memory: 8Gi
-        pod:
-          resourceClaims:
-            - name: gpu
-              resourceClaimTemplateName: emby-gpu
     defaultPodOptions:
       resourceClaims:
         - name: gpu
-          resourceClaimTemplateName: emby
+          resourceClaimTemplateName: emby-gpu
       affinity:
         podAntiAffinity:
           requiredDuringSchedulingIgnoredDuringExecution:
