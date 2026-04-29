@@ -7,26 +7,26 @@ metadata:
 spec:
   sourcePVC: ${APP}
   trigger:
-    schedule: "${VOLSYNC_SCHEDULE:=0 0 * * *}"
+    schedule: 0 * * * *
   kopia:
     accessModes:
       - ${VOLSYNC_SNAP_ACCESSMODES:=ReadWriteOnce}
-    cacheAccessModes:
-      - ${VOLSYNC_CACHE_ACCESSMODES:=ReadWriteOnce}
-    cacheCapacity: ${VOLSYNC_CAPACITY:=5Gi}
-    cacheStorageClassName: ${VOLSYNC_CACHE_SNAPSHOTCLASS:=openebs-hostpath}
     compression: zstd-fastest
     copyMethod: Snapshot
     moverSecurityContext:
       runAsUser: ${VOLSYNC_PUID:=1000}
       runAsGroup: ${VOLSYNC_PGID:=1000}
       fsGroup: ${VOLSYNC_PGID:=1000}
+    moverVolumes:
+      - mountPath: repository
+        volumeSource:
+          nfs:
+            path: /mnt/apps/kopia
+            server: nas.internal
     parallelism: 2
     repository: ${APP}-volsync-secret
     retain:
-      hourly: 0
+      hourly: 24
       daily: 7
-      weekly: 4
-      monthly: 0
     storageClassName: ${VOLSYNC_STORAGECLASS:=ceph-block}
     volumeSnapshotClassName: ${VOLSYNC_SNAPSHOTCLASS:=csi-ceph-blockpool}
