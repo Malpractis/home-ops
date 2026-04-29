@@ -23,9 +23,12 @@ spec:
         enabled: true
       prometheusRule:
         enabled: true
+    cronjob:
+      schedule: "*/30 * * * *"
     resources:
       requests:
         cpu: 50m
         memory: 100Mi
       limits:
+        cpu: 250m
         memory: 1Gi
