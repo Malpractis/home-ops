@@ -12,8 +12,8 @@ additionalApiServerCertSans: &sans
   - "matalos.internal"
 additionalMachineCertSans: *sans
 
-clusterPodNets: ["10.42.0.0/16"]
-clusterSvcNets: ["10.43.0.0/16"]
+clusterPodNets: [ "10.42.0.0/16" ]
+clusterSvcNets: [ "10.43.0.0/16" ]
 
 # Disable built-in CNI to use Cilium
 cniConfig:
@@ -47,12 +47,12 @@ nodes:
             gateway: "192.168.20.1"
         mtu: 9000
         vlans:
-          - # IOT
-            vlanId: 70
+          # IOT
+          - vlanId: 70
             dhcp: false
             mtu: 9000
-          - # VPN
-            vlanId: 90
+          # VPN
+          - vlanId: 90
             dhcp: false
             mtu: 9000
     schematic:
@@ -94,12 +94,12 @@ nodes:
             gateway: "192.168.20.1"
         mtu: 9000
         vlans:
-          - # IOT
-            vlanId: 70
+          # IOT
+          - vlanId: 70
             dhcp: false
             mtu: 9000
-          - # VPN
-            vlanId: 90
+          # VPN
+          - vlanId: 90
             dhcp: false
             mtu: 9000
       - deviceSelector:
@@ -145,12 +145,12 @@ nodes:
             gateway: "192.168.20.1"
         mtu: 9000
         vlans:
-          - # IOT
-            vlanId: 70
+          # IOT
+          - vlanId: 70
             dhcp: false
             mtu: 9000
-          - # VPN
-            vlanId: 90
+          # VPN
+          - vlanId: 90
             dhcp: false
             mtu: 9000
       - deviceSelector:
