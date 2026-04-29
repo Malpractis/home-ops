@@ -32,4 +32,3 @@ spec:
     substitute:
       APP: *app
       VOLSYNC_CAPACITY: 50Gi
-      VOLSYNC_SCHEDULE: ${EMBY_VOLSYNC_SCHEDULE}

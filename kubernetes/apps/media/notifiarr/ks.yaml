@@ -30,4 +30,3 @@ spec:
     substitute:
       APP: *app
       VOLSYNC_CAPACITY: 5Gi
-      VOLSYNC_SCHEDULE: ${NOTIFIARR_VOLSYNC_SCHEDULE}
