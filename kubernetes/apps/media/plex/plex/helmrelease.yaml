@@ -21,9 +21,12 @@ spec:
               repository: ghcr.io/home-operations/plex
               tag: 1.43.1.10611@sha256:a9c3723cb31cc9621df27cf5801184c290293adf1df2bfaea4b8b6fc01dbfd96
             env:
-              PLEX_ADVERTISE_URL: "https://plex.${SECRET_DOMAIN:=flux.local}:443,http://${PLEX_IP}:32400,http://plex.media.svc.cluster.local:32400"
-              ADVERTISE_IP: "https://plex.${SECRET_DOMAIN:=flux.local}:443,http://${PLEX_IP}:32400"
-              ALLOWED_NETWORKS: "192.168.1.0/24,192.168.20.0/24,192.168.10.0/24,10.42.0.0/16,${SECRET_DOMAIN:=flux.local}"
+              PLEX_ADVERTISE_URL: "https://plex.${SECRET_DOMAIN:=flux.local}:443,http://${PLE\
+                X_IP}:32400,http://plex.media.svc.cluster.local:32400"
+              ADVERTISE_IP: "https://plex.${SECRET_DOMAIN:=flux.local}:443,http://${PLEX_IP}:\
+                32400"
+              ALLOWED_NETWORKS: "192.168.1.0/24,192.168.20.0/24,192.168.10.0/24,10.42.0.0/16,\
+                ${SECRET_DOMAIN:=flux.local}"
               PLEX_NO_AUTH_NETWORKS: "192.168.1.0/24, 192.168.20.0/24, 10.42.0.0/16"
               PLEX_UID: 1000
               PLEX_GID: 1000
@@ -48,7 +51,7 @@ spec:
             securityContext:
               allowPrivilegeEscalation: false
               readOnlyRootFilesystem: true
-              capabilities: { drop: ["ALL"] }
+              capabilities: { drop: [ "ALL" ] }
             resources:
               claims:
                 - name: gpu
@@ -61,6 +64,9 @@ spec:
             - name: gpu
               resourceClaimTemplateName: plex-gpu
     defaultPodOptions:
+      resourceClaims:
+        - name: gpu
+          resourceClaimTemplateName: plex
       affinity:
         podAntiAffinity:
           requiredDuringSchedulingIgnoredDuringExecution:
@@ -78,7 +84,7 @@ spec:
         runAsGroup: 1000
         fsGroup: 1000
         fsGroupChangePolicy: OnRootMismatch
-        supplementalGroups: [44]
+        supplementalGroups: [ 44 ]
     service:
       app:
         controller: *app
@@ -100,8 +106,8 @@ spec:
           - name: envoy-external
             namespace: network
         rules:
-          - # Ref: https://forums.plex.tv/t/external-srt-subtitles-are-not-working-w-reverse-proxy/886540
-            backendRefs:
+          # Ref: https://forums.plex.tv/t/external-srt-subtitles-are-not-working-w-reverse-proxy/886540
+          - backendRefs:
               - identifier: app
                 port: *port
             filters:
