@@ -10,10 +10,6 @@ spec:
     name: rook-ceph-cluster
   interval: 1h
   values:
-    # cephImage:
-    #   repository: quay.io/ceph/ceph
-    #   tag: v19.2.3@sha256:af0c5903e901e329adabe219dfc8d0c3efc1f05102a753902f33ee16c26b6cee
-    #   imagePullPolicy: IfNotPresent
     monitoring:
       enabled: true
       createPrometheusRules: true
@@ -31,10 +27,10 @@ spec:
     cephClusterSpec:
       cephConfig:
         global:
-          bdev_enable_discard: "true" # quote
-          bdev_async_discard_threads: "1" # quote
-          osd_class_update_on_start: "false" # quote
-          device_failure_prediction_mode: local # requires mgr module
+          bdev_enable_discard: "true"
+          bdev_async_discard_threads: "1"
+          osd_class_update_on_start: "false"
+          device_failure_prediction_mode: local
       cleanupPolicy:
         wipeDevicesFromOtherClusters: true
       crashCollector:
