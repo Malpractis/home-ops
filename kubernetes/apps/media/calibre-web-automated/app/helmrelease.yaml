@@ -19,7 +19,7 @@ spec:
             nameOverride: *app
             image:
               repository: crocodilestick/calibre-web-automated
-              tag: V3.1.4
+              tag: v4.0.6
             env:
               CACHE_DIR: /cache
               TZ: "${TIMEZONE:-Etc/UTC}"
@@ -29,14 +29,11 @@ spec:
                 {{- $items := list
                   "// renovate: lsio-docker-mod"
                   "ghcr.io/linuxserver/mods:universal-calibre-v7.26.0"
-                -}}
-                {{- $filtered := list -}}
-                {{- range $item := $items -}}
+                -}} {{- $filtered := list -}} {{- range $item := $items -}}
                   {{- if not (hasPrefix "//" $item) -}}
                     {{- $filtered = append $filtered $item -}}
                   {{- end -}}
-                {{- end -}}
-                {{- $filtered | join "|" -}}
+                {{- end -}} {{- $filtered | join "|" -}}
             probes:
               liveness:
                 enabled: true
@@ -65,7 +62,7 @@ spec:
         runAsGroup: 0
         fsGroup: 1000
         fsGroupChangePolicy: OnRootMismatch
-        supplementalGroups: [44]
+        supplementalGroups: [ 44 ]
     service:
       app:
         controller: *app
