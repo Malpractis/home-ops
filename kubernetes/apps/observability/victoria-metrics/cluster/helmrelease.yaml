@@ -154,6 +154,9 @@ spec:
           promscrape.dropOriginalLabels: "true"
           promscrape.maxScrapeSize: 50MiB
           promscrape.streamParse: "true"
+        additionalScrapeConfigs:
+          name: victoriametrics-notifiarr-scrape-secret
+          key: notifiarr.yaml
     vmalert:
       spec:
         extraArgs:
