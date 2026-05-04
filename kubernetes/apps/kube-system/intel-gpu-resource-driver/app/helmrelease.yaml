@@ -17,3 +17,7 @@ spec:
       privileged: true
       healthMonitoring:
         enabled: false
+    nfd:
+      enabled: true
+      nameOverride: intel-gpu-nfd
+      enableNodeFeatureApi: true
