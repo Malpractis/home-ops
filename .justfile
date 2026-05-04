@@ -1,0 +1,21 @@
+#!/usr/bin/env -S just --justfile
+
+set lazy
+set quiet
+set shell := ['bash', '-euo', 'pipefail', '-c']
+
+mod bootstrap "bootstrap"
+mod kube "kubernetes"
+mod talos "talos"
+
+[private]
+default:
+    just -l
+
+[private]
+log lvl msg *args:
+    gum log -t rfc3339 -s -l "{{ lvl }}" "{{ msg }}" {{ args }}
+
+[private]
+template file *args:
+    bws run -- minijinja-cli "{{ file }}" {{ args }}

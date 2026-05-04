@@ -13,17 +13,23 @@ customization:
     - mitigations=off                     # Less security, faster puter
     - security=none                       # Less security, faster puter
     - talos.auditd.disabled=1             # Less security, faster puter
-    {% if ENV.ISO == 'true' %}
-    - talos.network.interface.ignore=eno1
+    {% if ENV.NODE_TYPE != 'vm' %}
+    - i915.enable_guc=3                   # Intel iGPU
+    - sysctl.kernel.kexec_load_disabled=1 # Intel iGPU
+    {% endif %}
+    {% if ENV.ISO == 'true' and ENV.NODE_TYPE != 'vm' %}
     - bond=bond0:enp3s0,enp4s0:mode=802.3ad,xmit_hash_policy=layer3+4:9000
-    - ip=bond0:dhcp
+    - ip={{ ENV.NODE_IP }}::192.168.20.1:255.255.255.0::bond0
     {% endif %}
   systemExtensions:
     officialExtensions:
-      - siderolabs/qemu-guest-agent       # QEMU Guest Agent
       - siderolabs/iscsi-tools            # iSCSI Support
       - siderolabs/util-linux-tools       # Useful Utilities
       - siderolabs/intel-ucode            # Intel CPU Microcode
+      - siderolabs/nfsrahead              # NFS Performance
+      {% if ENV.NODE_TYPE == 'vm' %}
+      - siderolabs/qemu-guest-agent       # QEMU Guest Agent
+      {% else %}
       - siderolabs/i915                   # Intel GPU
       - siderolabs/mei                    # Intel GPU
-      - siderolabs/nfsrahead              # NFS Performance
+      {% endif %}

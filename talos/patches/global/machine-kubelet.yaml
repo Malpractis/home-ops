@@ -1,9 +1,0 @@
-machine:
-  kubelet:
-    extraConfig:
-      imageGCHighThresholdPercent: 50
-      imageGCLowThresholdPercent: 40
-      serializeImagePulls: false
-    nodeIP:
-      validSubnets:
-        - 192.168.20.0/24

@@ -1,0 +1,33 @@
+---
+machine:
+  type: controlplane
+  install:
+    diskSelector:
+      model: INTEL SSDPE21D280GA
+    # renovate: depName=ghcr.io/siderolabs/installer
+    image: factory.talos.dev/installer/bc848587d4ea50bf8d03cc48845d51beb359f4caed23887f5cd1ab3408e01cb7:v1.13.0
+    wipe: false
+    grubUseUKICmdline: true
+---
+apiVersion: v1alpha1
+kind: HostnameConfig
+hostname: matalos-c1
+---
+apiVersion: v1alpha1
+kind: LinkAliasConfig
+name: net0
+selector:
+  match: mac(link.permanent_addr) == "bc:24:11:a7:7e:af"
+---
+apiVersion: v1alpha1
+kind: BondConfig
+name: bond0
+links:
+  - net0
+bondMode: active-backup
+mtu: 9000
+---
+apiVersion: v1alpha1
+kind: DHCPv4Config
+name: bond0
+clientIdentifier: mac
