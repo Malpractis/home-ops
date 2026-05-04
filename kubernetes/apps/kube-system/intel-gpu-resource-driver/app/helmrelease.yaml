@@ -21,3 +21,5 @@ spec:
       enabled: true
       nameOverride: intel-gpu-nfd
       enableNodeFeatureApi: true
+    nodeFeatureRules:
+      enabled: true
