@@ -204,6 +204,8 @@ spec:
           - name: envoy-internal
             namespace: network
       spec:
+        extraArgs:
+          maxLabelsPerTimeseries: "60"
         retentionPeriod: 90d
         storage:
           accessModes:
