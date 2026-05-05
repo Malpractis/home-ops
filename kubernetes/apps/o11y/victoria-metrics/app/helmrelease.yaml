@@ -161,6 +161,9 @@ spec:
         enable_converter_ownership: true
     vmagent:
       spec:
+        additionalScrapeConfigs:
+          name: victoriametrics-notifiarr-scrape-secret
+          key: notifiarr.yaml
         extraArgs:
           promscrape.dropOriginalLabels: "true"
           promscrape.maxScrapeSize: 50MiB
