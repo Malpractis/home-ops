@@ -6,12 +6,12 @@ metadata:
   name: &app stash
 spec:
   components:
-    - ../../../../components/gpu
+    # - ../../../../components/gpu
     - ../../../../components/volsync
     - ../../../../components/zeroscaler
   dependsOn:
-    - name: intel-gpu-resource-driver
-      namespace: kube-system
+    # - name: intel-gpu-resource-driver
+    #   namespace: kube-system
     - name: rook-ceph-cluster
       namespace: rook-ceph
   interval: 30m
