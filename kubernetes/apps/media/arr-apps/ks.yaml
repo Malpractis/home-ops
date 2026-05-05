@@ -1,246 +1,205 @@
 ---
-# yaml-language-server: $schema=https://kubernetes-schemas.pages.dev/kustomize.toolkit.fluxcd.io/kustomization_v1.json
+# yaml-language-server: $schema=https://schemas.materia.wtf/kustomize.toolkit.fluxcd.io/kustomization_v1.json
 apiVersion: kustomize.toolkit.fluxcd.io/v1
 kind: Kustomization
 metadata:
   name: &app bazarr-anime
-  namespace: media
 spec:
-  commonMetadata:
-    labels:
-      app.kubernetes.io/name: *app
   components:
     - ../../../../components/volsync
-  path: ./kubernetes/apps/media/arr-apps/bazarr-anime
-  sourceRef:
-    kind: GitRepository
-    name: flux-system
-    namespace: flux-system
-  interval: 30m
-  retryInterval: 5m
-  wait: false
-  prune: true
-  timeout: 5m
+    - ../../../../components/zeroscaler
   dependsOn:
     - name: rook-ceph-cluster
       namespace: rook-ceph
+  interval: 30m
+  path: ./kubernetes/apps/media/arr-apps/bazarr-anime
   postBuild:
     substitute:
       APP: *app
       VOLSYNC_CAPACITY: 5Gi
+  prune: true
+  sourceRef:
+    kind: GitRepository
+    name: flux-system
+    namespace: flux-system
+  targetNamespace: media
+  wait: false
 ---
-# yaml-language-server: $schema=https://kubernetes-schemas.pages.dev/kustomize.toolkit.fluxcd.io/kustomization_v1.json
+# yaml-language-server: $schema=https://schemas.materia.wtf/kustomize.toolkit.fluxcd.io/kustomization_v1.json
 apiVersion: kustomize.toolkit.fluxcd.io/v1
 kind: Kustomization
 metadata:
   name: &app bazarr
-  namespace: media
 spec:
-  commonMetadata:
-    labels:
-      app.kubernetes.io/name: *app
   components:
     - ../../../../components/volsync
-  path: ./kubernetes/apps/media/arr-apps/bazarr
-  sourceRef:
-    kind: GitRepository
-    name: flux-system
-    namespace: flux-system
-  interval: 30m
-  retryInterval: 5m
-  wait: false
-  prune: true
-  timeout: 5m
+    - ../../../../components/zeroscaler
   dependsOn:
     - name: rook-ceph-cluster
       namespace: rook-ceph
+  interval: 30m
+  path: ./kubernetes/apps/media/arr-apps/bazarr
   postBuild:
     substitute:
       APP: *app
       VOLSYNC_CAPACITY: 5Gi
+  prune: true
+  sourceRef:
+    kind: GitRepository
+    name: flux-system
+    namespace: flux-system
+  targetNamespace: media
+  wait: false
 ---
-# yaml-language-server: $schema=https://kubernetes-schemas.pages.dev/kustomize.toolkit.fluxcd.io/kustomization_v1.json
+# yaml-language-server: $schema=https://schemas.materia.wtf/kustomize.toolkit.fluxcd.io/kustomization_v1.json
 apiVersion: kustomize.toolkit.fluxcd.io/v1
 kind: Kustomization
 metadata:
   name: &app lidarr
-  namespace: media
 spec:
-  commonMetadata:
-    labels:
-      app.kubernetes.io/name: *app
   components:
     - ../../../../components/volsync
-  path: ./kubernetes/apps/media/arr-apps/lidarr
-  sourceRef:
-    kind: GitRepository
-    name: flux-system
-    namespace: flux-system
-  interval: 30m
-  retryInterval: 5m
-  wait: false
-  prune: true
-  timeout: 5m
+    - ../../../../components/zeroscaler
   dependsOn:
     - name: external-secrets-store
       namespace: security
     - name: rook-ceph-cluster
       namespace: rook-ceph
+  interval: 30m
+  path: ./kubernetes/apps/media/arr-apps/lidarr
   postBuild:
     substitute:
       APP: *app
       VOLSYNC_CAPACITY: 5Gi
+  prune: true
+  sourceRef:
+    kind: GitRepository
+    name: flux-system
+    namespace: flux-system
+  targetNamespace: media
+  wait: false
 ---
-# yaml-language-server: $schema=https://kubernetes-schemas.pages.dev/kustomize.toolkit.fluxcd.io/kustomization_v1.json
+# yaml-language-server: $schema=https://schemas.materia.wtf/kustomize.toolkit.fluxcd.io/kustomization_v1.json
 apiVersion: kustomize.toolkit.fluxcd.io/v1
 kind: Kustomization
 metadata:
   name: &app prowlarr
-  namespace: media
 spec:
-  commonMetadata:
-    labels:
-      app.kubernetes.io/name: *app
   components:
     - ../../../../components/volsync
-  path: ./kubernetes/apps/media/arr-apps/prowlarr
-  sourceRef:
-    kind: GitRepository
-    name: flux-system
-    namespace: flux-system
-  interval: 30m
-  retryInterval: 5m
-  wait: false
-  prune: true
-  timeout: 5m
+    - ../../../../components/zeroscaler
   dependsOn:
     - name: external-secrets-store
       namespace: security
     - name: rook-ceph-cluster
       namespace: rook-ceph
+  interval: 30m
+  path: ./kubernetes/apps/media/arr-apps/prowlarr
   postBuild:
     substitute:
       APP: *app
       VOLSYNC_CAPACITY: 5Gi
+  prune: true
+  sourceRef:
+    kind: GitRepository
+    name: flux-system
+    namespace: flux-system
+  targetNamespace: media
+  wait: false
 ---
-# yaml-language-server: $schema=https://kubernetes-schemas.pages.dev/kustomize.toolkit.fluxcd.io/kustomization_v1.json
+# yaml-language-server: $schema=https://schemas.materia.wtf/kustomize.toolkit.fluxcd.io/kustomization_v1.json
 apiVersion: kustomize.toolkit.fluxcd.io/v1
 kind: Kustomization
 metadata:
   name: &app radarr
-  namespace: media
 spec:
-  commonMetadata:
-    labels:
-      app.kubernetes.io/name: *app
   components:
     - ../../../../components/volsync
-  path: ./kubernetes/apps/media/arr-apps/radarr
-  sourceRef:
-    kind: GitRepository
-    name: flux-system
-    namespace: flux-system
-  interval: 30m
-  retryInterval: 5m
-  wait: false
-  prune: true
-  timeout: 5m
+    - ../../../../components/zeroscaler
   dependsOn:
     - name: external-secrets-store
       namespace: security
     - name: rook-ceph-cluster
       namespace: rook-ceph
+  interval: 30m
+  path: ./kubernetes/apps/media/arr-apps/radarr
   postBuild:
     substitute:
       APP: *app
       VOLSYNC_CAPACITY: 10Gi
+  prune: true
+  sourceRef:
+    kind: GitRepository
+    name: flux-system
+    namespace: flux-system
+  targetNamespace: media
+  wait: false
 ---
-# yaml-language-server: $schema=https://kubernetes-schemas.pages.dev/kustomize.toolkit.fluxcd.io/kustomization_v1.json
+# yaml-language-server: $schema=https://schemas.materia.wtf/kustomize.toolkit.fluxcd.io/kustomization_v1.json
 apiVersion: kustomize.toolkit.fluxcd.io/v1
 kind: Kustomization
 metadata:
   name: &app radarr-anime
-  namespace: media
 spec:
-  commonMetadata:
-    labels:
-      app.kubernetes.io/name: *app
   components:
     - ../../../../components/volsync
-  path: ./kubernetes/apps/media/arr-apps/radarr-anime
-  sourceRef:
-    kind: GitRepository
-    name: flux-system
-    namespace: flux-system
-  interval: 30m
-  retryInterval: 5m
-  wait: false
-  prune: true
-  timeout: 5m
+    - ../../../../components/zeroscaler
   dependsOn:
     - name: external-secrets-store
       namespace: security
     - name: rook-ceph-cluster
       namespace: rook-ceph
+  interval: 30m
+  path: ./kubernetes/apps/media/arr-apps/radarr-anime
   postBuild:
     substitute:
       APP: *app
       VOLSYNC_CAPACITY: 5Gi
+  prune: true
+  sourceRef:
+    kind: GitRepository
+    name: flux-system
+    namespace: flux-system
+  targetNamespace: media
+  wait: false
 ---
-# yaml-language-server: $schema=https://kubernetes-schemas.pages.dev/kustomize.toolkit.fluxcd.io/kustomization_v1.json
+# yaml-language-server: $schema=https://schemas.materia.wtf/kustomize.toolkit.fluxcd.io/kustomization_v1.json
 apiVersion: kustomize.toolkit.fluxcd.io/v1
 kind: Kustomization
 metadata:
   name: &app radarr-4k
-  namespace: media
 spec:
-  commonMetadata:
-    labels:
-      app.kubernetes.io/name: *app
   components:
     - ../../../../components/volsync
-  path: ./kubernetes/apps/media/arr-apps/radarr-4k
-  sourceRef:
-    kind: GitRepository
-    name: flux-system
-    namespace: flux-system
-  interval: 30m
-  retryInterval: 5m
-  wait: false
-  prune: true
-  timeout: 5m
+    - ../../../../components/zeroscaler
   dependsOn:
     - name: external-secrets-store
       namespace: security
     - name: rook-ceph-cluster
       namespace: rook-ceph
+  interval: 30m
+  path: ./kubernetes/apps/media/arr-apps/radarr-4k
   postBuild:
     substitute:
       APP: *app
       VOLSYNC_CAPACITY: 5Gi
----
-# yaml-language-server: $schema=https://kubernetes-schemas.pages.dev/kustomize.toolkit.fluxcd.io/kustomization_v1.json
-apiVersion: kustomize.toolkit.fluxcd.io/v1
-kind: Kustomization
-metadata:
-  name: &app readarr
-  namespace: media
-spec:
-  commonMetadata:
-    labels:
-      app.kubernetes.io/name: *app
-  components:
-    - ../../../../components/volsync
-  path: ./kubernetes/apps/media/arr-apps/readarr
+  prune: true
   sourceRef:
     kind: GitRepository
     name: flux-system
     namespace: flux-system
-  interval: 30m
-  retryInterval: 5m
+  targetNamespace: media
   wait: false
-  prune: true
-  timeout: 5m
+---
+# yaml-language-server: $schema=https://schemas.materia.wtf/kustomize.toolkit.fluxcd.io/kustomization_v1.json
+apiVersion: kustomize.toolkit.fluxcd.io/v1
+kind: Kustomization
+metadata:
+  name: &app readarr
+spec:
+  components:
+    - ../../../../components/volsync
+    - ../../../../components/zeroscaler
   dependsOn:
     - name: external-secrets-store
       namespace: security
@@ -248,103 +207,100 @@ spec:
       namespace: rook-ceph
     - name: calibre-web-automated
       namespace: media
+  interval: 30m
+  path: ./kubernetes/apps/media/arr-apps/readarr
   postBuild:
     substitute:
       APP: *app
       VOLSYNC_CAPACITY: 5Gi
+  prune: true
+  sourceRef:
+    kind: GitRepository
+    name: flux-system
+    namespace: flux-system
+  targetNamespace: media
+  wait: false
 ---
-# yaml-language-server: $schema=https://kubernetes-schemas.pages.dev/kustomize.toolkit.fluxcd.io/kustomization_v1.json
+# yaml-language-server: $schema=https://schemas.materia.wtf/kustomize.toolkit.fluxcd.io/kustomization_v1.json
 apiVersion: kustomize.toolkit.fluxcd.io/v1
 kind: Kustomization
 metadata:
   name: &app recyclarr
-  namespace: media
 spec:
-  commonMetadata:
-    labels:
-      app.kubernetes.io/name: *app
   components:
     - ../../../../components/volsync
-  path: ./kubernetes/apps/media/arr-apps/recyclarr
-  sourceRef:
-    kind: GitRepository
-    name: flux-system
-    namespace: flux-system
-  interval: 30m
-  retryInterval: 5m
-  wait: false
-  prune: true
-  timeout: 5m
+    - ../../../../components/zeroscaler
   dependsOn:
     - name: external-secrets-store
       namespace: security
     - name: rook-ceph-cluster
       namespace: rook-ceph
+  interval: 30m
+  path: ./kubernetes/apps/media/arr-apps/recyclarr
   postBuild:
     substitute:
       APP: *app
       VOLSYNC_CAPACITY: 5Gi
+  prune: true
+  sourceRef:
+    kind: GitRepository
+    name: flux-system
+    namespace: flux-system
+  targetNamespace: media
+  wait: false
 ---
-# yaml-language-server: $schema=https://kubernetes-schemas.pages.dev/kustomize.toolkit.fluxcd.io/kustomization_v1.json
+# yaml-language-server: $schema=https://schemas.materia.wtf/kustomize.toolkit.fluxcd.io/kustomization_v1.json
 apiVersion: kustomize.toolkit.fluxcd.io/v1
 kind: Kustomization
 metadata:
   name: &app sonarr
-  namespace: media
 spec:
-  commonMetadata:
-    labels:
-      app.kubernetes.io/name: *app
   components:
     - ../../../../components/volsync
-  path: ./kubernetes/apps/media/arr-apps/sonarr
-  sourceRef:
-    kind: GitRepository
-    name: flux-system
-    namespace: flux-system
-  interval: 30m
-  retryInterval: 5m
-  wait: false
-  prune: true
-  timeout: 5m
+    - ../../../../components/zeroscaler
   dependsOn:
     - name: external-secrets-store
       namespace: security
     - name: rook-ceph-cluster
       namespace: rook-ceph
+  interval: 30m
+  path: ./kubernetes/apps/media/arr-apps/sonarr
   postBuild:
     substitute:
       APP: *app
       VOLSYNC_CAPACITY: 10Gi
----
-# yaml-language-server: $schema=https://kubernetes-schemas.pages.dev/kustomize.toolkit.fluxcd.io/kustomization_v1.json
-apiVersion: kustomize.toolkit.fluxcd.io/v1
-kind: Kustomization
-metadata:
-  name: &app sonarr-anime
-  namespace: media
-spec:
-  commonMetadata:
-    labels:
-      app.kubernetes.io/name: *app
-  components:
-    - ../../../../components/volsync
-  path: ./kubernetes/apps/media/arr-apps/sonarr-anime
+  prune: true
   sourceRef:
     kind: GitRepository
     name: flux-system
     namespace: flux-system
-  interval: 30m
-  retryInterval: 5m
+  targetNamespace: media
   wait: false
-  prune: true
-  timeout: 5m
+---
+# yaml-language-server: $schema=https://schemas.materia.wtf/kustomize.toolkit.fluxcd.io/kustomization_v1.json
+apiVersion: kustomize.toolkit.fluxcd.io/v1
+kind: Kustomization
+metadata:
+  name: &app sonarr-anime
+spec:
+  components:
+    - ../../../../components/volsync
+    - ../../../../components/zeroscaler
   dependsOn:
     - name: external-secrets-store
       namespace: security
     - name: rook-ceph-cluster
       namespace: rook-ceph
+  interval: 30m
+  path: ./kubernetes/apps/media/arr-apps/sonarr-anime
   postBuild:
     substitute:
       APP: *app
       VOLSYNC_CAPACITY: 5Gi
+  prune: true
+  sourceRef:
+    kind: GitRepository
+    name: flux-system
+    namespace: flux-system
+  targetNamespace: media
+  wait: false

@@ -6,14 +6,14 @@ metadata:
   namespace: flux-system
 spec:
   deletionPolicy: WaitForTermination
+  interval: 1h
   path: ./kubernetes/apps
+  prune: true
   sourceRef:
     kind: GitRepository
     name: flux-system
     namespace: flux-system
-  interval: 1h
   wait: false
-  prune: true
   postBuild:
     substituteFrom:
       - name: cluster-secrets
@@ -27,7 +27,6 @@ spec:
         metadata:
           name: _
         spec:
-          deletionPolicy: WaitForTermination
           postBuild:
             substituteFrom:
               - name: cluster-secrets
@@ -44,8 +43,6 @@ spec:
                     mode: enabled
                   install:
                     crds: CreateReplace
-                    strategy:
-                      name: RetryOnFailure
                   rollback:
                     cleanupOnFail: true
                   upgrade:

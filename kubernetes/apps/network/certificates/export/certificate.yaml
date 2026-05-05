@@ -1,5 +1,5 @@
----
-# yaml-language-server: $schema=https://raw.githubusercontent.com/datreeio/CRDs-catalog/main/cert-manager.io/certificate_v1.json
+﻿---
+# yaml-language-server: $schema=https://schemas.materia.wtf/cert-manager.io/certificate_v1.json
 apiVersion: cert-manager.io/v1
 kind: Certificate
 metadata:
@@ -11,3 +11,9 @@ spec:
     kind: ClusterIssuer
   commonName: "${SECRET_DOMAIN:=flux.local}"
   dnsNames: ["${SECRET_DOMAIN:=flux.local}", "*.${SECRET_DOMAIN:=flux.local}"]
+  duration: 2160h
+  renewBefore: 360h
+  privateKey:
+    algorithm: ECDSA
+    size: 256
+    rotationPolicy: Always

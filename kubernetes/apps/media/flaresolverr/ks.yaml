@@ -1,24 +1,19 @@
 ---
-# yaml-language-server: $schema=https://datreeio.github.io/CRDs-catalog/kustomize.toolkit.fluxcd.io/kustomization_v1.json
+# yaml-language-server: $schema=https://schemas.materia.wtf/kustomize.toolkit.fluxcd.io/kustomization_v1.json
 apiVersion: kustomize.toolkit.fluxcd.io/v1
 kind: Kustomization
 metadata:
   name: &app flaresolverr
-  namespace: media
 spec:
-  commonMetadata:
-    labels:
-      app.kubernetes.io/name: *app
+  interval: 30m
   path: ./kubernetes/apps/media/flaresolverr/app
+  postBuild:
+    substitute:
+      APP: *app
+  prune: true
   sourceRef:
     kind: GitRepository
     name: flux-system
     namespace: flux-system
-  interval: 30m
-  retryInterval: 5m
-  prune: true
-  timeout: 5m
+  targetNamespace: media
   wait: true
-  postBuild:
-    substitute:
-      APP: *app

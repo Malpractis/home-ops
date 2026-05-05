@@ -23,6 +23,9 @@
     "prEditedNotification",
     "prIgnoreNotification",
   ],
+  registryAliases: {
+    "mirror.gcr.io": "docker.io",
+  },
   ignorePaths: [
     "**/resources/**",
   ],
