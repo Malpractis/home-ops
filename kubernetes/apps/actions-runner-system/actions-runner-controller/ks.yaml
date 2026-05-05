@@ -21,8 +21,6 @@ kind: Kustomization
 metadata:
   name: actions-runner-controller-runners
 spec:
-  components:
-    - ../../../../components/common
   dependsOn:
     - name: actions-runner-controller
     - name: rook-ceph-cluster
