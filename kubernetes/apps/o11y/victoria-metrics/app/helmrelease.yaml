@@ -123,6 +123,16 @@ spec:
       forceDeployDatasource: true
     kube-state-metrics:
       enabled: false
+    kubelet:
+      vmScrape:
+        spec:
+          metricRelabelConfigs:
+            - action: labeldrop
+              regex: "feature_node_kubernetes_io_.+"
+            - action: labeldrop
+              regex: "extensions_talos_dev_.+"
+            - action: labeldrop
+              regex: "node_kubernetes_io_(?!name).+"
     kubeControllerManager:
       vmScrape:
         spec:
@@ -205,7 +215,7 @@ spec:
             namespace: network
       spec:
         extraArgs:
-          maxLabelsPerTimeseries: "60"
+          maxLabelsPerTimeseries: "100"
         retentionPeriod: 90d
         storage:
           accessModes:
