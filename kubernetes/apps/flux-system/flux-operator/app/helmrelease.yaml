@@ -19,5 +19,12 @@ spec:
             username: flux
             groups:
               - flux-admin
+      httpRoute:
+        enabled: true
+        hostnames:
+          - flux-operator.${SECRET_DOMAIN:=flux.local}
+        parentRefs:
+          - name: envoy-internal
+            namespace: network
       networkPolicy:
         create: false
