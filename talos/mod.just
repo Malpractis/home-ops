@@ -7,6 +7,7 @@ set shell := ['bash', '-euo', 'pipefail', '-c']
 scripts_dir := justfile_dir() + '/scripts'
 talos_dir := justfile_dir() + '/talos'
 controller := `talosctl config info -o yaml | yq -e '.endpoints[0]'`
+nodes := `talosctl config info -o yaml | yq -e '.nodes | join (" ")'`
 
 [private]
 [script]
@@ -33,6 +34,16 @@ gen-schematic-id node_type='baremetal' iso='false' node_ip='':
     export NODE_TYPE="{{ node_type }}" ISO="{{ iso }}" NODE_IP="{{ node_ip }}"
     curl -sX POST --data-binary @<(just template "{{ talos_dir }}/schematic.yaml.j2") "https://factory.talos.dev/schematics" | jq -r '.id'
 
+[doc('Generate kubeconfig for the cluster')]
+[script]
+generate-kubeconfig:
+    talosctl kubeconfig -n "{{ controller }}" -f --force-context-name main {{ justfile_dir() }}
+
+[doc('Generate talosconfig client file')]
+[script]
+gen-talosconfig:
+    cd "{{ talos_dir }}" && bws run -- talhelper genconfig
+
 [doc('Reboot a node')]
 [script]
 reboot-node node:
@@ -45,6 +56,14 @@ render-config node:
     export IS_CONTROLLER="$(just talos machine-controller {{ node }})"
     talosctl machineconfig patch <(just template "{{ talos_dir }}/machineconfig.yaml.j2") \
         -p @<(just template "{{ talos_dir }}/nodes/{{ node }}.yaml.j2")
+
+[doc('Reset all nodes in the cluster')]
+[script]
+reset-cluster *args:
+    gum confirm "Reset ALL nodes in the cluster? This cannot be undone." --default="No" && \
+        for n in {{ nodes }}; do
+            talosctl -n "$n" reset --system-labels-to-wipe STATE --system-labels-to-wipe EPHEMERAL --system-labels-to-wipe u-local-hostpath --graceful=false {{ args }}
+        done || exit 0
 
 [doc('Reset a node')]
 [script]

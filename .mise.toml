@@ -27,6 +27,7 @@ _.file = ["{{config_root}}/.secrets.env"]
 "aqua:yannh/kubeconform" = "0.7.0"
 "aqua:mitsuhiko/minijinja" = "2.19.0"
 "aqua:charmbracelet/gum" = "0.17.0"
+"aqua:elsesiy/kubectl-view-secret" = "0.16.0"
 just = "latest"
 "aqua:evilmartians/lefthook" = "latest"
 "uv" = "latest"
