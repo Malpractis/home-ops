@@ -26,6 +26,7 @@ _.file = ["{{config_root}}/.secrets.env"]
 "aqua:siderolabs/talos" = "1.13.0"
 "aqua:yannh/kubeconform" = "0.7.0"
 "aqua:mitsuhiko/minijinja" = "2.19.0"
+"aqua:charmbracelet/gum" = "0.17.0"
 just = "latest"
 "aqua:evilmartians/lefthook" = "latest"
 "uv" = "latest"
