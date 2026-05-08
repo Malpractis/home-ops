@@ -4,6 +4,7 @@ kind: Kustomization
 namespace: kube-system
 resources:
   - externalsecret.yaml
+  - grafanafolder.yaml
   - grafanadashboard.yaml
   - helm-release.yaml
   - ocirepository.yaml
