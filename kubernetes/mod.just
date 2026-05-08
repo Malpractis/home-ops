@@ -1,11 +1,9 @@
 set lazy
-set positional-arguments
 set quiet
 set script-interpreter := ['bash', '-euo', 'pipefail']
 set shell := ['bash', '-euo', 'pipefail', '-c']
 
-kubernetes_dir := justfile_dir() + '/kubernetes'
-volsync_resources_dir := justfile_dir() + '/kubernetes/templates/volsync'
+volsync_resources_dir := source_directory() + '/templates/volsync'
 
 [private]
 [script]
@@ -157,4 +155,4 @@ restore ns app previous:
 [private]
 [script]
 render-local-ks ns ks:
-    flux-local build ks --namespace "{{ ns }}" --path "{{ kubernetes_dir }}/flux/cluster" "{{ ks }}"
+    flux-local build ks --namespace "{{ ns }}" --path "{{ source_directory() }}/flux/cluster" "{{ ks }}"

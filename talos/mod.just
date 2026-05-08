@@ -1,11 +1,8 @@
 set lazy
-set positional-arguments
 set quiet
 set script-interpreter := ['bash', '-euo', 'pipefail']
 set shell := ['bash', '-euo', 'pipefail', '-c']
 
-scripts_dir := justfile_dir() + '/scripts'
-talos_dir := justfile_dir() + '/talos'
 controller := `talosctl config info -o yaml | yq -e '.endpoints[0]'`
 nodes := `talosctl config info -o yaml | yq -e '.nodes | join (" ")'`
 
@@ -24,7 +21,7 @@ apply-node node *args:
 download-image version schematic:
     gum spin --title "Downloading Talos {{ version }} ..." -- \
     curl -sfL --remove-on-error --retry 5 --retry-delay 5 --retry-all-errors \
-        -o "{{ talos_dir }}/talos-{{ version }}-{{ replace_regex(schematic, '^(.{8}).*', '$1') }}.iso" \
+        -o "{{ source_directory() }}/talos-{{ version }}-{{ replace_regex(schematic, '^(.{8}).*', '$1') }}.iso" \
         "https://factory.talos.dev/image/{{ schematic }}/{{ version }}/metal-amd64.iso"
     just log info "Downloaded Talos" version "{{ version }}" schematic "{{ schematic }}"
 
@@ -32,17 +29,17 @@ download-image version schematic:
 [script]
 gen-schematic-id node_type='baremetal' iso='false' node_ip='':
     export NODE_TYPE="{{ node_type }}" ISO="{{ iso }}" NODE_IP="{{ node_ip }}"
-    curl -sX POST --data-binary @<(just template "{{ talos_dir }}/schematic.yaml.j2") "https://factory.talos.dev/schematics" | jq -r '.id'
+    curl -sX POST --data-binary @<(just template "{{ source_directory() }}/schematic.yaml.j2") "https://factory.talos.dev/schematics" | jq -r '.id'
 
 [doc('Generate kubeconfig for the cluster')]
 [script]
 generate-kubeconfig:
-    talosctl kubeconfig -n "{{ controller }}" -f --force-context-name main {{ justfile_dir() }}
+    talosctl kubeconfig -n "$(talosctl config info -o yaml | yq -e '.endpoints[0]')" -f --force-context-name main {{ justfile_dir() }}
 
 [doc('Generate talosconfig client file')]
 [script]
 gen-talosconfig:
-    cd "{{ talos_dir }}" && bws run -- talhelper genconfig
+    cd "{{ source_directory() }}" && bws run -- talhelper genconfig
 
 [doc('Reboot a node')]
 [script]
@@ -54,8 +51,8 @@ reboot-node node:
 [script]
 render-config node:
     export IS_CONTROLLER="$(just talos machine-controller {{ node }})"
-    talosctl machineconfig patch <(just template "{{ talos_dir }}/machineconfig.yaml.j2") \
-        -p @<(just template "{{ talos_dir }}/nodes/{{ node }}.yaml.j2")
+    talosctl machineconfig patch <(just template "{{ source_directory() }}/machineconfig.yaml.j2") \
+        -p @<(just template "{{ source_directory() }}/nodes/{{ node }}.yaml.j2")
 
 [doc('Reset all nodes in the cluster')]
 [script]
@@ -80,19 +77,19 @@ shutdown-node node *args:
 [doc('Upgrade Kubernetes version on the cluster')]
 [script]
 upgrade-k8s version:
-    talosctl -n "{{ controller }}" upgrade-k8s --to {{ version }}
+    talosctl -n "$(talosctl config info -o yaml | yq -e '.endpoints[0]')" upgrade-k8s --to {{ version }}
 
 [doc('Upgrade Talos version on a node')]
 [script]
 upgrade-node node *args:
-    talosctl -n "{{ node }}" upgrade -i "$(just talos machine-image {{ node }})" -m powercycle --timeout=10m {{ args }}
+    talosctl -n "{{ node }}" upgrade -i "$(just talos machine-image)" -m powercycle --timeout=10m {{ args }}
 
 [private]
 [script]
 machine-controller node:
-    just template "{{ talos_dir }}/nodes/{{ node }}.yaml.j2" | yq -e 'select(.machine) | (.machine.type == "controlplane") // ""'
+    just template "{{ source_directory() }}/nodes/{{ node }}.yaml.j2" | yq -e 'select(.machine) | (.machine.type == "controlplane") // ""'
 
 [private]
 [script]
-machine-image node:
-    just template "{{ talos_dir }}/nodes/{{ node }}.yaml.j2" | yq -e 'select(.machine) | .machine.install.image'
+machine-image:
+    just template "{{ source_directory() }}/machineconfig.yaml.j2" | yq -e 'select(.machine) | .machine.install.image'
