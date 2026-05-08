@@ -117,7 +117,7 @@ spec:
             - action: labeldrop
               regex: "extensions_talos_dev_.+"
             - action: labeldrop
-              regex: "node_kubernetes_io_(?!name).+"
+              regex: "node_kubernetes_io_.+"
     kubeControllerManager:
       vmScrape:
         spec:
