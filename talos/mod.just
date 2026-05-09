@@ -3,9 +3,6 @@ set quiet
 set script-interpreter := ['bash', '-euo', 'pipefail']
 set shell := ['bash', '-euo', 'pipefail', '-c']
 
-controller := `talosctl config info -o yaml | yq -e '.endpoints[0]'`
-nodes := `talosctl config info -o yaml | yq -e '.nodes | join (" ")'`
-
 [private]
 [script]
 default:
@@ -58,7 +55,7 @@ render-config node:
 [script]
 reset-cluster *args:
     gum confirm "Reset ALL nodes in the cluster? This cannot be undone." --default="No" && \
-        for n in {{ nodes }}; do
+        for n in $(talosctl config info -o yaml | yq -e '.nodes | join (" ")'); do
             talosctl -n "$n" reset --system-labels-to-wipe STATE --system-labels-to-wipe EPHEMERAL --system-labels-to-wipe u-local-hostpath --graceful=false {{ args }}
         done || exit 0
 

@@ -1,6 +1,8 @@
 ---
 
 helmDefaults:
+  args:
+    - --force-conflicts
   cleanupOnFail: true
   wait: true
   waitForJobs: true
@@ -12,22 +14,27 @@ releases:
     version: 1.18.6
     values: &template [./templates/values.yaml.gotmpl]
     hooks:
-      - # Wait for Cilium CRDs to be available
-        command: bash
+      - # Wait for CRDs to be available
+        command: kubectl
         args:
-          - -c
-          - until kubectl get crd ciliumloadbalancerippools.cilium.io ciliumbgpadvertisements.cilium.io ciliumbgppeerconfigs.cilium.io ciliumbgpclusterconfigs.cilium.io &>/dev/null; do sleep 5; done
+          - wait
+          - --for=create
+          - crd/ciliumbgpadvertisements.cilium.io
+          - crd/ciliumbgpclusterconfigs.cilium.io
+          - crd/ciliumbgppeerconfigs.cilium.io
+          - crd/ciliumloadbalancerippools.cilium.io
+          - --timeout=2m
         events:
           - postsync
         showlogs: true
-      - # Apply Cilium Resources
+      - # Apply Resources
         command: kubectl
         args:
           - apply
-          - --namespace=kube-system
+          - --namespace={{ .Release.Namespace }}
           - --server-side
-          - --field-manager=kustomize-controller
-          - --filename=../../kubernetes/apps/kube-system/cilium/app/networks.yaml
+          - --force-conflicts
+          - --filename=../../kubernetes/apps/{{ .Release.Namespace }}/{{ .Release.Name }}/app/networks.yaml
         events:
           - postsync
         showlogs: true
@@ -61,7 +68,7 @@ releases:
           - apply
           - --namespace=security
           - --server-side
-          - --field-manager=kustomize-controller
+          - --force-conflicts
           - --filename=../../kubernetes/apps/security/cert-manager/app/clusterissuers.yaml
           - --wait=true
         showlogs: true
@@ -72,7 +79,7 @@ releases:
           - apply
           - --namespace=security
           - --server-side
-          - --field-manager=kustomize-controller
+          - --force-conflicts
           - --filename=../../kubernetes/apps/security/cert-manager/app/bitwarden-issuer.yaml
           - --wait=true
       - # bitwarden needs its cert so it can come up, otherwise it just stays pending
@@ -82,7 +89,7 @@ releases:
           - apply
           - --namespace=security
           - --server-side
-          - --field-manager=kustomize-controller
+          - --force-conflicts
           - --filename=../../kubernetes/apps/security/external-secrets/store/bitwarden-secrets/certificate.yaml
           - --wait=true
     needs: [system/spegel]
