@@ -57,6 +57,13 @@ volsync state:
     flux -n volsync-system {{ state }} helmrelease volsync
     kubectl -n volsync-system scale deployment volsync --replicas {{ if state != "suspend" { "1" } else { "0" } }}
 
+[doc('Show VolSync backup schedules')]
+[script]
+volsync-schedule:
+    kubectl get replicationsources --no-headers -A \
+        -o custom-columns='NAMESPACE:.metadata.namespace,APP:.metadata.name,SCHEDULE:.spec.trigger.schedule' \
+        | sort -k3
+
 [doc('Sync ExternalSecrets')]
 [script]
 sync-es:

@@ -17,6 +17,7 @@ spec:
     substitute:
       APP: *app
       VOLSYNC_CAPACITY: 5Gi
+      VOLSYNC_SCHEDULE: "35 */4 * * *"
   prune: true
   sourceRef:
     kind: GitRepository
@@ -43,6 +44,7 @@ spec:
     substitute:
       APP: *app
       VOLSYNC_CAPACITY: 5Gi
+      VOLSYNC_SCHEDULE: "30 */4 * * *"
   prune: true
   sourceRef:
     kind: GitRepository
@@ -71,6 +73,7 @@ spec:
     substitute:
       APP: *app
       VOLSYNC_CAPACITY: 5Gi
+      VOLSYNC_SCHEDULE: "45 */4 * * *"
   prune: true
   sourceRef:
     kind: GitRepository
@@ -99,6 +102,7 @@ spec:
     substitute:
       APP: *app
       VOLSYNC_CAPACITY: 5Gi
+      VOLSYNC_SCHEDULE: "55 */4 * * *"
   prune: true
   sourceRef:
     kind: GitRepository
@@ -127,6 +131,7 @@ spec:
     substitute:
       APP: *app
       VOLSYNC_CAPACITY: 10Gi
+      VOLSYNC_SCHEDULE: "0 1,5,9,13,17,21 * * *"
   prune: true
   sourceRef:
     kind: GitRepository
@@ -155,6 +160,7 @@ spec:
     substitute:
       APP: *app
       VOLSYNC_CAPACITY: 5Gi
+      VOLSYNC_SCHEDULE: "10 1,5,9,13,17,21 * * *"
   prune: true
   sourceRef:
     kind: GitRepository
@@ -183,6 +189,7 @@ spec:
     substitute:
       APP: *app
       VOLSYNC_CAPACITY: 5Gi
+      VOLSYNC_SCHEDULE: "5 1,5,9,13,17,21 * * *"
   prune: true
   sourceRef:
     kind: GitRepository
@@ -213,6 +220,7 @@ spec:
     substitute:
       APP: *app
       VOLSYNC_CAPACITY: 5Gi
+      VOLSYNC_SCHEDULE: "15 1,5,9,13,17,21 * * *"
   prune: true
   sourceRef:
     kind: GitRepository
@@ -241,6 +249,7 @@ spec:
     substitute:
       APP: *app
       VOLSYNC_CAPACITY: 5Gi
+      VOLSYNC_SCHEDULE: "20 1,5,9,13,17,21 * * *"
   prune: true
   sourceRef:
     kind: GitRepository
@@ -269,6 +278,7 @@ spec:
     substitute:
       APP: *app
       VOLSYNC_CAPACITY: 10Gi
+      VOLSYNC_SCHEDULE: "35 1,5,9,13,17,21 * * *"
   prune: true
   sourceRef:
     kind: GitRepository
@@ -297,6 +307,7 @@ spec:
     substitute:
       APP: *app
       VOLSYNC_CAPACITY: 5Gi
+      VOLSYNC_SCHEDULE: "40 1,5,9,13,17,21 * * *"
   prune: true
   sourceRef:
     kind: GitRepository
