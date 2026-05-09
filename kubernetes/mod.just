@@ -61,7 +61,7 @@ volsync state:
 [script]
 volsync-schedule:
     kubectl get replicationsources --no-headers -A \
-        -o custom-columns='NAMESPACE:.metadata.namespace,APP:.metadata.name,SCHEDULE:.spec.trigger.schedule' \
+        -o custom-columns='NAMESPACE:.metadata.namespace,APP:.metadata.name,SCHEDULE:.spec.trigger.schedule,LAST_DURATION:.status.lastSyncDuration' \
         | sort -k3
 
 [doc('Sync ExternalSecrets')]
