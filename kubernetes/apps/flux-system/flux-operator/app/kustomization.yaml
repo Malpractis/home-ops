@@ -4,5 +4,4 @@ kind: Kustomization
 resources:
   - ./clusterrolebinding.yaml
   - ./helmrelease.yaml
-  - ./httproute.yaml
   - ./ocirepository.yaml
