@@ -94,7 +94,7 @@ spec:
         ipFamilies: [IPv4]
         ipFamilyPolicy: SingleStack
         annotations:
-          lbipam.cilium.io/ips: ${DNSCRYPT_IP:=192.168.10.2}
+          lbipam.cilium.io/ips: 192.168.10.2
         ports:
           dns-udp:
             primary: false

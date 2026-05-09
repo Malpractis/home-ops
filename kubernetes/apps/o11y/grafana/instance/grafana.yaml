@@ -14,7 +14,7 @@ spec:
       feedback_links_enabled: "false"
       reporting_enabled: "false"
     auth:
-      signout_redirect_url: https://sso.${SECRET_DOMAIN:=flux.local}/application/o/grafana/end-session/
+      signout_redirect_url: https://sso.materia.wtf/application/o/grafana/end-session/
       oauth_auto_login: "false"
       oauth_allow_insecure_email_lookup: "true"
     auth.anonymous:
@@ -26,9 +26,9 @@ spec:
     #   name: authentik
     #   enabled: "true"
     #   scopes: openid email profile
-    #   auth_url: https://sso.${SECRET_DOMAIN:=flux.local}/application/o/authorize/
-    #   token_url: https://sso.${SECRET_DOMAIN:=flux.local}/application/o/token/
-    #   api_url: https://sso.${SECRET_DOMAIN:=flux.local}/application/o/userinfo/
+    #   auth_url: https://sso.materia.wtf/application/o/authorize/
+    #   token_url: https://sso.materia.wtf/application/o/token/
+    #   api_url: https://sso.materia.wtf/application/o/userinfo/
     # Optionally map user groups to Grafana roles
     #   role_attribute_path: contains(groups[*], 'Grafana Admins') && 'Admin' || contains(groups[*], 'Grafana Editors') && 'Editor' || 'Viewer'
     log:
@@ -84,7 +84,7 @@ spec:
   httpRoute:
     spec:
       hostnames:
-        - grafana.${SECRET_DOMAIN:=flux.local}
+        - grafana.materia.wtf
       parentRefs:
         - name: envoy-internal
           namespace: network

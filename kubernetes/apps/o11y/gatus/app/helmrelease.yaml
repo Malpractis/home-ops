@@ -39,7 +39,7 @@ spec:
             env:
               GATUS_CONFIG_PATH: /config
               GATUS_WEB_PORT: &port 80
-              TZ: ${TIMEZONE:-Etc/UTC}
+              TZ: Australia/Melbourne
             probes:
               liveness: &probes
                 enabled: true
@@ -89,8 +89,8 @@ spec:
         annotations:
           gatus.home-operations.com/enabled: "false"
         hostnames:
-          - "{{ .Release.Name }}.${SECRET_DOMAIN:=flux.local}"
-          - status.${SECRET_DOMAIN:=flux.local}
+          - "{{ .Release.Name }}.materia.wtf"
+          - status.materia.wtf
         parentRefs:
           - name: envoy-external
             namespace: network

@@ -16,7 +16,7 @@ spec:
               name: cloudflare-issuer-secret
               key: CLOUDFLARE_DNS_TOKEN
         selector:
-          dnsZones: ["${SECRET_DOMAIN:=flux.local}"]
+          dnsZones: ["materia.wtf"]
 ---
 # yaml-language-server: $schema=https://schemas.materia.wtf/cert-manager.io/clusterissuer_v1.json
 apiVersion: cert-manager.io/v1
@@ -36,7 +36,7 @@ spec:
   commonName: *name
   subject:
     organizations:
-      - "${SECRET_DOMAIN:=flux.local}"
+      - "materia.wtf"
   secretName: cluster-signed-issuer-tls
   privateKey:
     algorithm: ECDSA

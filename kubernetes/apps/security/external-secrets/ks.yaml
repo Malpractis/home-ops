@@ -48,6 +48,10 @@ spec:
   interval: 30m
   path: ./kubernetes/apps/security/external-secrets/store
   postBuild:
+    substituteFrom:
+      - name: bitwarden-config
+        kind: Secret
+        optional: true
     substitute:
       APP: *app
       GATUS_SUBDOMAIN: bitwarden

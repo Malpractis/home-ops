@@ -22,7 +22,7 @@ spec:
               tag: v4.0.6
             env:
               CACHE_DIR: /cache
-              TZ: "${TIMEZONE:-Etc/UTC}"
+              TZ: Australia/Melbourne
               PUID: 1000
               PGID: 1000
               DOCKER_MODS: >-
@@ -72,7 +72,7 @@ spec:
     route:
       app:
         hostnames:
-          - "calibre.${SECRET_DOMAIN:=flux.local}"
+          - "calibre.materia.wtf"
         parentRefs:
           - name: envoy-internal
             namespace: network

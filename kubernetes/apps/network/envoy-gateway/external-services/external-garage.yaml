@@ -9,7 +9,7 @@ metadata:
 addressType: IPv4
 endpoints:
   - addresses:
-      - "${GARAGE_IP:=192.168.20.30}"
+      - 192.168.20.30
 ports:
   - port: 80
     name: http
@@ -40,7 +40,7 @@ spec:
       namespace: network
       sectionName: https
   hostnames:
-    - garage.${SECRET_DOMAIN:=flux.local}
+    - garage.materia.wtf
   rules:
     - matches:
         - path:

@@ -9,7 +9,7 @@ metadata:
 addressType: IPv4
 endpoints:
   - addresses:
-      - "${TRUENAS_IP:=192.168.20.22}"
+      - 192.168.20.22
 ports:
   - port: 443
     name: https
@@ -34,14 +34,14 @@ metadata:
   name: external-service-tlsroute-truenas
   namespace: network
   annotations:
-    external-dns.alpha.kubernetes.io/target: "internal-tls.${SECRET_DOMAIN:=flux.local}"
+    external-dns.alpha.kubernetes.io/target: "internal-tls.materia.wtf"
 spec:
   parentRefs:
     - name: envoy-internal-tls
       namespace: network
       sectionName: tls
   hostnames:
-    - "nas.${SECRET_DOMAIN:=flux.local}"
+    - "nas.materia.wtf"
   rules:
     - backendRefs:
         - name: internal-truenas

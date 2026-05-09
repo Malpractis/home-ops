@@ -34,7 +34,7 @@ spec:
               RUN_GRAVITY: "false"
               CRON: "*/10 * * * *"
               CLIENT_SKIP_TLS_VERIFICATION: "true"
-              TZ: ${TIMEZONE:-Etc/UTC}
+              TZ: Australia/Melbourne
               SYNC_CONFIG_DNS: "true"
               SYNC_CONFIG_DHCP: "false"
               SYNC_CONFIG_NTP: "true"

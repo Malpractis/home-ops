@@ -21,7 +21,7 @@ spec:
               repository: ghcr.io/seerr-team/seerr
               tag: v3.2.0@sha256:c4cbd5121236ac2f70a843a0b920b68a27976be57917555f1c45b08a1e6b2aad
             env:
-              TZ: "${TIMEZONE:-Etc/UTC}"
+              TZ: Australia/Melbourne
               LOG_LEVEL: "info"
               PORT: &port 80
             envFrom:
@@ -77,8 +77,8 @@ spec:
           gatus.home-operations.com/endpoint: |-
             conditions: ["[STATUS] == 200"]
         hostnames:
-          - "{{ .Release.Name }}.${SECRET_DOMAIN:=flux.local}"
-          - requests.${SECRET_DOMAIN:=flux.local}
+          - "{{ .Release.Name }}.materia.wtf"
+          - requests.materia.wtf
         parentRefs:
           - name: envoy-external
             namespace: network

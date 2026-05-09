@@ -24,7 +24,7 @@ spec:
             env:
               CRON_SCHEDULE: "@daily"
               RECYCLARR_CREATE_CONFIG: "true"
-              TZ: ${TIMEZONE:-Etc/UTC}
+              TZ: Australia/Melbourne
             envFrom:
               - secretRef:
                   name: recyclarr-secret

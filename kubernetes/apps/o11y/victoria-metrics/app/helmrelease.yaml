@@ -77,12 +77,12 @@ spec:
       route:
         enabled: true
         hostnames:
-          - vmalertmanager.${SECRET_DOMAIN:=flux.local}
+          - vmalertmanager.materia.wtf
         parentRefs:
           - name: envoy-internal
             namespace: network
       spec:
-        externalURL: https://vmalertmanager.${SECRET_DOMAIN:=flux.local}
+        externalURL: https://vmalertmanager.materia.wtf
         image:
           repository: quay.io/prometheus/alertmanager
         storage:
@@ -166,13 +166,13 @@ spec:
     vmalert:
       spec:
         extraArgs:
-          external.url: https://vmalert.${SECRET_DOMAIN:=flux.local}
+          external.url: https://vmalert.materia.wtf
         datasource:
           url: http://vmauth-victoria-metrics.o11y.svc.cluster.local:8427
       route:
         enabled: true
         hostnames:
-          - vmalert.${SECRET_DOMAIN:=flux.local}
+          - vmalert.materia.wtf
         parentRefs:
           - name: envoy-internal
             namespace: network
@@ -194,7 +194,7 @@ spec:
       route:
         enabled: true
         hostnames:
-          - vmsingle.${SECRET_DOMAIN:=flux.local}
+          - vmsingle.materia.wtf
         parentRefs:
           - name: envoy-internal
             namespace: network

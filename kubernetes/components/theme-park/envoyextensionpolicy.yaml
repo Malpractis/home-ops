@@ -23,7 +23,7 @@ spec:
           if string.find(string.lower(contentType), "text/html") and not response_handle:headers():get("content-encoding") then
             local body_obj = response_handle:body()
             if body_obj and body_obj:length() > 0 then
-              local css_url = "https://${THEME_PARK_SUBDOMAIN:-theme-park}.${SECRET_DOMAIN}/css/base/${THEME_PARK_APP:-${APP}}/${THEME_PARK_THEME:-nord}.css"
+              local css_url = "https://${THEME_PARK_SUBDOMAIN:-theme-park}.materia.wtf/css/base/${THEME_PARK_APP:-${APP}}/${THEME_PARK_THEME:-nord}.css"
               local inject_str = '<link rel="stylesheet" type="text/css" href="' .. css_url .. '"></head>'
               body_obj:setBytes(string.gsub(body_obj:getBytes(0, body_obj:length()), "</[Hh][Ee][Aa][Dd]>", inject_str))
               response_handle:headers():replace("content-length", tostring(body_obj:length()))

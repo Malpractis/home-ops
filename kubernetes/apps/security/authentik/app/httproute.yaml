@@ -9,7 +9,7 @@ metadata:
     gatus.home-operations.com/conditions: "['[STATUS] == 200']"
 spec:
   hostnames:
-    - auth.${SECRET_DOMAIN:=flux.local}
+    - auth.materia.wtf
   parentRefs:
     - name: envoy-internal
       namespace: network

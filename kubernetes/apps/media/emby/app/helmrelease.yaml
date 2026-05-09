@@ -67,7 +67,7 @@ spec:
         controller: *app
         type: LoadBalancer
         annotations:
-          lbipam.cilium.io/ips: "${EMBY_IP:=192.168.10.110}"
+          lbipam.cilium.io/ips: "192.168.10.110"
         ports:
           http:
             port: &port 8096
@@ -78,7 +78,7 @@ spec:
     route:
       app:
         hostnames:
-          - "{{ .Release.Name }}.${SECRET_DOMAIN:=flux.local}"
+          - "{{ .Release.Name }}.materia.wtf"
         parentRefs:
           - name: envoy-internal
             namespace: network

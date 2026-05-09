@@ -4,7 +4,7 @@ metadata:
   name: hubble-ui
 spec:
   hostnames:
-    - hubble.${SECRET_DOMAIN:=flux.local}
+    - hubble.materia.wtf
   parentRefs:
     - name: envoy-internal
       namespace: network

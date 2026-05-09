@@ -21,12 +21,11 @@ spec:
               repository: ghcr.io/home-operations/plex
               tag: 1.43.1.10611@sha256:a9c3723cb31cc9621df27cf5801184c290293adf1df2bfaea4b8b6fc01dbfd96
             env:
-              PLEX_ADVERTISE_URL: "https://plex.${SECRET_DOMAIN:=flux.local}:443,http://${PLE\
-                X_IP}:32400,http://plex.media.svc.cluster.local:32400"
-              ADVERTISE_IP: "https://plex.${SECRET_DOMAIN:=flux.local}:443,http://${PLEX_IP}:\
+              PLEX_ADVERTISE_URL: "https://plex.materia.wtf:443,http://192.168.10.111:32400,http://plex.media.svc.cluster.local:32400"
+              ADVERTISE_IP: "https://plex.materia.wtf:443,http://192.168.10.111:\
                 32400"
               ALLOWED_NETWORKS: "192.168.1.0/24,192.168.20.0/24,192.168.10.0/24,10.42.0.0/16,\
-                ${SECRET_DOMAIN:=flux.local}"
+                materia.wtf"
               PLEX_NO_AUTH_NETWORKS: "192.168.1.0/24, 192.168.20.0/24, 10.42.0.0/16"
               PLEX_UID: 1000
               PLEX_GID: 1000
@@ -86,7 +85,7 @@ spec:
         controller: *app
         type: LoadBalancer
         annotations:
-          lbipam.cilium.io/ips: "${PLEX_IP:=192.168.10.111}"
+          lbipam.cilium.io/ips: 192.168.10.111
         ports:
           http:
             port: *port
@@ -97,7 +96,7 @@ spec:
           gatus.home-operations.com/endpoint: |-
             conditions: ["[STATUS] == 401"]
         hostnames:
-          - "{{ .Release.Name }}.${SECRET_DOMAIN:=flux.local}"
+          - "{{ .Release.Name }}.materia.wtf"
         parentRefs:
           - name: envoy-external
             namespace: network

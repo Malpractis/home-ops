@@ -8,10 +8,6 @@ spec:
     - name: external-dns-cloudflare
   interval: 1h
   path: ./kubernetes/apps/network/cloudflare-tunnel/app
-  postBuild:
-    substituteFrom:
-      - name: cluster-secrets
-        kind: Secret
   prune: true
   sourceRef:
     kind: GitRepository

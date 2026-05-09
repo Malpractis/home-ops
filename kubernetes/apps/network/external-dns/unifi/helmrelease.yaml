@@ -50,7 +50,7 @@ spec:
       - service
     txtOwnerId: matalos
     txtPrefix: k8s.matalos.
-    domainFilters: ["${SECRET_DOMAIN:=flux.local}"]
+    domainFilters: ["materia.wtf"]
     serviceMonitor:
       enabled: true
     podAnnotations:

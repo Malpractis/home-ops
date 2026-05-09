@@ -6,7 +6,6 @@ namespace: system-controllers
 
 components:
   - ../../components/alerts
-  - ../../components/cluster-secrets
 
 resources:
   - ./namespace.yaml

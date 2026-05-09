@@ -22,7 +22,7 @@ spec:
       httpRoute:
         enabled: true
         hostnames:
-          - flux-operator.${SECRET_DOMAIN:=flux.local}
+          - flux-operator.materia.wtf
         parentRefs:
           - name: envoy-internal
             namespace: network

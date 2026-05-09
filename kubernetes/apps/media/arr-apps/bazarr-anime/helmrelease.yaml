@@ -62,7 +62,7 @@ spec:
     route:
       app:
         hostnames:
-          - "{{ .Release.Name }}.${SECRET_DOMAIN:=flux.local}"
+          - "{{ .Release.Name }}.materia.wtf"
         parentRefs:
           - name: envoy-internal
             namespace: network
