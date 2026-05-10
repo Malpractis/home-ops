@@ -8,6 +8,7 @@ set shell := ['bash', '-euo', 'pipefail', '-c']
 default:
     just -l talos
 
+[confirm('Apply Talos config to ' + node + ' [y|N] ?')]
 [doc('Apply Talos config to a node')]
 [script]
 apply-node node *args:
@@ -16,8 +17,7 @@ apply-node node *args:
 [doc('Download Talos machine image')]
 [script]
 download-image version schematic:
-    gum spin --title "Downloading Talos {{ version }} ..." -- \
-    curl -sfL --remove-on-error --retry 5 --retry-delay 5 --retry-all-errors \
+    curl -fL --progress-bar --remove-on-error --retry 5 --retry-delay 5 --retry-all-errors \
         -o "{{ source_directory() }}/talos-{{ version }}-{{ replace_regex(schematic, '^(.{8}).*', '$1') }}.iso" \
         "https://factory.talos.dev/image/{{ schematic }}/{{ version }}/metal-amd64.iso"
     just log info "Downloaded Talos" version "{{ version }}" schematic "{{ schematic }}"
@@ -38,11 +38,11 @@ generate-kubeconfig:
 gen-talosconfig:
     cd "{{ source_directory() }}" && bws run -- talhelper genconfig
 
+[confirm('Reboot node ' + node + ' [y|N] ?')]
 [doc('Reboot a node')]
 [script]
 reboot-node node:
-    gum confirm "Reboot node {{ node }}?" --default="No" && \
-        talosctl -n {{ node }} reboot -m powercycle || exit 0
+    talosctl -n {{ node }} reboot -m powercycle || exit 0
 
 [doc('Render Talos config for a node')]
 [script]
@@ -59,17 +59,17 @@ reset-cluster *args:
             talosctl -n "$n" reset --system-labels-to-wipe STATE --system-labels-to-wipe EPHEMERAL --system-labels-to-wipe u-local-hostpath --graceful=false {{ args }}
         done || exit 0
 
+[confirm('Reset node ' + node + ' [y|N] ?')]
 [doc('Reset a node')]
 [script]
 reset-node node *args:
-    gum confirm "Reset node {{ node }}?" --default="No" && \
-        talosctl -n "{{ node }}" reset --system-labels-to-wipe STATE --system-labels-to-wipe EPHEMERAL --system-labels-to-wipe u-local-hostpath --graceful=false {{ args }} || exit 0
+    talosctl -n "{{ node }}" reset --system-labels-to-wipe STATE --system-labels-to-wipe EPHEMERAL --system-labels-to-wipe u-local-hostpath --graceful=false {{ args }} || exit 0
 
+[confirm('Shutdown node ' + node + ' [y|N] ?')]
 [doc('Shutdown a node')]
 [script]
 shutdown-node node *args:
-    gum confirm "Shutdown node {{ node }}?" --default="No" && \
-        talosctl -n "{{ node }}" shutdown --force {{ args }} || exit 0
+    talosctl -n "{{ node }}" shutdown --force {{ args }} || exit 0
 
 [doc('Upgrade Kubernetes version on the cluster')]
 [script]
