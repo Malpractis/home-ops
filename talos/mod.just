@@ -11,6 +11,7 @@ default:
 apply-node node *args:
     just talos render-config "{{ node }}" | talosctl -n "{{ node }}" apply-config -f /dev/stdin {{ args }}
 
+[script]
 [doc('Download Talos machine image')]
 download-image version schematic:
     curl -fL --progress-bar --remove-on-error --retry 5 --retry-delay 5 --retry-all-errors \
@@ -18,6 +19,7 @@ download-image version schematic:
         "https://factory.talos.dev/image/{{ schematic }}/{{ version }}/metal-amd64.iso"
     just log info "Downloaded Talos" version "{{ version }}" schematic "{{ schematic }}"
 
+[script]
 [doc('Generate schematic ID from Talos schematic')]
 gen-schematic-id node_type='baremetal' iso='false' node_ip='':
     export NODE_TYPE="{{ node_type }}" ISO="{{ iso }}" NODE_IP="{{ node_ip }}"
@@ -36,12 +38,14 @@ gen-talosconfig:
 reboot-node node:
     talosctl -n {{ node }} reboot -m powercycle || exit 0
 
+[script]
 [doc('Render Talos config for a node')]
 render-config node:
     export IS_CONTROLLER="$(just talos machine-controller {{ node }})"
     talosctl machineconfig patch <(just template "{{ source_directory() }}/machineconfig.yaml.j2") \
         -p @<(just template "{{ source_directory() }}/nodes/{{ node }}.yaml.j2")
 
+[script]
 [doc('Reset all nodes in the cluster')]
 reset-cluster *args:
     gum confirm "Reset ALL nodes in the cluster? This cannot be undone." --default="No" && \
