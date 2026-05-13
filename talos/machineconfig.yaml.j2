@@ -58,7 +58,7 @@ machine:
       imageGCHighThresholdPercent: 50
       imageGCLowThresholdPercent: 40
       serializeImagePulls: false
-    image: ghcr.io/siderolabs/kubelet:v1.36.0
+    image: ghcr.io/siderolabs/kubelet:v1.36.1
     nodeIP:
       validSubnets:
         - 192.168.20.0/24
@@ -139,12 +139,12 @@ cluster:
     extraArgs:
       enable-aggregator-routing: "true"
       feature-gates: HPAScaleToZero=true
-    image: registry.k8s.io/kube-apiserver:v1.36.0
+    image: registry.k8s.io/kube-apiserver:v1.36.1
   controllerManager:
     extraArgs:
       bind-address: 0.0.0.0
       feature-gates: HPAScaleToZero=true
-    image: registry.k8s.io/kube-controller-manager:v1.36.0
+    image: registry.k8s.io/kube-controller-manager:v1.36.1
   coreDNS:
     disabled: true
   etcd:
@@ -157,7 +157,7 @@ cluster:
       listen-metrics-urls: http://0.0.0.0:2381
   proxy:
     disabled: true
-    image: registry.k8s.io/kube-proxy:v1.36.0
+    image: registry.k8s.io/kube-proxy:v1.36.1
   scheduler:
     config:
       apiVersion: kubescheduler.config.k8s.io/v1
@@ -178,7 +178,7 @@ cluster:
                     whenUnsatisfiable: ScheduleAnyway
     extraArgs:
       bind-address: 0.0.0.0
-    image: registry.k8s.io/kube-scheduler:v1.36.0
+    image: registry.k8s.io/kube-scheduler:v1.36.1
   secretboxEncryptionSecret: {{ ENV.talsecret_secrets_secretboxencryptionsecret }}
   serviceAccount:
     key: {{ ENV.talsecret_certs_k8sserviceaccount_key }}
