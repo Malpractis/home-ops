@@ -3,17 +3,19 @@
 apiVersion: cert-manager.io/v1
 kind: Certificate
 metadata:
-  name: "materia-wtf-production"
+  name: materia-wtf
 spec:
-  secretName: "materia-wtf-tls"
+  dnsNames:
+    - materia.wtf
+    - "*.materia.wtf"
+  duration: 160h
   issuerRef:
-    name: letsencrypt-production
     kind: ClusterIssuer
-  commonName: "materia.wtf"
-  dnsNames: ["materia.wtf", "*.materia.wtf"]
-  duration: 2160h
-  renewBefore: 360h
+    name: letsencrypt-production
   privateKey:
     algorithm: ECDSA
     size: 256
     rotationPolicy: Always
+  secretName: materia-wtf-tls
+  usages:
+    - digital signature
