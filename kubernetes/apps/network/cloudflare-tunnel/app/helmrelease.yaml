@@ -26,8 +26,10 @@ spec:
               TUNNEL_TRANSPORT_PROTOCOL: quic # or http2
             envFrom:
               - secretRef:
-                  name: cloudflare-tunnel-secret
-            args: ["tunnel", "run"]
+                  name: "{{ .Release.Name }}-secret"
+            args:
+              - tunnel
+              - run
             probes:
               liveness: &probes
                 enabled: true
@@ -72,7 +74,9 @@ spec:
               - hostname: "*.materia.wtf"
                 originRequest:
                   http2Origin: true
+                  keepAliveTimeout: 3600s
                   originServerName: external.materia.wtf
+                  tcpKeepAlive: 7200s
                 service: https://envoy-external.{{ .Release.Namespace }}.svc.cluster.local:443
               - service: http_status:404
     persistence:
