@@ -3,6 +3,19 @@
 apiVersion: observability.giantswarm.io/v1alpha2
 kind: Silence
 metadata:
+  name: ceph-node-local-diskspace-warning
+spec:
+  matchers:
+    - name: alertname
+      value: CephNodeDiskspaceWarning
+    - name: device
+      value: /dev/sd.*
+      matchType: "=~"
+---
+# yaml-language-server: $schema=https://schemas.materia.wtf/observability.giantswarm.io/silence_v1alpha2.json
+apiVersion: observability.giantswarm.io/v1alpha2
+kind: Silence
+metadata:
   name: ceph-node-nfsmount-diskspace-warning
 spec:
   matchers:
@@ -15,14 +28,33 @@ spec:
 apiVersion: observability.giantswarm.io/v1alpha2
 kind: Silence
 metadata:
-  name: ceph-node-local-diskspace-warning
+  name: cluster-memory-overcommit
 spec:
   matchers:
     - name: alertname
-      value: CephNodeDiskspaceWarning
-    - name: device
-      value: /dev/sd.*
-      matchType: "=~"
+      value: KubeMemoryOvercommit
+---
+# yaml-language-server: $schema=https://schemas.materia.wtf/observability.giantswarm.io/silence_v1alpha2.json
+apiVersion: observability.giantswarm.io/v1alpha2
+kind: Silence
+metadata:
+  name: cpu-throttling-high-info
+spec:
+  matchers:
+    - name: alertname
+      value: CPUThrottlingHigh
+    - name: severity
+      value: info
+---
+# yaml-language-server: $schema=https://schemas.materia.wtf/observability.giantswarm.io/silence_v1alpha2.json
+apiVersion: observability.giantswarm.io/v1alpha2
+kind: Silence
+metadata:
+  name: hpa-maxed-out
+spec:
+  matchers:
+    - name: alertname
+      value: KubeHpaMaxedOut
 ---
 # yaml-language-server: $schema=https://schemas.materia.wtf/observability.giantswarm.io/silence_v1alpha2.json
 apiVersion: observability.giantswarm.io/v1alpha2
@@ -41,11 +73,11 @@ spec:
 apiVersion: observability.giantswarm.io/v1alpha2
 kind: Silence
 metadata:
-  name: hpa-maxed-out
+  name: rook-ceph-csi-metrics-no-targets
 spec:
   matchers:
-    - name: alertname
-      value: KubeHpaMaxedOut
+    - name: scrape_job
+      value: serviceScrape/rook-ceph/csi-metrics/0
 ---
 # yaml-language-server: $schema=https://schemas.materia.wtf/observability.giantswarm.io/silence_v1alpha2.json
 apiVersion: observability.giantswarm.io/v1alpha2
@@ -59,13 +91,3 @@ spec:
     - name: recording
       value: cluster_quantile:scheduler_.*
       matchType: "=~"
----
-# yaml-language-server: $schema=https://schemas.materia.wtf/observability.giantswarm.io/silence_v1alpha2.json
-apiVersion: observability.giantswarm.io/v1alpha2
-kind: Silence
-metadata:
-  name: cluster-memory-overcommit
-spec:
-  matchers:
-    - name: alertname
-      value: KubeMemoryOvercommit
