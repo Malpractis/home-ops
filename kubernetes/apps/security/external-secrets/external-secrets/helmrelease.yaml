@@ -10,14 +10,6 @@ spec:
     name: external-secrets
   interval: 1h
   values:
-    bitwarden-sdk-server:
-      enabled: true
-      resources:
-        requests:
-          cpu: 100m
-          memory: 128Mi
-        limits:
-          memory: 256Mi
     grafanaDashboard:
       enabled: true
     leaderElect: true
