@@ -9,8 +9,6 @@ spec:
     - ../../../../components/volsync
     - ../../../../components/zeroscaler
   dependsOn:
-    - name: external-secrets-store
-      namespace: security
     - name: rook-ceph-cluster
       namespace: rook-ceph
   interval: 30m

@@ -8,8 +8,6 @@ spec:
   components:
     - ../../../../components/volsync
   dependsOn:
-    - name: external-secrets-store
-      namespace: security
     - name: rook-ceph-cluster
       namespace: rook-ceph
   interval: 30m
