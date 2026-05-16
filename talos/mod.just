@@ -29,10 +29,6 @@ gen-schematic-id node_type='baremetal' iso='false' node_ip='':
 generate-kubeconfig:
     talosctl kubeconfig -n "$(talosctl config info -o yaml | yq -e '.endpoints[0]')" -f --force-context-name main {{ justfile_dir() }}
 
-[doc('Generate talosconfig client file')]
-gen-talosconfig:
-    cd "{{ source_directory() }}" && bws run -- talhelper genconfig
-
 [confirm('Reboot node ' + node + ' [y|N] ?')]
 [doc('Reboot a node')]
 reboot-node node:
