@@ -12,23 +12,32 @@ spec:
     fullnameOverride: *app
     provider: cloudflare
     env:
-      - name: CF_API_TOKEN
+      - name: &name CF_API_TOKEN
         valueFrom:
           secretKeyRef:
             name: &secret external-dns-cloudflare-secret
-            key: CF_API_TOKEN
+            key: *name
+      - name: &name CF_ZONE_ID
+        valueFrom:
+          secretKeyRef:
+            name: *secret
+            key: *name
     extraArgs:
       - --cloudflare-dns-records-per-page=1000
       - --cloudflare-proxied
       - --crd-source-apiversion=externaldns.k8s.io/v1alpha1
       - --crd-source-kind=DNSEndpoint
       - --gateway-name=envoy-external
+      - --zone-id-filter=$(CF_ZONE_ID)
     triggerLoopOnEvent: true
     policy: sync
-    sources: ["crd", "gateway-httproute"]
-    txtPrefix: k8s.
+    sources:
+      - crd
+      - gateway-httproute
     txtOwnerId: default
-    domainFilters: ["materia.wtf"]
+    txtPrefix: k8s.
+    domainFilters:
+      - materia.wtf
     serviceMonitor:
       enabled: true
     podAnnotations:

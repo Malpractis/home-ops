@@ -5,6 +5,7 @@ metadata:
   name: cloudflare-tunnel
 spec:
   endpoints:
-    - dnsName: "external.materia.wtf"
+    - dnsName: external.materia.wtf
       recordType: CNAME
-      targets: ["f0d443f8-a9a2-445e-91fe-8fb0d5e24ae8.cfargotunnel.com"]
+      targets:
+        - ${CLOUDFLARE_TUNNEL_ID}.cfargotunnel.com

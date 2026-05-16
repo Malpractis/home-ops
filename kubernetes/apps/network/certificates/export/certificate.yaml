@@ -5,7 +5,7 @@ kind: Certificate
 metadata:
   name: "materia-wtf-production"
 spec:
-  secretName: "materia-wtf-production-tls"
+  secretName: "materia-wtf-tls"
   issuerRef:
     name: letsencrypt-production
     kind: ClusterIssuer
