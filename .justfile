@@ -1,7 +1,6 @@
-#!/usr/bin/env -S just --justfile
+﻿#!/usr/bin/env -S just --justfile
 
 set lazy
-set positional-arguments
 set quiet
 set shell := ['bash', '-euo', 'pipefail', '-c']
 
@@ -27,4 +26,4 @@ log lvl msg *args:
 
 [private]
 template file *args:
-    bws run -- minijinja-cli "{{ file }}" {{ args }}
+    minijinja-cli "{{ file }}" {{ args }} | op inject
