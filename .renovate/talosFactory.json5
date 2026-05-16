@@ -4,18 +4,14 @@
     "talos-factory": {
       defaultRegistryUrlTemplate: "https://factory.talos.dev/versions",
       format: "json",
-      transformTemplates: [
-        '{"releases": [$.{"version": $}]}'
-      ],
+      transformTemplates: [ '{"releases": [$.{"version": $}]}' ],
     },
   },
   customManagers: [
     {
       description: "Process Talos Factory installer images",
       customType: "regex",
-      managerFilePatterns: [
-        "/talos\\/.*\\.yaml(?:\\.j2)?$/"
-      ],
+      managerFilePatterns: [ "/talos\\/.*\\.yaml(?:\\.j2)?$/" ],
       matchStrings: [
         "factory\\.talos\\.dev\\/[^/]+\\/[^:]+:(?<currentValue>v\\S+)",
       ],
@@ -26,12 +22,8 @@
   ],
   packageRules: [
     {
-      addLabels: [
-        "renovate/talos"
-      ],
-      matchDatasources: [
-        "custom.talos-factory"
-      ],
+      addLabels: [ "renovate/talos" ],
+      matchDatasources: [ "custom.talos-factory" ],
       semanticCommitScope: "container",
       commitMessageTopic: "{{depName}}",
     },
