@@ -44,51 +44,51 @@ spec:
     name: flux-system
     namespace: flux-system
   targetNamespace: security
----
-# yaml-language-server: $schema=https://schemas.materia.wtf/kustomize.toolkit.fluxcd.io/kustomization_v1.json
-apiVersion: kustomize.toolkit.fluxcd.io/v1
-kind: Kustomization
-metadata:
-  name: &app external-secrets-store
-spec:
-  dependsOn:
-    - name: external-secrets
-      namespace: security
-  healthChecks:
-    - apiVersion: &certApiVersion cert-manager.io/v1
-      kind: &certKind Certificate
-      name: bitwarden-css-certs
-      namespace: security
-    - apiVersion: *certApiVersion
-      kind: *certKind
-      name: bitwarden-tls-certs
-      namespace: security
-    - apiVersion: &secretApiVersion external-secrets.io/v1
-      kind: &secretKind ClusterSecretStore
-      name: bitwarden-secrets-manager
-  healthCheckExprs:
-    - apiVersion: *certApiVersion
-      kind: *certKind
-      current: status.conditions.filter(e, e.type == 'Ready').all(e, e.status == 'True')
-      failed: status.conditions.filter(e, e.type == 'Ready').all(e, e.status == 'False')
-    - apiVersion: *secretApiVersion
-      kind: *secretKind
-      current: status.conditions.filter(e, e.type == 'Ready').all(e, e.status == 'True')
-      failed: status.conditions.filter(e, e.type == 'Ready').all(e, e.status == 'False')
-  interval: 30m
-  path: ./kubernetes/apps/security/external-secrets/bitwarden-secrets
-  postBuild:
-    substituteFrom:
-      - name: bitwarden-config
-        kind: Secret
-        optional: true
-    substitute:
-      APP: *app
-      GATUS_SUBDOMAIN: bitwarden
-  prune: true
-  sourceRef:
-    kind: GitRepository
-    name: flux-system
-    namespace: flux-system
-  targetNamespace: security
-  wait: false
+# ---
+# # yaml-language-server: $schema=https://schemas.materia.wtf/kustomize.toolkit.fluxcd.io/kustomization_v1.json
+# apiVersion: kustomize.toolkit.fluxcd.io/v1
+# kind: Kustomization
+# metadata:
+#   name: &app external-secrets-store
+# spec:
+#   dependsOn:
+#     - name: external-secrets
+#       namespace: security
+#   healthChecks:
+#     - apiVersion: &certApiVersion cert-manager.io/v1
+#       kind: &certKind Certificate
+#       name: bitwarden-css-certs
+#       namespace: security
+#     - apiVersion: *certApiVersion
+#       kind: *certKind
+#       name: bitwarden-tls-certs
+#       namespace: security
+#     - apiVersion: &secretApiVersion external-secrets.io/v1
+#       kind: &secretKind ClusterSecretStore
+#       name: bitwarden-secrets-manager
+#   healthCheckExprs:
+#     - apiVersion: *certApiVersion
+#       kind: *certKind
+#       current: status.conditions.filter(e, e.type == 'Ready').all(e, e.status == 'True')
+#       failed: status.conditions.filter(e, e.type == 'Ready').all(e, e.status == 'False')
+#     - apiVersion: *secretApiVersion
+#       kind: *secretKind
+#       current: status.conditions.filter(e, e.type == 'Ready').all(e, e.status == 'True')
+#       failed: status.conditions.filter(e, e.type == 'Ready').all(e, e.status == 'False')
+#   interval: 30m
+#   path: ./kubernetes/apps/security/external-secrets/bitwarden-secrets
+#   postBuild:
+#     substituteFrom:
+#       - name: bitwarden-config
+#         kind: Secret
+#         optional: true
+#     substitute:
+#       APP: *app
+#       GATUS_SUBDOMAIN: bitwarden
+#   prune: true
+#   sourceRef:
+#     kind: GitRepository
+#     name: flux-system
+#     namespace: flux-system
+#   targetNamespace: security
+#   wait: false

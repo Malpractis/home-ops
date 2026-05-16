@@ -5,7 +5,6 @@ kind: Kustomization
 resources:
   - ./bitwarden-issuer.yaml
   - ./clusterissuer.yaml
-  - ./clusterissuers.yaml
   - ./externalsecret.yaml
   - ./grafanadashboard.yaml
   - ./helmrelease.yaml
