@@ -20,14 +20,12 @@ spec:
     bpfClockProbe: true
     bgpControlPlane:
       enabled: true
-    cni:
-      # Required for pairing with Multus CNI
-      exclusive: false
     cgroup:
       automount:
         enabled: false
       hostRoot: /sys/fs/cgroup
-    # NOTE: devices might need to be set if you have more than one active NIC on your hosts
+    cni:
+      exclusive: false
     devices: bond+
     enableIPv4BIGTCP: true
     dashboards:
@@ -38,21 +36,9 @@ spec:
       enabled: false
     hubble:
       enabled: false
-      # enabled: true
-      # metrics:
-      #   enabled:
-      #     - dns:query
-      #     - drop
-      #     - tcp
-      #     - flow
-      #     - port-distribution
-      #     - icmp
-      #     - http
-      #   serviceMonitor:
-      #     enabled: true
     ipam:
       mode: kubernetes
-    ipv4NativeRoutingCIDR: "10.42.0.0/16"
+    ipv4NativeRoutingCIDR: 10.42.0.0/16
     k8sServiceHost: 127.0.0.1
     k8sServicePort: 7445
     kubeProxyReplacement: true
@@ -62,7 +48,8 @@ spec:
     loadBalancer:
       algorithm: maglev
       mode: "dsr"
-    localRedirectPolicy: true
+    localRedirectPolicies:
+      enabled: true
     operator:
       dashboards:
         enabled: true
