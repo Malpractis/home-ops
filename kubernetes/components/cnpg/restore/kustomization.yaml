@@ -1,0 +1,46 @@
+---
+# yaml-language-server: $schema=https://json.schemastore.org/kustomization
+# DISASTER RECOVERY — per-app CNPG cluster restore from barman-cloud backup.
+#
+# Include this component alongside components/cnpg/app to bootstrap from a
+# Garage S3 backup rather than a fresh initdb. Remove it once the cluster
+# is healthy — leaving it in causes Flux to keep re-applying the recovery
+# spec on every reconcile (harmless but noisy and confusing).
+#
+# RESTORE PROCEDURE
+# =================
+# 1. Suspend Flux reconciliation for the app so you control the timing:
+#      flux suspend ks <app> -n <namespace>
+#
+# 2. Delete the existing Cluster CR (CNPG will terminate the pods):
+#      kubectl delete cluster postgres-<app> -n <namespace>
+#
+# 3. Delete the leftover PVCs — recovery creates fresh volumes from the backup:
+#      kubectl delete pvc -l cnpg.io/cluster=postgres-<app> -n <namespace>
+#
+# 4. Add this component to the app's ks.yaml:
+#      components:
+#        - ../../../../components/cnpg/app
+#        - ../../../../components/cnpg/restore  # <-- add this line
+#
+#    Optionally set a point-in-time target in cluster-recovery-patch.yaml
+#    before committing (see recoveryTarget.targetTime).
+#
+# 5. Commit and push, then resume reconciliation:
+#      flux resume ks <app> -n <namespace>
+#
+# 6. Watch the cluster recover from backup:
+#      kubectl get cluster postgres-<app> -n <namespace> -w
+#    Full recovery including WAL replay can take several minutes depending on
+#    how much WAL has accumulated since the last base backup.
+#
+# 7. Once the cluster reports 'Cluster in healthy state', remove this component
+#    from ks.yaml, commit and push.
+apiVersion: kustomize.config.k8s.io/v1alpha1
+kind: Component
+patches:
+  - path: ./cluster-recovery-patch.yaml
+    target:
+      group: postgresql.cnpg.io
+      version: v1
+      kind: Cluster

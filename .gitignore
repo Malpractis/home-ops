@@ -13,6 +13,11 @@
 # Kubernetes
 kubeconfig
 talosconfig
+# Terraform
+.terraform/
+terraform.tfstate
+terraform.tfstate.backup
+terraform/**/.env
 # Misc.
 .claude/
 .private/
