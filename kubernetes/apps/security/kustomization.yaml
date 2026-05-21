@@ -9,7 +9,7 @@ components:
 
 resources:
   - ./namespace.yaml
-  # - ./authentik/ks.yaml
+  - ./authentik/ks.yaml
   - ./cert-manager/ks.yaml
   - ./external-secrets/ks.yaml
   - ./onepassword-connect/ks.yaml
