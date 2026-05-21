@@ -1,6 +1,7 @@
 {
   "recommendations": [
     "bluebrown.yamlfmt",
+    "hverlin.mise-vscode",
     "blueglassblock.better-json5",
     "irongeek.vscode-env",
     "nefrob.vscode-just-syntax",
