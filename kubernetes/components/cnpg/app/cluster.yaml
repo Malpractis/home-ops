@@ -57,7 +57,7 @@ spec:
           name: postgres-backup-secret
           key: SECRET_ACCESS_KEY
       wal:
-        compression: zstd
+        compression: gzip
         maxParallel: 8
       data:
         compression: gzip
