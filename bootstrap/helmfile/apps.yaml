@@ -1,20 +1,20 @@
 ---
 # yaml-language-server: $schema=https://json.schemastore.org/helmfile
-
+bases:
+  - defaults.yaml
+---
+# yaml-language-server: $schema=https://json.schemastore.org/helmfile
 helmDefaults:
-  args:
-    - --force-conflicts
   cleanupOnFail: true
+  forceConflicts: true
   wait: true
   waitForJobs: true
 
 releases:
   - name: cilium
     namespace: kube-system
-    chart: oci://ghcr.io/home-operations/charts-mirror/cilium
-    version: 1.19.3
-    values:
-      - ./templates/values.yaml.gotmpl
+    inherit:
+      - template: default
     hooks:
       - # Wait for CRDs to be available
         command: kubectl
@@ -43,33 +43,24 @@ releases:
 
   - name: coredns
     namespace: kube-system
-    chart: oci://ghcr.io/coredns/charts/coredns
-    version: 1.45.2
-    values:
-      - ./templates/values.yaml.gotmpl
+    inherit:
+      - template: default
     needs:
       - kube-system/cilium
 
   - name: spegel
     namespace: system
-    chart: oci://ghcr.io/spegel-org/helm-charts/spegel
-    version: 0.7.0
-    values:
-      - ./templates/values.yaml.gotmpl
+    inherit:
+      - template: default
     needs:
       - kube-system/coredns
 
   - name: cert-manager
     namespace: security
-    chart: oci://quay.io/jetstack/charts/cert-manager
-    version: v1.20.2
-    values:
-      - ./templates/values.yaml.gotmpl
+    inherit:
+      - template: default
     hooks:
-      - # Apply cluster secret store configuration
-        # We need this for bitwarden, which we need for the cluster-secrets to get populated
-        # without those, flux fails to install anything
-        events: [postsync]
+      - events: [postsync]
         command: kubectl
         args:
           - apply
@@ -79,53 +70,33 @@ releases:
           - --filename=../../kubernetes/apps/security/cert-manager/app/clusterissuers.yaml
           - --wait=true
         showlogs: true
-      - # bitwarden needs its certissuer so it can come up, otherwise it just stays pending
-        events: [postsync]
-        command: kubectl
-        args:
-          - apply
-          - --namespace=security
-          - --server-side
-          - --force-conflicts
-          - --filename=../../kubernetes/apps/security/cert-manager/app/bitwarden-issuer.yaml
-          - --wait=true
-      - # bitwarden needs its cert so it can come up, otherwise it just stays pending
-        events: [postsync]
-        command: kubectl
-        args:
-          - apply
-          - --namespace=security
-          - --server-side
-          - --force-conflicts
-          - --filename=../../kubernetes/apps/security/external-secrets/store/bitwarden-secrets/certificate.yaml
-          - --wait=true
     needs:
-      - kube-system/spegel
+      - system/spegel
 
   - name: external-secrets
     namespace: security
-    chart: oci://ghcr.io/external-secrets/charts/external-secrets
-    version: 2.4.1
-    values:
-      - ./templates/values.yaml.gotmpl
+    inherit:
+      - template: default
     needs:
-      - cert-manager/cert-manager
+      - security/cert-manager
+
+  - name: onepassword-connect
+    namespace: security
+    inherit:
+      - template: default
+    needs:
+      - security/external-secrets
 
   - name: flux-operator
     namespace: flux-system
-    chart: oci://ghcr.io/controlplaneio-fluxcd/charts/flux-operator
-    version: 0.48.0
-    values:
-      - ./templates/values.yaml.gotmpl
+    inherit:
+      - template: default
     needs:
-      - external-secrets/onepassword-connect
+      - security/onepassword-connect
 
   - name: flux-instance
     namespace: flux-system
-    chart: oci://ghcr.io/controlplaneio-fluxcd/charts/flux-instance
-    version: 0.48.0
-    values:
-      - ./templates/values.yaml.gotmpl
+    inherit:
+      - template: default
     needs:
       - flux-system/flux-operator
-

@@ -1,5 +1,8 @@
 ---
-
+# yaml-language-server: $schema=https://json.schemastore.org/helmfile
+bases:
+  - defaults.yaml
+---
 # This helmfile is for extracting and installing Custom Resource Definitions (CRDs) from Helm charts.
 # It is not intended to be used with helmfile apply or helmfile sync.
 
@@ -7,23 +10,19 @@ helmDefaults:
   args:
     - --include-crds
     - --no-hooks
-  postRenderer: bash
-  postRendererArgs:
-    - -c
-    - yq eval-all --exit-status 'select(.kind == "CustomResourceDefinition")'
 
 releases:
   - name: envoy-gateway
     namespace: network
-    chart: oci://mirror.gcr.io/envoyproxy/gateway-helm
-    version: 1.7.3
+    inherit:
+      - template: default
 
   - name: grafana-operator
     namespace: o11y
-    chart: oci://ghcr.io/grafana/helm-charts/grafana-operator
-    version: 5.22.2
+    inherit:
+      - template: default
 
   - name: prometheus-operator-crds
     namespace: o11y
-    chart: oci://ghcr.io/prometheus-community/charts/prometheus-operator-crds
-    version: 29.0.0
+    inherit:
+      - template: default
