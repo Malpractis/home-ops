@@ -8,7 +8,6 @@ on:
       - main
     paths:
       - .renovaterc.json5
-      - .renovate/**.json5
   schedule:
     - cron: 0 * * * *
   workflow_dispatch:
@@ -47,6 +46,7 @@ jobs:
     steps:
       - name: Load Secrets
         id: load-secrets
+        # zizmor: ignore[unpinned-tools]
         uses: 1password/load-secrets-action@92467eb28f72e8255933372f1e0707c567ce2259 # v4.0.0
         env:
           OP_SERVICE_ACCOUNT_TOKEN: ${{ secrets.OP_SERVICE_ACCOUNT_TOKEN }}
@@ -59,6 +59,10 @@ jobs:
         with:
           client-id: ${{ steps.load-secrets.outputs.GITHUB_BOT_APP_CLIENT_ID }}
           private-key: ${{ steps.load-secrets.outputs.GITHUB_BOT_APP_PRIVATE_KEY }}
+          permission-contents: write
+          permission-pull-requests: write
+          permission-issues: write
+          permission-workflows: write
 
       - name: Checkout
         uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
