@@ -201,6 +201,8 @@ spec:
       spec:
         extraArgs:
           maxLabelsPerTimeseries: "100"
+          search.maxConcurrentRequests: "8"
+          search.maxQueueDuration: "30s"
         retentionPeriod: 90d
         storage:
           accessModes:
