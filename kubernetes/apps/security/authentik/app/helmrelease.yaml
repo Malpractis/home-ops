@@ -34,6 +34,9 @@ spec:
         # Required when using pgBouncer in transaction mode — disables prepared statements
         - name: AUTHENTIK_POSTGRESQL__USE_PGBOUNCER
           value: "true"
+        # Release connections back to pool after each request (required for PgBouncer transaction mode)
+        - name: AUTHENTIK_POSTGRESQL__CONN_MAX_AGE
+          value: "0"
         - name: AUTHENTIK_POSTGRESQL__NAME
           value: authentik
         # Media file storage
