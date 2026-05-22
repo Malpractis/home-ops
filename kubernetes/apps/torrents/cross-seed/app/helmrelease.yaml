@@ -57,20 +57,17 @@ spec:
               - -v
             probes:
               liveness:
-                enabled: false
+                enabled: true
+                type: HTTP
+                path: /api/ping
+                spec:
+                  initialDelaySeconds: 120
+                  periodSeconds: 10
+                  failureThreshold: 30
               readiness:
                 enabled: false
               startup:
                 enabled: false
-              # liveness: &probes
-              #   enabled: true
-              #   type: HTTP
-              #   path: /api/ping
-              #   spec:
-              #     initialDelaySeconds: 120
-              #     periodSeconds: 10
-              #     failureThreshold: 30
-              # readiness: *probes
             securityContext:
               allowPrivilegeEscalation: false
               readOnlyRootFilesystem: true

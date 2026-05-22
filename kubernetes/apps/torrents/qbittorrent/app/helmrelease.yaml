@@ -25,22 +25,29 @@ spec:
               QBT_WEBUI_PORT: &port 80
               QBT_TORRENTING_PORT: 50413
             probes:
-              liveness: &probes
+              liveness:
                 enabled: true
                 type: HTTP
                 path: /api/v2/app/version
                 spec:
                   periodSeconds: 30
+                  timeoutSeconds: 30
+                  failureThreshold: 10
+              readiness:
+                enabled: true
+                type: HTTP
+                path: /api/v2/app/version
+                spec:
+                  periodSeconds: 30
+                  timeoutSeconds: 30
                   failureThreshold: 6
-                  timeoutSeconds: 10
-              readiness: *probes
               startup:
                 enabled: true
                 type: HTTP
                 path: /api/v2/app/version
                 spec:
                   initialDelaySeconds: 30
-                  timeoutSeconds: 10
+                  timeoutSeconds: 30
                   periodSeconds: 30
                   failureThreshold: 60
             securityContext:
