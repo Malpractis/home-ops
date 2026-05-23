@@ -26,14 +26,14 @@ locals {
     radarr-anime = { name = "Radarr Anime",       url = "https://radarr-anime.materia.wtf",             description = "Anime movies",       icon = "application-icons/svg/radarr.svg"                           }
     sonarr       = { name = "Sonarr",             url = "https://sonarr.materia.wtf",                   description = "TV shows",           icon = "application-icons/svg/sonarr.svg"                           }
     sonarr-anime = { name = "Sonarr Anime",       url = "https://sonarr-anime.materia.wtf",             description = "Anime TV",           icon = "application-icons/svg/sonarr.svg"                           }
-    prowlarr     = { name = "Prowlarr",           url = "https://prowlarr.materia.wtf",                 description = "Indexers",           icon = "application-icons/svg/prowlarr.svg"                         }
+    prowlarr     = { name = "Prowlarr",           url = "https://prowlarr.materia.wtf",                 description = "Indexers",           icon = "application-icons/png/prowlarr.png"                         }
     lidarr       = { name = "Lidarr",             url = "https://lidarr.materia.wtf",                   description = "Music",              icon = "application-icons/svg/lidarr.svg"                           }
     bazarr       = { name = "Bazarr",             url = "https://bazarr.materia.wtf",                   description = "Subtitles",          icon = "application-icons/svg/bazarr.svg"                           }
     bazarr-anime = { name = "Bazarr Anime",       url = "https://bazarr-anime.materia.wtf",             description = "Anime subtitles",    icon = "application-icons/svg/bazarr.svg"                           }
     sabnzbd      = { name = "SABnzbd",            url = "https://sabnzbd.materia.wtf",                  description = "Usenet downloader",  icon = "application-icons/svg/sabnzbd.svg"                          }
     qbittorrent  = { name = "qBittorrent",        url = "https://qbittorrent.materia.wtf",              description = "Torrent client",     icon = "application-icons/svg/qbittorrent.svg"                      }
     autobrr      = { name = "autobrr",            url = "https://autobrr.materia.wtf",                  description = "Torrent automation", icon = "application-icons/svg/autobrr.svg"                          }
-    notifiarr    = { name = "Notifiarr",          url = "https://notifiarr.materia.wtf",                description = "Notifications",      icon = "application-icons/svg/notifiarr.svg"                        }
+    notifiarr    = { name = "Notifiarr",          url = "https://notifiarr.materia.wtf",                description = "Notifications",      icon = "application-icons/png/notifiarr.png"                        }
     stash        = { name = "Stash",              url = "https://stash.materia.wtf",                    description = "Media library",      icon = "application-icons/svg/stash.svg"                            }
     calibre      = { name = "Calibre",            url = "https://calibre.materia.wtf",                  description = "eBook library",      icon = "application-icons/svg/calibre-web.svg"                      }
     calibre-dl   = { name = "Calibre Downloader", url = "https://calibre-book-downloader.materia.wtf",  description = "Book downloads",     icon = "application-icons/png/calibre-web-automated-book-downloader.png" }
@@ -47,9 +47,9 @@ locals {
     vmalertmanager = { name = "AlertManager",    url = "https://vmalertmanager.materia.wtf", description = "Alert routing",     icon = "application-icons/svg/alertmanager.svg"    }
     status         = { name = "Status",          url = "https://status.materia.wtf",         description = "Uptime monitoring", icon = "application-icons/svg/gatus.svg"           }
     flux           = { name = "Flux",            url = "https://flux-operator.materia.wtf",  description = "GitOps operator",   icon = "application-icons/svg/flux-operator.svg"   }
-    pve-0          = { name = "Proxmox",         url = "https://pve-0.materia.wtf",          description = "Hypervisor",        icon = "application-icons/svg/proxmox.svg"         }
-    pi-0           = { name = "Pi-hole (0)",     url = "https://pi-0.materia.wtf",           description = "DNS & ad blocking", icon = "application-icons/svg/pi-hole.svg"         }
-    pi-1           = { name = "Pi-hole (1)",     url = "https://pi-1.materia.wtf",           description = "DNS & ad blocking", icon = "application-icons/svg/pi-hole.svg"         }
+    pve-0          = { name = "Proxmox",         url = "https://pve-0.materia.wtf",          description = "Hypervisor",        icon = "application-icons/png/proxmox.png"         }
+    pi-0           = { name = "Pi-hole (0)",     url = "https://pi-0.materia.wtf",           description = "DNS & ad blocking", icon = "application-icons/png/pi-hole.png"         }
+    pi-1           = { name = "Pi-hole (1)",     url = "https://pi-1.materia.wtf",           description = "DNS & ad blocking", icon = "application-icons/png/pi-hole.png"         }
   }
 }
 
@@ -189,7 +189,7 @@ resource "authentik_application" "seerr" {
   group             = authentik_group.media.name
   meta_launch_url   = "https://requests.materia.wtf"
   meta_description  = "Media requests"
-  meta_icon         = "application-icons/svg/seerr.svg"
+  meta_icon         = "application-icons/png/seerr.png"
   open_in_new_tab   = true
 }
 

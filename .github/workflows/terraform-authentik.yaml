@@ -274,7 +274,7 @@ jobs:
           op item get grafana --vault kubernetes --fields label=client-secret
 
           echo "=== static write test ==="
-          op item edit grafana --vault kubernetes "client-secret=testvalue123"
+          op item edit grafana --vault kubernetes "client-secret=testvalue123" --debug 2>&1 || true
 
           echo "Retrieving Terraform outputs..."
           GRAFANA_SECRET=$(terraform output -raw grafana_client_secret 2>/dev/null || true)
