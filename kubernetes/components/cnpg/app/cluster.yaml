@@ -12,6 +12,10 @@ spec:
     size: ${DB_SIZE:-10Gi}
     storageClass: ceph-block
 
+  env:
+    - name: AWS_DEFAULT_REGION
+      value: garage
+
   postgresql:
     # dataDurability=preferred: writes fall back to local-commit if the standby
     # is unavailable rather than blocking. Safe for 2-instance clusters.
