@@ -269,9 +269,8 @@ jobs:
             exit 1
           fi
 
-          # Fields live in the "add more" section — must use "section.field=value" syntax
           echo "Updating 1Password items..."
-          op item edit grafana  --vault kubernetes "add more.client-secret=${GRAFANA_SECRET}"
-          op item edit seerr    --vault kubernetes "add more.client-secret=${SEERR_SECRET}"
-          op item edit truenas  --vault kubernetes "add more.client-secret=${TRUENAS_SECRET}"
+          op item edit grafana  --vault kubernetes "client-secret=${GRAFANA_SECRET}"
+          op item edit seerr    --vault kubernetes "client-secret=${SEERR_SECRET}"
+          op item edit truenas  --vault kubernetes "client-secret=${TRUENAS_SECRET}"
           echo "Done — client secrets written to 1Password."
