@@ -42,6 +42,7 @@ spec:
     security:
       angular_support_enabled: "true"
     server:
+      root_url: https://grafana.materia.wtf
       enable_gzip: "true"
   deployment:
     spec:
