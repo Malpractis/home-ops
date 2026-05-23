@@ -109,10 +109,9 @@ jobs:
             local APP_ADDR="authentik_application.${GROUP}[\"${TF_KEY}\"]"
             local PRV_ADDR="authentik_provider_proxy.${GROUP}[\"${TF_KEY}\"]"
 
-            # Fetch once, use for both imports
-            APP_DATA=$(curl -sf -H "${AK_HDR}" "${AK_API}/core/applications/${SLUG}/")
-            APP_UUID=$(echo "${APP_DATA}" | jq -r '.pk')
-            PROVIDER_ID=$(echo "${APP_DATA}" | jq -r '.provider')
+            # Fetch provider ID from application's API endpoint
+            PROVIDER_ID=$(curl -sf -H "${AK_HDR}" "${AK_API}/core/applications/${SLUG}/" \
+              | jq -r '.provider')
 
             if ! terraform state show "${PRV_ADDR}" > /dev/null 2>&1; then
               echo "Importing ${GROUP} provider for: ${SLUG}..."
@@ -125,7 +124,8 @@ jobs:
 
             if ! terraform state show "${APP_ADDR}" > /dev/null 2>&1; then
               echo "Importing ${GROUP} app: ${SLUG}..."
-              terraform import "${APP_ADDR}" "${APP_UUID}"
+              # authentik_application import ID is the slug, not the UUID
+              terraform import "${APP_ADDR}" "${SLUG}"
             else
               echo "${GROUP} app '${SLUG}' already in state, skipping."
             fi
