@@ -29,7 +29,7 @@ spec:
       auth_url: https://auth.materia.wtf/application/o/authorize/
       token_url: https://auth.materia.wtf/application/o/token/
       api_url: https://auth.materia.wtf/application/o/userinfo/
-      use_pkce: "false"
+      use_pkce: "true"
       # Map Authentik groups to Grafana roles
       role_attribute_path: contains(groups[*], 'admins') && 'Admin' || 'Viewer'
     log:
