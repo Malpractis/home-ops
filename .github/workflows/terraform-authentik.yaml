@@ -267,9 +267,13 @@ jobs:
           TF_VAR_plex_client_id: ${{ steps.load-secrets.outputs.TF_VAR_PLEX_CLIENT_ID }}
           TF_VAR_plex_token: ${{ steps.load-secrets.outputs.TF_VAR_PLEX_TOKEN }}
         run: |
-          # Verify op can reach the vault and items exist
-          echo "Checking vault access..."
-          op item list --vault kubernetes --format json | jq -r '.[].title' | sort
+          # Show field labels in each item (helps diagnose field-name issues)
+          echo "=== grafana fields ==="
+          op item get grafana  --vault kubernetes --format json | jq -r '[.fields[] | {label,type}]'
+          echo "=== seerr fields ==="
+          op item get seerr    --vault kubernetes --format json | jq -r '[.fields[] | {label,type}]'
+          echo "=== truenas fields ==="
+          op item get truenas  --vault kubernetes --format json | jq -r '[.fields[] | {label,type}]'
 
           # Capture terraform outputs
           GRAFANA_SECRET=$(terraform output -raw grafana_client_secret)
@@ -279,7 +283,7 @@ jobs:
           echo "seerr secret length:   ${#SEERR_SECRET}"
           echo "truenas secret length: ${#TRUENAS_SECRET}"
 
-          # Write secrets back to 1Password
-          op item edit grafana  --vault kubernetes --field "client-secret[password]=${GRAFANA_SECRET}" < /dev/null
-          op item edit seerr    --vault kubernetes --field "client-secret[password]=${SEERR_SECRET}"   < /dev/null
-          op item edit truenas  --vault kubernetes --field "client-secret[password]=${TRUENAS_SECRET}" < /dev/null
+          # Write secrets (no type annotation — update existing field value only)
+          op item edit grafana  --vault kubernetes "client-secret=${GRAFANA_SECRET}"
+          op item edit seerr    --vault kubernetes "client-secret=${SEERR_SECRET}"
+          op item edit truenas  --vault kubernetes "client-secret=${TRUENAS_SECRET}"
