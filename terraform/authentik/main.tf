@@ -30,3 +30,8 @@ data "authentik_property_mapping_provider_scope" "profile" {
 data "authentik_property_mapping_provider_scope" "offline_access" {
   managed = "goauthentik.io/providers/oauth2/scope-offline_access"
 }
+resource "authentik_property_mapping_provider_scope" "groups" {
+  name       = "Groups"
+  scope_name = "groups"
+  expression = "return list(request.user.ak_groups.values_list('name', flat=True))"
+}

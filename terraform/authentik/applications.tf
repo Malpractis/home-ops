@@ -133,7 +133,7 @@ resource "authentik_provider_oauth2" "grafana" {
   authorization_flow = data.authentik_flow.default_provider_authorization_implicit_consent.id
   invalidation_flow  = authentik_flow.invalidation.uuid
 
-  property_mappings = local.oidc_scopes
+  property_mappings = concat(local.oidc_scopes, [authentik_property_mapping_provider_scope.groups.id])
 }
 
 resource "authentik_application" "grafana" {

@@ -25,7 +25,7 @@ spec:
     auth.generic_oauth:
       name: authentik
       enabled: "true"
-      scopes: openid email profile
+      scopes: openid email profile groups
       auth_url: https://auth.materia.wtf/application/o/authorize/
       token_url: https://auth.materia.wtf/application/o/token/
       api_url: https://auth.materia.wtf/application/o/userinfo/
