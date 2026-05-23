@@ -259,6 +259,9 @@ jobs:
           echo "=== op version ==="
           op --version
 
+          echo "=== op environment ==="
+          env | grep -i "^OP_" || true
+
           echo "=== op whoami ==="
           op whoami
 
