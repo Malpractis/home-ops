@@ -256,10 +256,24 @@ jobs:
           AWS_ACCESS_KEY_ID: ${{ steps.load-secrets.outputs.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ steps.load-secrets.outputs.AWS_SECRET_ACCESS_KEY }}
         run: |
+          echo "=== op version ==="
+          op --version
+
+          echo "=== op whoami ==="
+          op whoami
+
+          echo "=== static write test ==="
+          op item edit grafana --vault kubernetes "client-secret=testvalue123"
+
           echo "Retrieving Terraform outputs..."
           GRAFANA_SECRET=$(terraform output -raw grafana_client_secret 2>/dev/null || true)
           SEERR_SECRET=$(terraform output -raw seerr_client_secret 2>/dev/null || true)
           TRUENAS_SECRET=$(terraform output -raw truenas_client_secret 2>/dev/null || true)
+
+          echo "Secret lengths: grafana=${#GRAFANA_SECRET} seerr=${#SEERR_SECRET} truenas=${#TRUENAS_SECRET}"
+          echo "Grafana prefix:  ${GRAFANA_SECRET:0:8}"
+          echo "Seerr prefix:    ${SEERR_SECRET:0:8}"
+          echo "TrueNAS prefix:  ${TRUENAS_SECRET:0:8}"
 
           if [ -z "${GRAFANA_SECRET}" ] || [ -z "${SEERR_SECRET}" ] || [ -z "${TRUENAS_SECRET}" ]; then
             echo "ERROR: One or more Terraform outputs are empty"
