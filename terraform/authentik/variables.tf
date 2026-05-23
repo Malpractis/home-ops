@@ -1,6 +1,13 @@
 # All secrets are injected as TF_VAR_* environment variables by the GHA workflow
 # via the 1password/load-secrets-action. See terraform-authentik.yaml.
 
+# ─── Authentik API Token ──────────────────────────────────────────────────────
+# op://kubernetes/authentik/AUTHENTIK_TOKEN
+variable "authentik_token" {
+  type      = string
+  sensitive = true
+}
+
 # ─── Cloudflare Turnstile ─────────────────────────────────────────────────────
 # op://kubernetes/cloudflare-turnstile/site-key
 variable "turnstile_site_key" {

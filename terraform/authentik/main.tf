@@ -4,7 +4,8 @@
 # Secrets are injected via TF_VAR_* env vars by the GHA workflow (load-secrets-action).
 
 provider "authentik" {
-  url = "https://auth.materia.wtf"
+  url   = "https://auth.materia.wtf"
+  token = var.authentik_token
 }
 
 # ─── Data Sources ─────────────────────────────────────────────────────────────
