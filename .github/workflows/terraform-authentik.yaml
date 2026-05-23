@@ -37,7 +37,7 @@ jobs:
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@b9cd54a3c349d3f38e8881555d616ced269862dd # v3.1.2
         with:
-          wrapper: false  # avoid Node.js shim — runner does not have node in PATH
+          terraform_wrapper: false  # avoid Node.js shim — runner does not have node in PATH
 
       - name: Terraform Init
         env:
@@ -106,7 +106,7 @@ jobs:
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@b9cd54a3c349d3f38e8881555d616ced269862dd # v3.1.2
         with:
-          wrapper: false  # avoid Node.js shim — runner does not have node in PATH
+          terraform_wrapper: false  # avoid Node.js shim — runner does not have node in PATH
 
       - name: Terraform Init
         env:
