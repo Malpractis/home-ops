@@ -122,3 +122,23 @@ jobs:
           AWS_ACCESS_KEY_ID: ${{ steps.load-secrets.outputs.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ steps.load-secrets.outputs.AWS_SECRET_ACCESS_KEY }}
         run: terraform apply -auto-approve tfplan
+
+      - name: Install 1Password CLI
+        uses: 1password/install-cli-action@v1
+
+      - name: Store OIDC Client Secrets in 1Password
+        # Writes each client secret into 1Password so ExternalSecrets can pull
+        # them automatically — avoids needing to manually retrieve masked outputs.
+        #
+        # Items must already exist in 1Password (vault: kubernetes):
+        #   grafana  → field: client-secret
+        #   seerr    → field: client-secret
+        #   truenas  → field: client-secret
+        env:
+          OP_SERVICE_ACCOUNT_TOKEN: ${{ secrets.OP_SERVICE_ACCOUNT_TOKEN }}
+          AWS_ACCESS_KEY_ID: ${{ steps.load-secrets.outputs.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ steps.load-secrets.outputs.AWS_SECRET_ACCESS_KEY }}
+        run: |
+          op item edit grafana  --vault kubernetes "client-secret=$(terraform output -raw grafana_client_secret)"
+          op item edit seerr    --vault kubernetes "client-secret=$(terraform output -raw seerr_client_secret)"
+          op item edit truenas  --vault kubernetes "client-secret=$(terraform output -raw truenas_client_secret)"
