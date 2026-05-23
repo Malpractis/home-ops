@@ -253,6 +253,8 @@ jobs:
         #   truenas  → field: client-secret
         env:
           OP_SERVICE_ACCOUNT_TOKEN: ${{ secrets.OP_SERVICE_ACCOUNT_TOKEN }}
+          AWS_ACCESS_KEY_ID: ${{ steps.load-secrets.outputs.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ steps.load-secrets.outputs.AWS_SECRET_ACCESS_KEY }}
           TF_VAR_authentik_token: ${{ steps.load-secrets.outputs.TF_VAR_AUTHENTIK_TOKEN }}
           TF_VAR_turnstile_site_key: ${{ steps.load-secrets.outputs.TF_VAR_TURNSTILE_SITE_KEY }}
           TF_VAR_turnstile_secret_key: ${{ steps.load-secrets.outputs.TF_VAR_TURNSTILE_SECRET_KEY }}
