@@ -267,6 +267,10 @@ jobs:
           TF_VAR_plex_client_id: ${{ steps.load-secrets.outputs.TF_VAR_PLEX_CLIENT_ID }}
           TF_VAR_plex_token: ${{ steps.load-secrets.outputs.TF_VAR_PLEX_TOKEN }}
         run: |
-          op item edit grafana  --vault kubernetes "client-secret=$(terraform output -raw grafana_client_secret)"
-          op item edit seerr    --vault kubernetes "client-secret=$(terraform output -raw seerr_client_secret)"
-          op item edit truenas  --vault kubernetes "client-secret=$(terraform output -raw truenas_client_secret)"
+          GRAFANA_SECRET=$(terraform output -raw grafana_client_secret)
+          SEERR_SECRET=$(terraform output -raw seerr_client_secret)
+          TRUENAS_SECRET=$(terraform output -raw truenas_client_secret)
+
+          op item edit grafana  --vault kubernetes "client-secret[password]=${GRAFANA_SECRET}"
+          op item edit seerr    --vault kubernetes "client-secret[password]=${SEERR_SECRET}"
+          op item edit truenas  --vault kubernetes "client-secret[password]=${TRUENAS_SECRET}"
