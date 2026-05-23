@@ -17,8 +17,8 @@ data "onepassword_item" "cloudflare_turnstile" {
 }
 
 locals {
-  op_authentik = { for f in data.onepassword_item.authentik.fields : f.label => f.value }
-  op_turnstile = { for f in data.onepassword_item.cloudflare_turnstile.fields : f.label => f.value }
+  op_authentik = { for f in data.onepassword_item.authentik.field : f.label => f.value }
+  op_turnstile = { for f in data.onepassword_item.cloudflare_turnstile.field : f.label => f.value }
 
   authentik_token      = local.op_authentik["AUTHENTIK_TOKEN"]
   turnstile_site_key   = local.op_turnstile["site-key"]

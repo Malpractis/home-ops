@@ -60,10 +60,10 @@ data "onepassword_item" "plex_oauth" {
 }
 
 locals {
-  op_discord = { for f in data.onepassword_item.discord_oauth.fields : f.label => f.value }
-  op_google  = { for f in data.onepassword_item.google_oauth.fields : f.label => f.value }
-  op_github  = { for f in data.onepassword_item.github_oauth.fields : f.label => f.value }
-  op_plex    = { for f in data.onepassword_item.plex_oauth.fields : f.label => f.value }
+  op_discord = { for f in data.onepassword_item.discord_oauth.field : f.label => f.value }
+  op_google  = { for f in data.onepassword_item.google_oauth.field : f.label => f.value }
+  op_github  = { for f in data.onepassword_item.github_oauth.field : f.label => f.value }
+  op_plex    = { for f in data.onepassword_item.plex_oauth.field : f.label => f.value }
 }
 
 # ─── Discord ─────────────────────────────────────────────────────────────────
