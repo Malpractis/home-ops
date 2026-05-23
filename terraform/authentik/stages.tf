@@ -83,7 +83,7 @@ resource "authentik_stage_authenticator_validate" "mfa" {
   device_classes             = ["static", "totp", "webauthn"]
   # "skip": users without MFA configured can still log in (change to
   # "configure" to force MFA enrollment, or "deny" to block them entirely)
-  not_configured_action      = "skip"
+  not_configured_action      = "configure"
   webauthn_user_verification = "preferred"
 }
 

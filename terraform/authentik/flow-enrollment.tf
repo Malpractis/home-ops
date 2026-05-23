@@ -2,7 +2,7 @@
 # Authentik UI (or via API); anyone without a valid invite token is blocked.
 resource "authentik_flow" "enrollment" {
   name           = "enrollment-invitation"
-  title          = "Welcome to materia.wtf"
+  title          = "Welcome to Materia"
   slug           = "enrollment-invitation"
   designation    = "enrollment"
   authentication = "none"

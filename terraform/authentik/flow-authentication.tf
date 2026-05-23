@@ -69,7 +69,7 @@ resource "authentik_policy_binding" "authentication_password_remote" {
 # ── Stage 40: MFA Validation ──────────────────────────────────────────────────
 # Skipped on local network. Remote users must pass their configured MFA device
 # (TOTP via 1Password, WebAuthn passkey, or static backup code).
-# Users with no MFA configured are allowed through (not_configured_action=skip).
+# Users with no MFA configured are sent to the setup flow (not_configured_action=configure).
 
 resource "authentik_flow_stage_binding" "authentication_mfa" {
   target             = authentik_flow.authentication.uuid

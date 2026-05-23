@@ -29,6 +29,7 @@ jobs:
           OP_SERVICE_ACCOUNT_TOKEN: ${{ secrets.OP_SERVICE_ACCOUNT_TOKEN }}
           AWS_ACCESS_KEY_ID: op://kubernetes/terraform/s3-key-id
           AWS_SECRET_ACCESS_KEY: op://kubernetes/terraform/s3-secret-key
+          AUTHENTIK_TOKEN: op://kubernetes/authentik/AUTHENTIK_TOKEN
 
       - name: Checkout
         uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4.3.1
@@ -41,6 +42,27 @@ jobs:
           AWS_ACCESS_KEY_ID: ${{ steps.load-secrets.outputs.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ steps.load-secrets.outputs.AWS_SECRET_ACCESS_KEY }}
         run: terraform init
+
+      - name: Import Embedded Outpost
+        # The embedded outpost is created by Authentik automatically on install,
+        # so it exists in Authentik but not in Terraform state on the first run.
+        # This step imports it once and is a no-op on subsequent runs.
+        env:
+          OP_SERVICE_ACCOUNT_TOKEN: ${{ secrets.OP_SERVICE_ACCOUNT_TOKEN }}
+          AWS_ACCESS_KEY_ID: ${{ steps.load-secrets.outputs.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ steps.load-secrets.outputs.AWS_SECRET_ACCESS_KEY }}
+          AUTHENTIK_TOKEN: ${{ steps.load-secrets.outputs.AUTHENTIK_TOKEN }}
+        run: |
+          if ! terraform state show authentik_outpost.embedded > /dev/null 2>&1; then
+            echo "Importing embedded outpost..."
+            OUTPOST_PK=$(curl -sf \
+              -H "Authorization: Bearer ${AUTHENTIK_TOKEN}" \
+              "https://auth.materia.wtf/api/v3/outposts/instances/?managed=goauthentik.io%2Foutposts%2Fembedded" \
+              | jq -r '.results[0].pk')
+            terraform import authentik_outpost.embedded "${OUTPOST_PK}"
+          else
+            echo "Embedded outpost already in state, skipping import."
+          fi
 
       - name: Terraform Validate
         run: terraform validate
