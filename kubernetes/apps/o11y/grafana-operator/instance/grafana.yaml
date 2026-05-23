@@ -22,15 +22,15 @@ spec:
       org_name: Main Org.
       org_role: Viewer
       hide_version: "true"
-    # auth.generic_oauth:
-    #   name: authentik
-    #   enabled: "true"
-    #   scopes: openid email profile
-    #   auth_url: https://auth.materia.wtf/application/o/authorize/
-    #   token_url: https://auth.materia.wtf/application/o/token/
-    #   api_url: https://auth.materia.wtf/application/o/userinfo/
-    # Optionally map user groups to Grafana roles
-    #   role_attribute_path: contains(groups[*], 'Grafana Admins') && 'Admin' || contains(groups[*], 'Grafana Editors') && 'Editor' || 'Viewer'
+    auth.generic_oauth:
+      name: authentik
+      enabled: "true"
+      scopes: openid email profile
+      auth_url: https://auth.materia.wtf/application/o/authorize/
+      token_url: https://auth.materia.wtf/application/o/token/
+      api_url: https://auth.materia.wtf/application/o/userinfo/
+      # Map Authentik groups to Grafana roles
+      role_attribute_path: contains(groups[*], 'admins') && 'Admin' || 'Viewer'
     log:
       mode: console
     metrics:
@@ -57,16 +57,16 @@ spec:
                     secretKeyRef:
                       name: grafana-secret
                       key: GF_SECURITY_ADMIN_PASSWORD
-                # - name: GF_AUTH_GENERIC_OAUTH_CLIENT_ID
-                #   valueFrom:
-                #     secretKeyRef:
-                #       name: grafana-secret
-                #       key: GF_AUTH_GENERIC_OAUTH_CLIENT_ID
-                # - name: GF_AUTH_GENERIC_OAUTH_CLIENT_SECRET
-                #   valueFrom:
-                #     secretKeyRef:
-                #       name: grafana-secret
-                #       key: GF_AUTH_GENERIC_OAUTH_CLIENT_SECRET
+                - name: GF_AUTH_GENERIC_OAUTH_CLIENT_ID
+                  valueFrom:
+                    secretKeyRef:
+                      name: grafana-secret
+                      key: GF_AUTH_GENERIC_OAUTH_CLIENT_ID
+                - name: GF_AUTH_GENERIC_OAUTH_CLIENT_SECRET
+                  valueFrom:
+                    secretKeyRef:
+                      name: grafana-secret
+                      key: GF_AUTH_GENERIC_OAUTH_CLIENT_SECRET
               securityContext:
                 allowPrivilegeEscalation: false
                 readOnlyRootFilesystem: true
