@@ -262,8 +262,16 @@ jobs:
           echo "=== op environment ==="
           env | grep -i "^OP_" || true
 
+          echo "=== HOME / config dir ==="
+          echo "HOME=${HOME}"
+          ls -la ~/.config/op/ 2>/dev/null || echo "(no op config dir)"
+          cat ~/.config/op/config 2>/dev/null || echo "(no config file)"
+
           echo "=== op whoami ==="
           op whoami
+
+          echo "=== read test ==="
+          op item get grafana --vault kubernetes --fields label=client-secret
 
           echo "=== static write test ==="
           op item edit grafana --vault kubernetes "client-secret=testvalue123"
