@@ -37,35 +37,6 @@ data "authentik_flow" "default_source_authentication" {
   slug = "default-source-authentication"
 }
 
-# ─── 1Password data sources ───────────────────────────────────────────────────
-
-data "onepassword_item" "discord_oauth" {
-  vault = "kubernetes"
-  title = "discord-oauth"
-}
-
-data "onepassword_item" "google_oauth" {
-  vault = "kubernetes"
-  title = "google-oauth"
-}
-
-data "onepassword_item" "github_oauth" {
-  vault = "kubernetes"
-  title = "github-oauth"
-}
-
-data "onepassword_item" "plex_oauth" {
-  vault = "kubernetes"
-  title = "plex-oauth"
-}
-
-locals {
-  op_discord = { for f in data.onepassword_item.discord_oauth.field : f.label => f.value }
-  op_google  = { for f in data.onepassword_item.google_oauth.field : f.label => f.value }
-  op_github  = { for f in data.onepassword_item.github_oauth.field : f.label => f.value }
-  op_plex    = { for f in data.onepassword_item.plex_oauth.field : f.label => f.value }
-}
-
 # ─── Discord ─────────────────────────────────────────────────────────────────
 
 resource "authentik_source_oauth" "discord" {
@@ -74,8 +45,8 @@ resource "authentik_source_oauth" "discord" {
   enabled = true
 
   provider_type   = "discord"
-  consumer_key    = local.op_discord["client-id"]
-  consumer_secret = local.op_discord["client-secret"]
+  consumer_key    = var.discord_client_id
+  consumer_secret = var.discord_client_secret
 
   # Match to an existing Authentik user by email — social login does NOT
   # create new accounts on its own; an invitation is still required.
@@ -93,8 +64,8 @@ resource "authentik_source_oauth" "google" {
   enabled = true
 
   provider_type   = "google"
-  consumer_key    = local.op_google["client-id"]
-  consumer_secret = local.op_google["client-secret"]
+  consumer_key    = var.google_client_id
+  consumer_secret = var.google_client_secret
 
   user_matching_mode = "email_link"
 
@@ -110,8 +81,8 @@ resource "authentik_source_oauth" "github" {
   enabled = true
 
   provider_type   = "github"
-  consumer_key    = local.op_github["client-id"]
-  consumer_secret = local.op_github["client-secret"]
+  consumer_key    = var.github_client_id
+  consumer_secret = var.github_client_secret
 
   user_matching_mode = "email_link"
 
@@ -131,7 +102,7 @@ resource "authentik_source_plex" "plex" {
   slug    = "plex"
   enabled = true
 
-  client_id     = local.op_plex["client-id"]
+  client_id     = var.plex_client_id
   allow_friends = false
 
   user_matching_mode = "email_link"

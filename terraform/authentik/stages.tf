@@ -42,8 +42,8 @@ resource "authentik_stage_password" "main" {
 
 resource "authentik_stage_captcha" "main" {
   name        = "authentication-captcha"
-  public_key  = local.turnstile_site_key
-  private_key = local.turnstile_secret_key
+  public_key  = var.turnstile_site_key
+  private_key = var.turnstile_secret_key
   # Cloudflare Turnstile endpoints (non-interactive by default)
   js_url  = "https://challenges.cloudflare.com/turnstile/v0/api.js"
   api_url = "https://challenges.cloudflare.com/turnstile/v0/siteverify"

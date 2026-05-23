@@ -6,10 +6,6 @@ terraform {
       source  = "goauthentik/authentik"
       version = "~> 2026.2"
     }
-    onepassword = {
-      source  = "1Password/onepassword"
-      version = "~> 2.1"
-    }
   }
 
   backend "s3" {

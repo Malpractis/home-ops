@@ -1,35 +1,10 @@
-# ─── 1Password ───────────────────────────────────────────────────────────────
-# Provider reads OP_SERVICE_ACCOUNT_TOKEN from the environment automatically —
-# same token used by the load-secrets-action in the workflow.
-#
-# For local runs: export OP_SERVICE_ACCOUNT_TOKEN=<your-service-account-token>
-
-provider "onepassword" {}
-
-data "onepassword_item" "authentik" {
-  vault = "kubernetes"
-  title = "authentik"
-}
-
-data "onepassword_item" "cloudflare_turnstile" {
-  vault = "kubernetes"
-  title = "cloudflare-turnstile"
-}
-
-locals {
-  op_authentik = { for f in data.onepassword_item.authentik.field : f.label => f.value }
-  op_turnstile = { for f in data.onepassword_item.cloudflare_turnstile.field : f.label => f.value }
-
-  authentik_token      = local.op_authentik["AUTHENTIK_TOKEN"]
-  turnstile_site_key   = local.op_turnstile["site-key"]
-  turnstile_secret_key = local.op_turnstile["secret-key"]
-}
-
 # ─── Authentik ────────────────────────────────────────────────────────────────
+# The provider reads AUTHENTIK_TOKEN and AUTHENTIK_URL from the environment
+# automatically — no explicit token block needed.
+# Secrets are injected via TF_VAR_* env vars by the GHA workflow (load-secrets-action).
 
 provider "authentik" {
-  url   = "https://auth.materia.wtf"
-  token = local.authentik_token
+  url = "https://auth.materia.wtf"
 }
 
 # ─── Data Sources ─────────────────────────────────────────────────────────────
