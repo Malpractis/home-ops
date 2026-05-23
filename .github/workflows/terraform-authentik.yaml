@@ -59,10 +59,18 @@ jobs:
         # so it exists in Authentik but not in Terraform state on the first run.
         # This step imports it once and is a no-op on subsequent runs.
         env:
-          OP_SERVICE_ACCOUNT_TOKEN: ${{ secrets.OP_SERVICE_ACCOUNT_TOKEN }}
           AWS_ACCESS_KEY_ID: ${{ steps.load-secrets.outputs.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ steps.load-secrets.outputs.AWS_SECRET_ACCESS_KEY }}
           AUTHENTIK_TOKEN: ${{ steps.load-secrets.outputs.AUTHENTIK_TOKEN }}
+          TF_VAR_turnstile_site_key: ${{ steps.load-secrets.outputs.TF_VAR_TURNSTILE_SITE_KEY }}
+          TF_VAR_turnstile_secret_key: ${{ steps.load-secrets.outputs.TF_VAR_TURNSTILE_SECRET_KEY }}
+          TF_VAR_discord_client_id: ${{ steps.load-secrets.outputs.TF_VAR_DISCORD_CLIENT_ID }}
+          TF_VAR_discord_client_secret: ${{ steps.load-secrets.outputs.TF_VAR_DISCORD_CLIENT_SECRET }}
+          TF_VAR_google_client_id: ${{ steps.load-secrets.outputs.TF_VAR_GOOGLE_CLIENT_ID }}
+          TF_VAR_google_client_secret: ${{ steps.load-secrets.outputs.TF_VAR_GOOGLE_CLIENT_SECRET }}
+          TF_VAR_github_client_id: ${{ steps.load-secrets.outputs.TF_VAR_GITHUB_CLIENT_ID }}
+          TF_VAR_github_client_secret: ${{ steps.load-secrets.outputs.TF_VAR_GITHUB_CLIENT_SECRET }}
+          TF_VAR_plex_client_id: ${{ steps.load-secrets.outputs.TF_VAR_PLEX_CLIENT_ID }}
         run: |
           if ! terraform state show authentik_outpost.embedded > /dev/null 2>&1; then
             echo "Importing embedded outpost..."
