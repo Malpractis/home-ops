@@ -267,10 +267,19 @@ jobs:
           TF_VAR_plex_client_id: ${{ steps.load-secrets.outputs.TF_VAR_PLEX_CLIENT_ID }}
           TF_VAR_plex_token: ${{ steps.load-secrets.outputs.TF_VAR_PLEX_TOKEN }}
         run: |
+          # Verify op can reach the vault and items exist
+          echo "Checking vault access..."
+          op item list --vault kubernetes --format json | jq -r '.[].title' | sort
+
+          # Capture terraform outputs
           GRAFANA_SECRET=$(terraform output -raw grafana_client_secret)
           SEERR_SECRET=$(terraform output -raw seerr_client_secret)
           TRUENAS_SECRET=$(terraform output -raw truenas_client_secret)
+          echo "grafana secret length: ${#GRAFANA_SECRET}"
+          echo "seerr secret length:   ${#SEERR_SECRET}"
+          echo "truenas secret length: ${#TRUENAS_SECRET}"
 
-          op item edit grafana  --vault kubernetes "client-secret[password]=${GRAFANA_SECRET}"
-          op item edit seerr    --vault kubernetes "client-secret[password]=${SEERR_SECRET}"
-          op item edit truenas  --vault kubernetes "client-secret[password]=${TRUENAS_SECRET}"
+          # Write secrets back to 1Password
+          op item edit grafana  --vault kubernetes --field "client-secret[password]=${GRAFANA_SECRET}" < /dev/null
+          op item edit seerr    --vault kubernetes --field "client-secret[password]=${SEERR_SECRET}"   < /dev/null
+          op item edit truenas  --vault kubernetes --field "client-secret[password]=${TRUENAS_SECRET}" < /dev/null
