@@ -185,7 +185,7 @@ resource "authentik_stage_email" "enrollment_verification" {
   activate_user_on_success = true
   subject                  = "Welcome to materia.wtf — please verify your email"
   template                 = "email/account_confirmation.html"
-  token_expiry             = 30
+  token_expiry             = "minutes=30"
   timeout                  = 10
 }
 
@@ -196,7 +196,7 @@ resource "authentik_stage_email" "recovery" {
   use_global_settings = true
   subject             = "materia.wtf — Password Reset"
   template            = "email/password_reset.html"
-  token_expiry        = 30
+  token_expiry        = "minutes=30"
   timeout             = 10
 }
 

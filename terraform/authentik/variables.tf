@@ -66,3 +66,9 @@ variable "plex_client_id" {
   type      = string
   sensitive = true
 }
+
+# op://kubernetes/plex-oauth/token  (your Plex account token — get from plex.tv/web → Account → XML feed)
+variable "plex_token" {
+  type      = string
+  sensitive = true
+}

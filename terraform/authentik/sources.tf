@@ -102,7 +102,8 @@ resource "authentik_source_plex" "plex" {
   slug    = "plex"
   enabled = true
 
-  client_id     = var.plex_client_id
+  client_id   = var.plex_client_id
+  plex_token  = var.plex_token
   allow_friends = false
 
   user_matching_mode = "email_link"
