@@ -9,7 +9,7 @@ spec:
   imageName: ghcr.io/cloudnative-pg/postgresql:17
 
   storage:
-    size: ${DB_SIZE:-5Gi}
+    size: ${DB_SIZE:-10Gi}
     storageClass: ceph-block
 
   postgresql:
