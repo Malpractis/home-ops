@@ -81,10 +81,14 @@ resource "authentik_stage_authenticator_static" "setup" {
 resource "authentik_stage_authenticator_validate" "mfa" {
   name                       = "authentication-mfa-validation"
   device_classes             = ["static", "totp", "webauthn"]
-  # "skip": users without MFA configured can still log in (change to
-  # "configure" to force MFA enrollment, or "deny" to block them entirely)
   not_configured_action      = "configure"
   webauthn_user_verification = "preferred"
+  # Stages offered to users who have no MFA device yet — they can pick any
+  configuration_stages = [
+    authentik_stage_authenticator_totp.setup.id,
+    authentik_stage_authenticator_webauthn.setup.id,
+    authentik_stage_authenticator_static.setup.id,
+  ]
 }
 
 # WebAuthn-only validate used by the passwordless flow

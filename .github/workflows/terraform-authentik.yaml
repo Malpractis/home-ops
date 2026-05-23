@@ -56,10 +56,9 @@ jobs:
           AWS_SECRET_ACCESS_KEY: ${{ steps.load-secrets.outputs.AWS_SECRET_ACCESS_KEY }}
         run: terraform init
 
-      - name: Import Embedded Outpost
-        # The embedded outpost is created by Authentik automatically on install,
-        # so it exists in Authentik but not in Terraform state on the first run.
-        # This step imports it once and is a no-op on subsequent runs.
+      - name: Import Pre-existing Authentik Resources
+        # Imports resources that already exist in Authentik but aren't in TF state.
+        # Each block is a no-op on subsequent runs (checks state first).
         env:
           AWS_ACCESS_KEY_ID: ${{ steps.load-secrets.outputs.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ steps.load-secrets.outputs.AWS_SECRET_ACCESS_KEY }}
@@ -76,16 +75,57 @@ jobs:
           TF_VAR_plex_client_id: ${{ steps.load-secrets.outputs.TF_VAR_PLEX_CLIENT_ID }}
           TF_VAR_plex_token: ${{ steps.load-secrets.outputs.TF_VAR_PLEX_TOKEN }}
         run: |
+          AK_API="https://auth.materia.wtf/api/v3"
+          AK_HDR="Authorization: Bearer ${AUTHENTIK_TOKEN}"
+
+          # ── Embedded outpost ───────────────────────────────────────────────
           if ! terraform state show authentik_outpost.embedded > /dev/null 2>&1; then
             echo "Importing embedded outpost..."
-            OUTPOST_PK=$(curl -sf \
-              -H "Authorization: Bearer ${AUTHENTIK_TOKEN}" \
-              "https://auth.materia.wtf/api/v3/outposts/instances/?managed=goauthentik.io%2Foutposts%2Fembedded" \
+            PK=$(curl -sf -H "${AK_HDR}" \
+              "${AK_API}/outposts/instances/?managed=goauthentik.io%2Foutposts%2Fembedded" \
               | jq -r '.results[0].pk')
-            terraform import authentik_outpost.embedded "${OUTPOST_PK}"
+            terraform import authentik_outpost.embedded "${PK}"
           else
-            echo "Embedded outpost already in state, skipping import."
+            echo "Embedded outpost already in state, skipping."
           fi
+
+          # ── Default brand ──────────────────────────────────────────────────
+          if ! terraform state show authentik_brand.main > /dev/null 2>&1; then
+            echo "Importing default brand..."
+            PK=$(curl -sf -H "${AK_HDR}" \
+              "${AK_API}/core/brands/?default=true" \
+              | jq -r '.results[0].brand_uuid')
+            terraform import authentik_brand.main "${PK}"
+          else
+            echo "Default brand already in state, skipping."
+          fi
+
+          # ── Helper: import a proxy app + its provider by slug ──────────────
+          import_proxy_app() {
+            local TF_KEY="$1"   # for_each map key (e.g. "stash")
+            local SLUG="$2"     # Authentik slug  (usually the same)
+            local GROUP="$3"    # "media" or "admin"
+
+            local APP_ADDR="authentik_application.${GROUP}[\"${TF_KEY}\"]"
+            local PRV_ADDR="authentik_provider_proxy.${GROUP}[\"${TF_KEY}\"]"
+
+            if ! terraform state show "${APP_ADDR}" > /dev/null 2>&1; then
+              echo "Importing ${GROUP} app: ${SLUG}..."
+              APP_DATA=$(curl -sf -H "${AK_HDR}" "${AK_API}/core/applications/${SLUG}/")
+              APP_UUID=$(echo "${APP_DATA}" | jq -r '.pk')
+              PROVIDER_ID=$(echo "${APP_DATA}" | jq -r '.provider')
+              if [ "${PROVIDER_ID}" != "null" ] && [ -n "${PROVIDER_ID}" ]; then
+                terraform import "${PRV_ADDR}" "${PROVIDER_ID}"
+              fi
+              terraform import "${APP_ADDR}" "${APP_UUID}"
+            else
+              echo "${GROUP} app '${SLUG}' already in state, skipping."
+            fi
+          }
+
+          # Apps that existed in Authentik before Terraform took over
+          import_proxy_app "stash"      "stash"      "media"
+          import_proxy_app "calibre-dl" "calibre-dl" "media"
 
       - name: Terraform Validate
         env:
