@@ -5,7 +5,7 @@ resource "authentik_brand" "main" {
 
   branding_logo     = "icons/orb.svg"
   branding_favicon  = "icons/orb.png"
-  # flow_background removed in provider v2026.x — set via Admin UI → Branding
+  branding_default_flow_background = "backgrounds/W_2013_244_GRAVITY.jpg"
 
   # Wire up all the custom flows
   flow_authentication = authentik_flow.authentication.uuid

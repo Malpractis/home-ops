@@ -55,7 +55,7 @@ resource "authentik_stage_captcha" "main" {
 # Setup stage used in the user-settings flow (and optionally enrollment)
 resource "authentik_stage_authenticator_totp" "setup" {
   name   = "authenticator-totp-setup"
-  digits = 6
+  digits = "6"
   # 1Password stores and auto-fills the TOTP secret when scanning the QR code
   # during setup — no Duo integration needed
 }

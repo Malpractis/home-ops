@@ -121,10 +121,12 @@ resource "authentik_provider_oauth2" "grafana" {
   name          = "grafana"
   client_id     = "grafana"
   client_type   = "confidential"
-  redirect_uris {
-    url           = "https://grafana.materia.wtf/login/generic_oauth"
-    matching_mode = "strict"
-  }
+  allowed_redirect_uris = [
+    {
+      url           = "https://grafana.materia.wtf/login/generic_oauth"
+      matching_mode = "strict"
+    }
+  ]
 
   signing_key = data.authentik_certificate_key_pair.generated.id
 
@@ -165,10 +167,12 @@ resource "authentik_provider_oauth2" "seerr" {
   name          = "seerr"
   client_id     = "seerr"
   client_type   = "confidential"
-  redirect_uris {
-    url           = "https://requests.materia.wtf/auth/oidc-callback"
-    matching_mode = "strict"
-  }
+  allowed_redirect_uris = [
+    {
+      url           = "https://requests.materia.wtf/auth/oidc-callback"
+      matching_mode = "strict"
+    }
+  ]
 
   signing_key = data.authentik_certificate_key_pair.generated.id
 
@@ -210,10 +214,12 @@ resource "authentik_provider_oauth2" "truenas" {
   name          = "truenas"
   client_id     = "truenas"
   client_type   = "confidential"
-  redirect_uris {
-    url           = "https://nas.materia.wtf/api/v2.0/auth/oidc_callback"
-    matching_mode = "strict"
-  }
+  allowed_redirect_uris = [
+    {
+      url           = "https://nas.materia.wtf/api/v2.0/auth/oidc_callback"
+      matching_mode = "strict"
+    }
+  ]
 
   signing_key = data.authentik_certificate_key_pair.generated.id
 
