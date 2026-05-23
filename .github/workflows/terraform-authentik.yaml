@@ -109,14 +109,22 @@ jobs:
             local APP_ADDR="authentik_application.${GROUP}[\"${TF_KEY}\"]"
             local PRV_ADDR="authentik_provider_proxy.${GROUP}[\"${TF_KEY}\"]"
 
-            if ! terraform state show "${APP_ADDR}" > /dev/null 2>&1; then
-              echo "Importing ${GROUP} app: ${SLUG}..."
-              APP_DATA=$(curl -sf -H "${AK_HDR}" "${AK_API}/core/applications/${SLUG}/")
-              APP_UUID=$(echo "${APP_DATA}" | jq -r '.pk')
-              PROVIDER_ID=$(echo "${APP_DATA}" | jq -r '.provider')
+            # Fetch once, use for both imports
+            APP_DATA=$(curl -sf -H "${AK_HDR}" "${AK_API}/core/applications/${SLUG}/")
+            APP_UUID=$(echo "${APP_DATA}" | jq -r '.pk')
+            PROVIDER_ID=$(echo "${APP_DATA}" | jq -r '.provider')
+
+            if ! terraform state show "${PRV_ADDR}" > /dev/null 2>&1; then
+              echo "Importing ${GROUP} provider for: ${SLUG}..."
               if [ "${PROVIDER_ID}" != "null" ] && [ -n "${PROVIDER_ID}" ]; then
                 terraform import "${PRV_ADDR}" "${PROVIDER_ID}"
               fi
+            else
+              echo "${GROUP} provider '${SLUG}' already in state, skipping."
+            fi
+
+            if ! terraform state show "${APP_ADDR}" > /dev/null 2>&1; then
+              echo "Importing ${GROUP} app: ${SLUG}..."
               terraform import "${APP_ADDR}" "${APP_UUID}"
             else
               echo "${GROUP} app '${SLUG}' already in state, skipping."
