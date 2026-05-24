@@ -1,0 +1,90 @@
+---
+# yaml-language-server: $schema=https://version-2026-5.goauthentik.io/blueprints/v1/schema.json
+version: 1
+metadata:
+  name: Users
+entries:
+  # ── Admin ─────────────────────────────────────────────────────────────────────
+  - id: user_vince
+    model: authentik_core.user
+    identifiers:
+      username: vince
+    attrs:
+      is_active: true
+      groups:
+        - !Find [authentik_core.group, [name, "admins"]]
+        - !Find [authentik_core.group, [name, "infra"]]
+        - !Find [authentik_core.group, [name, "media"]]
+
+  # ── Friends ───────────────────────────────────────────────────────────────────
+  - id: user_kitty
+    model: authentik_core.user
+    identifiers:
+      username: kitty
+    attrs:
+      is_active: true
+      groups:
+        - !Find [authentik_core.group, [name, "members"]]
+
+  - id: user_suri
+    model: authentik_core.user
+    identifiers:
+      username: suri
+    attrs:
+      is_active: true
+      groups:
+        - !Find [authentik_core.group, [name, "members"]]
+
+  - id: user_izzy
+    model: authentik_core.user
+    identifiers:
+      username: izzy
+    attrs:
+      is_active: true
+      groups:
+        - !Find [authentik_core.group, [name, "members"]]
+
+  - id: user_alex
+    model: authentik_core.user
+    identifiers:
+      username: alex
+    attrs:
+      is_active: true
+      groups:
+        - !Find [authentik_core.group, [name, "members"]]
+
+  - id: user_chris
+    model: authentik_core.user
+    identifiers:
+      username: chris
+    attrs:
+      is_active: true
+      groups:
+        - !Find [authentik_core.group, [name, "members"]]
+
+  - id: user_liz
+    model: authentik_core.user
+    identifiers:
+      username: liz
+    attrs:
+      is_active: true
+      groups:
+        - !Find [authentik_core.group, [name, "members"]]
+
+  - id: user_karl
+    model: authentik_core.user
+    identifiers:
+      username: karl
+    attrs:
+      is_active: true
+      groups:
+        - !Find [authentik_core.group, [name, "members"]]
+
+  - id: user_narks
+    model: authentik_core.user
+    identifiers:
+      username: narks
+    attrs:
+      is_active: true
+      groups:
+        - !Find [authentik_core.group, [name, "members"]]

@@ -1,0 +1,45 @@
+---
+# yaml-language-server: $schema=https://version-2026-5.goauthentik.io/blueprints/v1/schema.json
+version: 1
+metadata:
+  name: Flow Bindings - Recovery
+entries:
+  - id: binding_recovery_identification
+    model: authentik_flows.flowstagebinding
+    identifiers:
+      target: !Find [authentik_flows.flow, [slug, "materia-password-recovery"]]
+      stage: !Find [authentik_stages_identification.identificationstage, [name, "materia-recovery-identification"]]
+    attrs:
+      order: 10
+
+  - id: binding_recovery_email
+    model: authentik_flows.flowstagebinding
+    identifiers:
+      target: !Find [authentik_flows.flow, [slug, "materia-password-recovery"]]
+      stage: !Find [authentik_stages_email.emailstage, [name, "materia-recovery-email"]]
+    attrs:
+      order: 20
+
+  - id: binding_recovery_prompt
+    model: authentik_flows.flowstagebinding
+    identifiers:
+      target: !Find [authentik_flows.flow, [slug, "materia-password-recovery"]]
+      stage: !Find [authentik_stages_prompt.promptstage, [name, "materia-recovery-password-prompt"]]
+    attrs:
+      order: 30
+
+  - id: binding_recovery_user_write
+    model: authentik_flows.flowstagebinding
+    identifiers:
+      target: !Find [authentik_flows.flow, [slug, "materia-password-recovery"]]
+      stage: !Find [authentik_stages_user_write.userwritestage, [name, "materia-recovery-user-write"]]
+    attrs:
+      order: 40
+
+  - id: binding_recovery_login
+    model: authentik_flows.flowstagebinding
+    identifiers:
+      target: !Find [authentik_flows.flow, [slug, "materia-password-recovery"]]
+      stage: !Find [authentik_stages_user_login.userloginstage, [name, "materia-authentication-login"]]
+    attrs:
+      order: 50

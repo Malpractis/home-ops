@@ -1,0 +1,20 @@
+---
+# yaml-language-server: $schema=https://version-2026-5.goauthentik.io/blueprints/v1/schema.json
+version: 1
+metadata:
+  name: Branding
+entries:
+  - id: brand_main
+    model: authentik_brands.brand
+    identifiers:
+      domain: auth.materia.wtf
+    attrs:
+      default: true
+      branding_title: Materia
+      branding_logo: icons/orb.svg
+      branding_favicon: icons/orb.png
+      branding_default_flow_background: backgrounds/W_2013_244_GRAVITY.jpg
+      flow_authentication: !Find [authentik_flows.flow, [slug, "materia-authentication"]]
+      flow_invalidation: !Find [authentik_flows.flow, [slug, "materia-invalidation"]]
+      flow_recovery: !Find [authentik_flows.flow, [slug, "materia-password-recovery"]]
+      flow_user_settings: !Find [authentik_flows.flow, [slug, "materia-user-settings"]]

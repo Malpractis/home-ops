@@ -1,0 +1,30 @@
+---
+# yaml-language-server: $schema=https://version-2026-5.goauthentik.io/blueprints/v1/schema.json
+version: 1
+metadata:
+  name: Policies
+entries:
+  - id: policy_reputation_block
+    model: authentik_policies_reputation.reputationpolicy
+    identifiers:
+      name: materia-reputation-block
+    attrs:
+      threshold: -5
+      check_ip: true
+      check_username: true
+
+  - id: policy_require_remote_network
+    model: authentik_policies_expression.expressionpolicy
+    identifiers:
+      name: materia-require-remote-network
+    attrs:
+      expression: |
+        from ipaddress import ip_address, ip_network
+
+        client_ip = ip_address(request.http_request.META.get("REMOTE_ADDR", "0.0.0.0"))
+        local_networks = [
+            ip_network("10.0.0.0/8"),
+            ip_network("172.16.0.0/12"),
+            ip_network("192.168.0.0/16"),
+        ]
+        return not any(client_ip in net for net in local_networks)

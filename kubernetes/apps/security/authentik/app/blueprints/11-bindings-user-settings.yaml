@@ -1,0 +1,45 @@
+---
+# yaml-language-server: $schema=https://version-2026-5.goauthentik.io/blueprints/v1/schema.json
+version: 1
+metadata:
+  name: Flow Bindings - User Settings
+entries:
+  - id: binding_user_settings_prompt
+    model: authentik_flows.flowstagebinding
+    identifiers:
+      target: !Find [authentik_flows.flow, [slug, "materia-user-settings"]]
+      stage: !Find [authentik_stages_prompt.promptstage, [name, "materia-user-settings-prompt"]]
+    attrs:
+      order: 10
+
+  - id: binding_user_settings_write
+    model: authentik_flows.flowstagebinding
+    identifiers:
+      target: !Find [authentik_flows.flow, [slug, "materia-user-settings"]]
+      stage: !Find [authentik_stages_user_write.userwritestage, [name, "materia-user-settings-write"]]
+    attrs:
+      order: 20
+
+  - id: binding_user_settings_totp
+    model: authentik_flows.flowstagebinding
+    identifiers:
+      target: !Find [authentik_flows.flow, [slug, "materia-user-settings"]]
+      stage: !Find [authentik_stages_authenticator_totp.authenticatortotpstage, [name, "materia-authenticator-totp-setup"]]
+    attrs:
+      order: 30
+
+  - id: binding_user_settings_webauthn
+    model: authentik_flows.flowstagebinding
+    identifiers:
+      target: !Find [authentik_flows.flow, [slug, "materia-user-settings"]]
+      stage: !Find [authentik_stages_authenticator_webauthn.authenticatewebauthnstage, [name, "materia-authenticator-webauthn-setup"]]
+    attrs:
+      order: 40
+
+  - id: binding_user_settings_static
+    model: authentik_flows.flowstagebinding
+    identifiers:
+      target: !Find [authentik_flows.flow, [slug, "materia-user-settings"]]
+      stage: !Find [authentik_stages_authenticator_static.authenticatorstaticstage, [name, "materia-authenticator-static-setup"]]
+    attrs:
+      order: 50

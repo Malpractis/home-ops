@@ -1,0 +1,13 @@
+---
+# yaml-language-server: $schema=https://version-2026-5.goauthentik.io/blueprints/v1/schema.json
+version: 1
+metadata:
+  name: Flow Bindings - Invalidation
+entries:
+  - id: binding_invalidation_logout
+    model: authentik_flows.flowstagebinding
+    identifiers:
+      target: !Find [authentik_flows.flow, [slug, "materia-invalidation"]]
+      stage: !Find [authentik_stages_user_logout.userlogoutstage, [name, "materia-session-invalidation"]]
+    attrs:
+      order: 10

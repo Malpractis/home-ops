@@ -1,0 +1,428 @@
+---
+# yaml-language-server: $schema=https://version-2026-5.goauthentik.io/blueprints/v1/schema.json
+version: 1
+metadata:
+  name: Stages
+entries:
+  # ── Deny ──────────────────────────────────────────────────────────────────────
+  - id: stage_deny_reputation
+    model: authentik_stages_deny.denystage
+    identifiers:
+      name: materia-reputation-deny
+    attrs: {}
+
+  # ── Identification ────────────────────────────────────────────────────────────
+  - id: stage_identification_main
+    model: authentik_stages_identification.identificationstage
+    identifiers:
+      name: materia-authentication-identification
+    attrs:
+      user_fields:
+        - username
+        - email
+      # Social login buttons shown on the login page
+      sources:
+        - !Find [authentik_sources_oauth.oauthsource, [slug, "discord"]]
+        - !Find [authentik_sources_oauth.oauthsource, [slug, "google"]]
+        - !Find [authentik_sources_oauth.oauthsource, [slug, "github"]]
+        - !Find [authentik_sources_plex.plexsource, [slug, "plex"]]
+      show_source_labels: true         # show "Log in with Discord" text next to buttons
+      case_insensitive_matching: true  # Username and username both match
+      pretend_user_exists: true        # show password step even for unknown users (anti-enumeration)
+      show_matched_user: true          # show matched user's name/avatar on the password step
+      enrollment_flow: !Find [authentik_flows.flow, [slug, "materia-enrollment-invitation"]]
+      recovery_flow: !Find [authentik_flows.flow, [slug, "materia-password-recovery"]]
+      passwordless_flow: !Find [authentik_flows.flow, [slug, "materia-passwordless-authentication"]]
+
+  # Stripped-down for passwordless — no enrollment/recovery links, no social buttons
+  - id: stage_identification_passwordless
+    model: authentik_stages_identification.identificationstage
+    identifiers:
+      name: materia-passwordless-identification
+    attrs:
+      user_fields:
+        - email
+      case_insensitive_matching: true
+      show_matched_user: true
+
+  # Stripped-down for recovery — no social buttons
+  - id: stage_identification_recovery
+    model: authentik_stages_identification.identificationstage
+    identifiers:
+      name: materia-recovery-identification
+    attrs:
+      user_fields:
+        - email
+        - username
+      case_insensitive_matching: true
+      show_matched_user: true
+
+  # ── Password ──────────────────────────────────────────────────────────────────
+  - id: stage_password
+    model: authentik_stages_password.passwordstage
+    identifiers:
+      name: materia-authentication-password
+    attrs:
+      backends:
+        - authentik.core.auth.InbuiltBackend
+        - authentik.core.auth.TokenBackend
+      failed_attempts_before_cancel: 5
+      allow_show_password: true
+
+  # ── Captcha (Cloudflare Turnstile) ────────────────────────────────────────────
+  - id: stage_captcha
+    model: authentik_stages_captcha.captchastage
+    identifiers:
+      name: materia-authentication-captcha
+    attrs:
+      public_key: !Env TURNSTILE_SITE_KEY
+      private_key: !Env TURNSTILE_SECRET_KEY
+      js_url: https://challenges.cloudflare.com/turnstile/v0/api.js
+      api_url: https://challenges.cloudflare.com/turnstile/v0/siteverify
+      interactive: false
+
+  # ── MFA — TOTP ────────────────────────────────────────────────────────────────
+  - id: stage_totp_setup
+    model: authentik_stages_authenticator_totp.authenticatortotpstage
+    identifiers:
+      name: materia-authenticator-totp-setup
+    attrs:
+      digits: 6
+
+  # ── MFA — WebAuthn (Passkey) ──────────────────────────────────────────────────
+  - id: stage_webauthn_setup
+    model: authentik_stages_authenticator_webauthn.authenticatewebauthnstage
+    identifiers:
+      name: materia-authenticator-webauthn-setup
+    attrs:
+      resident_key_requirement: preferred
+      user_verification: preferred
+
+  # ── MFA — Static backup codes ─────────────────────────────────────────────────
+  - id: stage_static_setup
+    model: authentik_stages_authenticator_static.authenticatorstaticstage
+    identifiers:
+      name: materia-authenticator-static-setup
+    attrs:
+      token_count: 6
+
+  # ── MFA — Validate (login) ────────────────────────────────────────────────────
+  - id: stage_mfa_validate
+    model: authentik_stages_authenticator_validate.authenticatorvalidatestage
+    identifiers:
+      name: materia-authentication-mfa-validation
+    attrs:
+      device_classes:
+        - static
+        - totp
+        - webauthn
+      not_configured_action: configure
+      webauthn_user_verification: preferred
+      # Skip MFA if authenticated within the last week — reduces friction without sacrificing security
+      last_auth_threshold: "hours=168;minutes=0;seconds=0"
+      configuration_stages:
+        - !KeyOf stage_totp_setup
+        - !KeyOf stage_webauthn_setup
+        - !KeyOf stage_static_setup
+
+  - id: stage_webauthn_only_validate
+    model: authentik_stages_authenticator_validate.authenticatorvalidatestage
+    identifiers:
+      name: materia-passwordless-mfa-validation
+    attrs:
+      device_classes:
+        - webauthn
+      not_configured_action: deny
+      webauthn_user_verification: required
+
+  # ── User Login ────────────────────────────────────────────────────────────────
+  - id: stage_user_login
+    model: authentik_stages_user_login.userloginstage
+    identifiers:
+      name: materia-authentication-login
+    attrs:
+      session_duration: "seconds=0"
+      remember_me_offset: "seconds=2592000"
+      terminate_other_sessions: false
+      # Bind session to GeoIP continent/country and network ASN.
+      # If the IP moves to a different country or ISP the session is invalidated.
+      geoip_binding: bind_continent_country
+      network_binding: bind_asn
+
+  # ── User Logout ───────────────────────────────────────────────────────────────
+  - id: stage_user_logout
+    model: authentik_stages_user_logout.userlogoutstage
+    identifiers:
+      name: materia-session-invalidation
+    attrs: {}
+
+  # ── Enrollment stages ─────────────────────────────────────────────────────────
+  - id: stage_enrollment_invitation
+    model: authentik_stages_invitation.invitationstage
+    identifiers:
+      name: materia-enrollment-invitation
+    attrs:
+      continue_flow_without_invitation: false
+
+  - id: prompt_field_username
+    model: authentik_stages_prompt.prompt
+    identifiers:
+      name: username
+    attrs:
+      field_key: username
+      label: Username
+      type: username
+      required: true
+      placeholder: Username
+      order: 0
+
+  - id: prompt_field_name
+    model: authentik_stages_prompt.prompt
+    identifiers:
+      name: name
+    attrs:
+      field_key: name
+      label: Full Name
+      type: text
+      required: true
+      placeholder: Full Name
+      order: 10
+
+  - id: prompt_field_email
+    model: authentik_stages_prompt.prompt
+    identifiers:
+      name: email
+    attrs:
+      field_key: email
+      label: Email
+      type: email
+      required: true
+      placeholder: email@example.com
+      order: 20
+
+  - id: prompt_field_password
+    model: authentik_stages_prompt.prompt
+    identifiers:
+      name: password
+    attrs:
+      field_key: password
+      label: Password
+      type: password
+      required: true
+      placeholder: Password
+      order: 30
+
+  - id: prompt_field_password_repeat
+    model: authentik_stages_prompt.prompt
+    identifiers:
+      name: password_repeat
+    attrs:
+      field_key: password_repeat
+      label: "Password (confirm)"
+      type: password
+      required: true
+      placeholder: "Password (confirm)"
+      order: 40
+
+  # Password strength policy applied to enrollment and password-change prompts
+  - id: policy_password_strength
+    model: authentik_policies_password.passwordpolicy
+    identifiers:
+      name: materia-password-strength
+    attrs:
+      check_have_i_been_pwned: true  # rejects passwords in known breach databases
+      check_zxcvbn: true             # rejects weak passwords (score < 2 by default)
+
+  - id: stage_enrollment_prompt
+    model: authentik_stages_prompt.promptstage
+    identifiers:
+      name: materia-enrollment-prompt
+    attrs:
+      fields:
+        - !KeyOf prompt_field_username
+        - !KeyOf prompt_field_name
+        - !KeyOf prompt_field_email
+        - !KeyOf prompt_field_password
+        - !KeyOf prompt_field_password_repeat
+      validation_policies:
+        - !KeyOf policy_password_strength
+
+  - id: stage_enrollment_user_write
+    model: authentik_stages_user_write.userwritestage
+    identifiers:
+      name: materia-enrollment-user-write
+    attrs:
+      create_users_as_inactive: false
+      create_users_group: !Find [authentik_core.group, [name, "users"]]
+
+  - id: stage_enrollment_email_verification
+    model: authentik_stages_email.emailstage
+    identifiers:
+      name: materia-enrollment-email-verification
+    attrs:
+      use_global_settings: true
+      activate_user_on_success: true
+      subject: "Welcome to materia.wtf — please verify your email"
+      template: email/account_confirmation.html
+      token_expiry: "minutes=30"
+      timeout: 10
+
+  # ── Recovery stages ───────────────────────────────────────────────────────────
+  - id: stage_recovery_email
+    model: authentik_stages_email.emailstage
+    identifiers:
+      name: materia-recovery-email
+    attrs:
+      use_global_settings: true
+      subject: "materia.wtf — Password Reset"
+      template: email/password_reset.html
+      token_expiry: "minutes=30"
+      timeout: 10
+
+  - id: prompt_field_new_password
+    model: authentik_stages_prompt.prompt
+    identifiers:
+      name: new_password
+    attrs:
+      field_key: password
+      label: New Password
+      type: password
+      required: true
+      placeholder: New Password
+      order: 0
+
+  - id: prompt_field_new_password_repeat
+    model: authentik_stages_prompt.prompt
+    identifiers:
+      name: new_password_repeat
+    attrs:
+      field_key: password_repeat
+      label: "New Password (confirm)"
+      type: password
+      required: true
+      placeholder: "New Password (confirm)"
+      order: 10
+
+  - id: stage_recovery_prompt
+    model: authentik_stages_prompt.promptstage
+    identifiers:
+      name: materia-recovery-password-prompt
+    attrs:
+      fields:
+        - !KeyOf prompt_field_new_password
+        - !KeyOf prompt_field_new_password_repeat
+      validation_policies:
+        - !KeyOf policy_password_strength
+
+  - id: stage_recovery_user_write
+    model: authentik_stages_user_write.userwritestage
+    identifiers:
+      name: materia-recovery-user-write
+    attrs:
+      create_users_as_inactive: false
+      user_creation_mode: never_create
+
+  # ── User Settings stages ──────────────────────────────────────────────────────
+  - id: prompt_field_settings_name
+    model: authentik_stages_prompt.prompt
+    identifiers:
+      name: settings_name
+    attrs:
+      field_key: name
+      label: Full Name
+      type: text
+      required: false
+      placeholder: Full Name
+      order: 0
+
+  - id: prompt_field_settings_email
+    model: authentik_stages_prompt.prompt
+    identifiers:
+      name: settings_email
+    attrs:
+      field_key: email
+      label: Email
+      type: email
+      required: false
+      placeholder: email@example.com
+      order: 10
+
+  - id: stage_user_settings_prompt
+    model: authentik_stages_prompt.promptstage
+    identifiers:
+      name: materia-user-settings-prompt
+    attrs:
+      fields:
+        - !KeyOf prompt_field_settings_name
+        - !KeyOf prompt_field_settings_email
+
+  - id: stage_user_settings_write
+    model: authentik_stages_user_write.userwritestage
+    identifiers:
+      name: materia-user-settings-write
+    attrs:
+      create_users_as_inactive: false
+      user_creation_mode: never_create
+
+  # ── Password-change flow stages ───────────────────────────────────────────────
+  # This flow appears in the user's settings under a "Change Password" section.
+
+  - id: prompt_field_pc_password
+    model: authentik_stages_prompt.prompt
+    identifiers:
+      name: pc_password
+    attrs:
+      field_key: password
+      label: New Password
+      type: password
+      required: true
+      placeholder: New Password
+      order: 0
+
+  - id: prompt_field_pc_password_repeat
+    model: authentik_stages_prompt.prompt
+    identifiers:
+      name: pc_password_repeat
+    attrs:
+      field_key: password_repeat
+      label: "New Password (confirm)"
+      type: password
+      required: true
+      placeholder: "New Password (confirm)"
+      order: 10
+
+  - id: stage_password_change_prompt
+    model: authentik_stages_prompt.promptstage
+    identifiers:
+      name: materia-password-change-prompt
+    attrs:
+      fields:
+        - !KeyOf prompt_field_pc_password
+        - !KeyOf prompt_field_pc_password_repeat
+      validation_policies:
+        - !KeyOf policy_password_strength
+
+  - id: stage_password_change_user_write
+    model: authentik_stages_user_write.userwritestage
+    identifiers:
+      name: materia-password-change-write
+    attrs:
+      create_users_as_inactive: false
+      user_creation_mode: never_create
+
+  # Password-change flow bindings (flow is in 04-flows.yaml, stages are above)
+  - id: binding_pc_prompt
+    model: authentik_flows.flowstagebinding
+    identifiers:
+      target: !Find [authentik_flows.flow, [slug, "materia-password-change"]]
+      stage: !KeyOf stage_password_change_prompt
+    attrs:
+      order: 10
+
+  - id: binding_pc_user_write
+    model: authentik_flows.flowstagebinding
+    identifiers:
+      target: !Find [authentik_flows.flow, [slug, "materia-password-change"]]
+      stage: !KeyOf stage_password_change_user_write
+    attrs:
+      order: 20

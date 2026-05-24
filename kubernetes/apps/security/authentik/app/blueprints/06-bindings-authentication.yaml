@@ -1,0 +1,100 @@
+---
+# yaml-language-server: $schema=https://version-2026-5.goauthentik.io/blueprints/v1/schema.json
+version: 1
+metadata:
+  name: Flow Bindings - Authentication
+entries:
+  # Order 5: Deny (only when reputation is bad — policy is negated)
+  - id: binding_auth_deny
+    model: authentik_flows.flowstagebinding
+    identifiers:
+      target: !Find [authentik_flows.flow, [slug, "materia-authentication"]]
+      stage: !Find [authentik_stages_deny.denystage, [name, "materia-reputation-deny"]]
+    attrs:
+      order: 5
+      policy_engine_mode: all
+
+  - id: policy_binding_auth_deny_reputation
+    model: authentik_policies.policybinding
+    identifiers:
+      target: !KeyOf binding_auth_deny
+      policy: !Find [authentik_policies_reputation.reputationpolicy, [name, "materia-reputation-block"]]
+    attrs:
+      order: 0
+      negate: true
+      failure_result: true  # policy error → show deny stage (fail safe)
+
+  # Order 10: Captcha (only for remote/non-RFC1918 clients)
+  - id: binding_auth_captcha
+    model: authentik_flows.flowstagebinding
+    identifiers:
+      target: !Find [authentik_flows.flow, [slug, "materia-authentication"]]
+      stage: !Find [authentik_stages_captcha.captchastage, [name, "materia-authentication-captcha"]]
+    attrs:
+      order: 10
+      policy_engine_mode: all
+
+  - id: policy_binding_auth_captcha_remote
+    model: authentik_policies.policybinding
+    identifiers:
+      target: !KeyOf binding_auth_captcha
+      policy: !Find [authentik_policies_expression.expressionpolicy, [name, "materia-require-remote-network"]]
+    attrs:
+      order: 0
+      failure_result: true  # policy error → show captcha (fail safe)
+
+  # Order 20: Identification (always shown)
+  - id: binding_auth_identification
+    model: authentik_flows.flowstagebinding
+    identifiers:
+      target: !Find [authentik_flows.flow, [slug, "materia-authentication"]]
+      stage: !Find [authentik_stages_identification.identificationstage, [name, "materia-authentication-identification"]]
+    attrs:
+      order: 20
+
+  # Order 30: Password (only for remote clients)
+  - id: binding_auth_password
+    model: authentik_flows.flowstagebinding
+    identifiers:
+      target: !Find [authentik_flows.flow, [slug, "materia-authentication"]]
+      stage: !Find [authentik_stages_password.passwordstage, [name, "materia-authentication-password"]]
+    attrs:
+      order: 30
+      policy_engine_mode: all
+
+  - id: policy_binding_auth_password_remote
+    model: authentik_policies.policybinding
+    identifiers:
+      target: !KeyOf binding_auth_password
+      policy: !Find [authentik_policies_expression.expressionpolicy, [name, "materia-require-remote-network"]]
+    attrs:
+      order: 0
+      failure_result: true  # policy error → require password (fail safe)
+
+  # Order 40: MFA Validation (only for remote clients)
+  - id: binding_auth_mfa
+    model: authentik_flows.flowstagebinding
+    identifiers:
+      target: !Find [authentik_flows.flow, [slug, "materia-authentication"]]
+      stage: !Find [authentik_stages_authenticator_validate.authenticatorvalidatestage, [name, "materia-authentication-mfa-validation"]]
+    attrs:
+      order: 40
+      policy_engine_mode: all
+
+  - id: policy_binding_auth_mfa_remote
+    model: authentik_policies.policybinding
+    identifiers:
+      target: !KeyOf binding_auth_mfa
+      policy: !Find [authentik_policies_expression.expressionpolicy, [name, "materia-require-remote-network"]]
+    attrs:
+      order: 0
+      failure_result: true  # policy error → require MFA (fail safe)
+
+  # Order 100: User Login (always runs)
+  - id: binding_auth_login
+    model: authentik_flows.flowstagebinding
+    identifiers:
+      target: !Find [authentik_flows.flow, [slug, "materia-authentication"]]
+      stage: !Find [authentik_stages_user_login.userloginstage, [name, "materia-authentication-login"]]
+    attrs:
+      order: 100

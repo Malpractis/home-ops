@@ -1,0 +1,79 @@
+---
+# yaml-language-server: $schema=https://version-2026-5.goauthentik.io/blueprints/v1/schema.json
+version: 1
+metadata:
+  name: Flows
+entries:
+  - id: flow_authentication
+    model: authentik_flows.flow
+    identifiers:
+      slug: materia-authentication
+    attrs:
+      name: materia-authentication
+      title: "Welcome to materia.wtf"
+      designation: authentication
+      authentication: none
+      compatibility_mode: true   # improves compatibility with older browsers/clients
+      denied_action: continue    # already-authenticated users are passed through, not errored
+
+  - id: flow_enrollment
+    model: authentik_flows.flow
+    identifiers:
+      slug: materia-enrollment-invitation
+    attrs:
+      name: materia-enrollment-invitation
+      title: "Welcome to Materia"
+      designation: enrollment
+      authentication: none
+
+  - id: flow_invalidation
+    model: authentik_flows.flow
+    identifiers:
+      slug: materia-invalidation
+    attrs:
+      name: materia-session-invalidation
+      title: "Signing out…"
+      designation: invalidation
+      authentication: require_authenticated
+
+  - id: flow_passwordless
+    model: authentik_flows.flow
+    identifiers:
+      slug: materia-passwordless-authentication
+    attrs:
+      name: materia-passwordless-authentication
+      title: "Sign in with a passkey"
+      designation: authentication
+      authentication: none
+
+  - id: flow_recovery
+    model: authentik_flows.flow
+    identifiers:
+      slug: materia-password-recovery
+    attrs:
+      name: materia-password-recovery
+      title: "Password Recovery"
+      designation: recovery
+      authentication: none
+
+  - id: flow_user_settings
+    model: authentik_flows.flow
+    identifiers:
+      slug: materia-user-settings
+    attrs:
+      name: materia-user-settings
+      title: "User Settings"
+      designation: stage_configuration
+      authentication: require_authenticated
+
+  # Accessible from user settings → "Change Password" section.
+  # A password policy with HaveIBeenPwned + zxcvbn validates the new password.
+  - id: flow_password_change
+    model: authentik_flows.flow
+    identifiers:
+      slug: materia-password-change
+    attrs:
+      name: materia-password-change
+      title: "Change Password"
+      designation: stage_configuration
+      authentication: require_authenticated

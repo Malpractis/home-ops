@@ -1,0 +1,47 @@
+---
+# yaml-language-server: $schema=https://version-2026-5.goauthentik.io/blueprints/v1/schema.json
+version: 1
+metadata:
+  name: Groups
+entries:
+  # Authentik superusers — full admin panel access, no app bindings
+  - id: group_admins
+    model: authentik_core.group
+    identifiers:
+      name: admins
+    attrs:
+      is_superuser: true
+
+  # Infrastructure operators — access to monitoring, networking, storage, hypervisor
+  - id: group_infra
+    model: authentik_core.group
+    identifiers:
+      name: infra
+    attrs:
+      is_superuser: false
+
+  # Base authenticated user — no app access by itself; parent of media/members
+  - id: group_users
+    model: authentik_core.group
+    identifiers:
+      name: users
+    attrs:
+      is_superuser: false
+
+  # Media managers — arr stack, download clients, Stash
+  - id: group_media
+    model: authentik_core.group
+    identifiers:
+      name: media
+    attrs:
+      is_superuser: false
+      parent: !KeyOf group_users
+
+  # Media consumers — Seerr (requests) + Calibre (reading); safe to share with members/family
+  - id: group_members
+    model: authentik_core.group
+    identifiers:
+      name: members
+    attrs:
+      is_superuser: false
+      parent: !KeyOf group_users

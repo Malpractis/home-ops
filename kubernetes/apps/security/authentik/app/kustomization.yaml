@@ -4,8 +4,34 @@ apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 resources:
   - ./externalsecret.yaml
+  - ./externalsecret-blueprints.yaml
   - ./grafanadashboard.yaml
   - ./helmrelease.yaml
   - ./httproute.yaml
   - ./ocirepository.yaml
   - ./referencegrant.yaml
+generatorOptions:
+  disableNameSuffixHash: true
+configMapGenerator:
+  - name: authentik-blueprints
+    files:
+      - ./blueprints/01-groups.yaml
+      - ./blueprints/01b-users.yaml
+      - ./blueprints/02-policies.yaml
+      - ./blueprints/03-scopes.yaml
+      - ./blueprints/04-flows.yaml
+      - ./blueprints/04b-sources.yaml
+      - ./blueprints/05-stages.yaml
+      - ./blueprints/06-bindings-authentication.yaml
+      - ./blueprints/07-bindings-enrollment.yaml
+      - ./blueprints/08-bindings-invalidation.yaml
+      - ./blueprints/09-bindings-passwordless.yaml
+      - ./blueprints/10-bindings-recovery.yaml
+      - ./blueprints/11-bindings-user-settings.yaml
+      - ./blueprints/12-branding.yaml
+      - ./blueprints/14-apps-grafana.yaml
+      - ./blueprints/15-apps-seerr.yaml
+      - ./blueprints/16-apps-truenas.yaml
+      - ./blueprints/17-apps-proxy-media.yaml
+      - ./blueprints/18-apps-proxy-admin.yaml
+      - ./blueprints/19-outpost.yaml

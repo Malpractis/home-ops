@@ -1,0 +1,591 @@
+---
+# yaml-language-server: $schema=https://version-2026-5.goauthentik.io/blueprints/v1/schema.json
+version: 1
+metadata:
+  name: Apps - Proxy (Media)
+entries:
+  # ── Radarr ──────────────────────────────────────────────────────────────────
+  - id: provider_radarr
+    model: authentik_providers_proxy.proxyprovider
+    identifiers:
+      name: radarr
+    attrs:
+      mode: forward_single
+      external_host: https://radarr.materia.wtf
+      authorization_flow: !Find [authentik_flows.flow, [slug, "default-provider-authorization-implicit-consent"]]
+      invalidation_flow: !Find [authentik_flows.flow, [slug, "materia-invalidation"]]
+      property_mappings:
+        - !Find [authentik_providers_oauth2.scopemapping, [scope_name, "proxy-outpost-reduced"]]
+
+  - id: app_radarr
+    model: authentik_core.application
+    identifiers:
+      slug: radarr
+    attrs:
+      name: Radarr
+      provider: !KeyOf provider_radarr
+      group: media
+      meta_launch_url: https://radarr.materia.wtf
+      meta_description: Movies
+      meta_icon: application-icons/svg/radarr.svg
+      open_in_new_tab: true
+
+  - id: policy_binding_radarr
+    model: authentik_policies.policybinding
+    identifiers:
+      target: !KeyOf app_radarr
+      group: !Find [authentik_core.group, [name, "media"]]
+    attrs:
+      order: 0
+
+  # ── Radarr 4K ────────────────────────────────────────────────────────────────
+  - id: provider_radarr_4k
+    model: authentik_providers_proxy.proxyprovider
+    identifiers:
+      name: radarr 4k
+    attrs:
+      mode: forward_single
+      external_host: https://radarr-4k.materia.wtf
+      authorization_flow: !Find [authentik_flows.flow, [slug, "default-provider-authorization-implicit-consent"]]
+      invalidation_flow: !Find [authentik_flows.flow, [slug, "materia-invalidation"]]
+      property_mappings:
+        - !Find [authentik_providers_oauth2.scopemapping, [scope_name, "proxy-outpost-reduced"]]
+
+  - id: app_radarr_4k
+    model: authentik_core.application
+    identifiers:
+      slug: radarr-4k
+    attrs:
+      name: Radarr 4K
+      provider: !KeyOf provider_radarr_4k
+      group: media
+      meta_launch_url: https://radarr-4k.materia.wtf
+      meta_description: 4K movies
+      meta_icon: application-icons/svg/radarr-4k.svg
+      open_in_new_tab: true
+
+  - id: policy_binding_radarr_4k
+    model: authentik_policies.policybinding
+    identifiers:
+      target: !KeyOf app_radarr_4k
+      group: !Find [authentik_core.group, [name, "media"]]
+    attrs:
+      order: 0
+
+  # ── Radarr Anime ─────────────────────────────────────────────────────────────
+  - id: provider_radarr_anime
+    model: authentik_providers_proxy.proxyprovider
+    identifiers:
+      name: radarr anime
+    attrs:
+      mode: forward_single
+      external_host: https://radarr-anime.materia.wtf
+      authorization_flow: !Find [authentik_flows.flow, [slug, "default-provider-authorization-implicit-consent"]]
+      invalidation_flow: !Find [authentik_flows.flow, [slug, "materia-invalidation"]]
+      property_mappings:
+        - !Find [authentik_providers_oauth2.scopemapping, [scope_name, "proxy-outpost-reduced"]]
+
+  - id: app_radarr_anime
+    model: authentik_core.application
+    identifiers:
+      slug: radarr-anime
+    attrs:
+      name: Radarr Anime
+      provider: !KeyOf provider_radarr_anime
+      group: media
+      meta_launch_url: https://radarr-anime.materia.wtf
+      meta_description: Anime movies
+      meta_icon: application-icons/svg/radarr.svg
+      open_in_new_tab: true
+
+  - id: policy_binding_radarr_anime
+    model: authentik_policies.policybinding
+    identifiers:
+      target: !KeyOf app_radarr_anime
+      group: !Find [authentik_core.group, [name, "media"]]
+    attrs:
+      order: 0
+
+  # ── Sonarr ───────────────────────────────────────────────────────────────────
+  - id: provider_sonarr
+    model: authentik_providers_proxy.proxyprovider
+    identifiers:
+      name: sonarr
+    attrs:
+      mode: forward_single
+      external_host: https://sonarr.materia.wtf
+      authorization_flow: !Find [authentik_flows.flow, [slug, "default-provider-authorization-implicit-consent"]]
+      invalidation_flow: !Find [authentik_flows.flow, [slug, "materia-invalidation"]]
+      property_mappings:
+        - !Find [authentik_providers_oauth2.scopemapping, [scope_name, "proxy-outpost-reduced"]]
+
+  - id: app_sonarr
+    model: authentik_core.application
+    identifiers:
+      slug: sonarr
+    attrs:
+      name: Sonarr
+      provider: !KeyOf provider_sonarr
+      group: media
+      meta_launch_url: https://sonarr.materia.wtf
+      meta_description: TV shows
+      meta_icon: application-icons/svg/sonarr.svg
+      open_in_new_tab: true
+
+  - id: policy_binding_sonarr
+    model: authentik_policies.policybinding
+    identifiers:
+      target: !KeyOf app_sonarr
+      group: !Find [authentik_core.group, [name, "media"]]
+    attrs:
+      order: 0
+
+  # ── Sonarr Anime ─────────────────────────────────────────────────────────────
+  - id: provider_sonarr_anime
+    model: authentik_providers_proxy.proxyprovider
+    identifiers:
+      name: sonarr anime
+    attrs:
+      mode: forward_single
+      external_host: https://sonarr-anime.materia.wtf
+      authorization_flow: !Find [authentik_flows.flow, [slug, "default-provider-authorization-implicit-consent"]]
+      invalidation_flow: !Find [authentik_flows.flow, [slug, "materia-invalidation"]]
+      property_mappings:
+        - !Find [authentik_providers_oauth2.scopemapping, [scope_name, "proxy-outpost-reduced"]]
+
+  - id: app_sonarr_anime
+    model: authentik_core.application
+    identifiers:
+      slug: sonarr-anime
+    attrs:
+      name: Sonarr Anime
+      provider: !KeyOf provider_sonarr_anime
+      group: media
+      meta_launch_url: https://sonarr-anime.materia.wtf
+      meta_description: Anime TV
+      meta_icon: application-icons/svg/sonarr.svg
+      open_in_new_tab: true
+
+  - id: policy_binding_sonarr_anime
+    model: authentik_policies.policybinding
+    identifiers:
+      target: !KeyOf app_sonarr_anime
+      group: !Find [authentik_core.group, [name, "media"]]
+    attrs:
+      order: 0
+
+  # ── Prowlarr ─────────────────────────────────────────────────────────────────
+  - id: provider_prowlarr
+    model: authentik_providers_proxy.proxyprovider
+    identifiers:
+      name: prowlarr
+    attrs:
+      mode: forward_single
+      external_host: https://prowlarr.materia.wtf
+      authorization_flow: !Find [authentik_flows.flow, [slug, "default-provider-authorization-implicit-consent"]]
+      invalidation_flow: !Find [authentik_flows.flow, [slug, "materia-invalidation"]]
+      property_mappings:
+        - !Find [authentik_providers_oauth2.scopemapping, [scope_name, "proxy-outpost-reduced"]]
+
+  - id: app_prowlarr
+    model: authentik_core.application
+    identifiers:
+      slug: prowlarr
+    attrs:
+      name: Prowlarr
+      provider: !KeyOf provider_prowlarr
+      group: media
+      meta_launch_url: https://prowlarr.materia.wtf
+      meta_description: Indexers
+      meta_icon: application-icons/png/prowlarr.png
+      open_in_new_tab: true
+
+  - id: policy_binding_prowlarr
+    model: authentik_policies.policybinding
+    identifiers:
+      target: !KeyOf app_prowlarr
+      group: !Find [authentik_core.group, [name, "media"]]
+    attrs:
+      order: 0
+
+  # ── Lidarr ───────────────────────────────────────────────────────────────────
+  - id: provider_lidarr
+    model: authentik_providers_proxy.proxyprovider
+    identifiers:
+      name: lidarr
+    attrs:
+      mode: forward_single
+      external_host: https://lidarr.materia.wtf
+      authorization_flow: !Find [authentik_flows.flow, [slug, "default-provider-authorization-implicit-consent"]]
+      invalidation_flow: !Find [authentik_flows.flow, [slug, "materia-invalidation"]]
+      property_mappings:
+        - !Find [authentik_providers_oauth2.scopemapping, [scope_name, "proxy-outpost-reduced"]]
+
+  - id: app_lidarr
+    model: authentik_core.application
+    identifiers:
+      slug: lidarr
+    attrs:
+      name: Lidarr
+      provider: !KeyOf provider_lidarr
+      group: media
+      meta_launch_url: https://lidarr.materia.wtf
+      meta_description: Music
+      meta_icon: application-icons/svg/lidarr.svg
+      open_in_new_tab: true
+
+  - id: policy_binding_lidarr
+    model: authentik_policies.policybinding
+    identifiers:
+      target: !KeyOf app_lidarr
+      group: !Find [authentik_core.group, [name, "media"]]
+    attrs:
+      order: 0
+
+  # ── Bazarr ───────────────────────────────────────────────────────────────────
+  - id: provider_bazarr
+    model: authentik_providers_proxy.proxyprovider
+    identifiers:
+      name: bazarr
+    attrs:
+      mode: forward_single
+      external_host: https://bazarr.materia.wtf
+      authorization_flow: !Find [authentik_flows.flow, [slug, "default-provider-authorization-implicit-consent"]]
+      invalidation_flow: !Find [authentik_flows.flow, [slug, "materia-invalidation"]]
+      property_mappings:
+        - !Find [authentik_providers_oauth2.scopemapping, [scope_name, "proxy-outpost-reduced"]]
+
+  - id: app_bazarr
+    model: authentik_core.application
+    identifiers:
+      slug: bazarr
+    attrs:
+      name: Bazarr
+      provider: !KeyOf provider_bazarr
+      group: media
+      meta_launch_url: https://bazarr.materia.wtf
+      meta_description: Subtitles
+      meta_icon: application-icons/svg/bazarr.svg
+      open_in_new_tab: true
+
+  - id: policy_binding_bazarr
+    model: authentik_policies.policybinding
+    identifiers:
+      target: !KeyOf app_bazarr
+      group: !Find [authentik_core.group, [name, "media"]]
+    attrs:
+      order: 0
+
+  # ── Bazarr Anime ─────────────────────────────────────────────────────────────
+  - id: provider_bazarr_anime
+    model: authentik_providers_proxy.proxyprovider
+    identifiers:
+      name: bazarr anime
+    attrs:
+      mode: forward_single
+      external_host: https://bazarr-anime.materia.wtf
+      authorization_flow: !Find [authentik_flows.flow, [slug, "default-provider-authorization-implicit-consent"]]
+      invalidation_flow: !Find [authentik_flows.flow, [slug, "materia-invalidation"]]
+      property_mappings:
+        - !Find [authentik_providers_oauth2.scopemapping, [scope_name, "proxy-outpost-reduced"]]
+
+  - id: app_bazarr_anime
+    model: authentik_core.application
+    identifiers:
+      slug: bazarr-anime
+    attrs:
+      name: Bazarr Anime
+      provider: !KeyOf provider_bazarr_anime
+      group: media
+      meta_launch_url: https://bazarr-anime.materia.wtf
+      meta_description: Anime subtitles
+      meta_icon: application-icons/svg/bazarr.svg
+      open_in_new_tab: true
+
+  - id: policy_binding_bazarr_anime
+    model: authentik_policies.policybinding
+    identifiers:
+      target: !KeyOf app_bazarr_anime
+      group: !Find [authentik_core.group, [name, "media"]]
+    attrs:
+      order: 0
+
+  # ── SABnzbd ──────────────────────────────────────────────────────────────────
+  - id: provider_sabnzbd
+    model: authentik_providers_proxy.proxyprovider
+    identifiers:
+      name: sabnzbd
+    attrs:
+      mode: forward_single
+      external_host: https://sabnzbd.materia.wtf
+      authorization_flow: !Find [authentik_flows.flow, [slug, "default-provider-authorization-implicit-consent"]]
+      invalidation_flow: !Find [authentik_flows.flow, [slug, "materia-invalidation"]]
+      property_mappings:
+        - !Find [authentik_providers_oauth2.scopemapping, [scope_name, "proxy-outpost-reduced"]]
+
+  - id: app_sabnzbd
+    model: authentik_core.application
+    identifiers:
+      slug: sabnzbd
+    attrs:
+      name: SABnzbd
+      provider: !KeyOf provider_sabnzbd
+      group: media
+      meta_launch_url: https://sabnzbd.materia.wtf
+      meta_description: Usenet downloader
+      meta_icon: application-icons/svg/sabnzbd.svg
+      open_in_new_tab: true
+
+  - id: policy_binding_sabnzbd
+    model: authentik_policies.policybinding
+    identifiers:
+      target: !KeyOf app_sabnzbd
+      group: !Find [authentik_core.group, [name, "media"]]
+    attrs:
+      order: 0
+
+  # ── qBittorrent ───────────────────────────────────────────────────────────────
+  - id: provider_qbittorrent
+    model: authentik_providers_proxy.proxyprovider
+    identifiers:
+      name: qbittorrent
+    attrs:
+      mode: forward_single
+      external_host: https://qbittorrent.materia.wtf
+      authorization_flow: !Find [authentik_flows.flow, [slug, "default-provider-authorization-implicit-consent"]]
+      invalidation_flow: !Find [authentik_flows.flow, [slug, "materia-invalidation"]]
+      property_mappings:
+        - !Find [authentik_providers_oauth2.scopemapping, [scope_name, "proxy-outpost-reduced"]]
+
+  - id: app_qbittorrent
+    model: authentik_core.application
+    identifiers:
+      slug: qbittorrent
+    attrs:
+      name: qBittorrent
+      provider: !KeyOf provider_qbittorrent
+      group: media
+      meta_launch_url: https://qbittorrent.materia.wtf
+      meta_description: Torrent client
+      meta_icon: application-icons/svg/qbittorrent.svg
+      open_in_new_tab: true
+
+  - id: policy_binding_qbittorrent
+    model: authentik_policies.policybinding
+    identifiers:
+      target: !KeyOf app_qbittorrent
+      group: !Find [authentik_core.group, [name, "media"]]
+    attrs:
+      order: 0
+
+  # ── autobrr ───────────────────────────────────────────────────────────────────
+  - id: provider_autobrr
+    model: authentik_providers_proxy.proxyprovider
+    identifiers:
+      name: autobrr
+    attrs:
+      mode: forward_single
+      external_host: https://autobrr.materia.wtf
+      authorization_flow: !Find [authentik_flows.flow, [slug, "default-provider-authorization-implicit-consent"]]
+      invalidation_flow: !Find [authentik_flows.flow, [slug, "materia-invalidation"]]
+      property_mappings:
+        - !Find [authentik_providers_oauth2.scopemapping, [scope_name, "proxy-outpost-reduced"]]
+
+  - id: app_autobrr
+    model: authentik_core.application
+    identifiers:
+      slug: autobrr
+    attrs:
+      name: autobrr
+      provider: !KeyOf provider_autobrr
+      group: media
+      meta_launch_url: https://autobrr.materia.wtf
+      meta_description: Torrent automation
+      meta_icon: application-icons/svg/autobrr.svg
+      open_in_new_tab: true
+
+  - id: policy_binding_autobrr
+    model: authentik_policies.policybinding
+    identifiers:
+      target: !KeyOf app_autobrr
+      group: !Find [authentik_core.group, [name, "media"]]
+    attrs:
+      order: 0
+
+  # ── Notifiarr ────────────────────────────────────────────────────────────────
+  - id: provider_notifiarr
+    model: authentik_providers_proxy.proxyprovider
+    identifiers:
+      name: notifiarr
+    attrs:
+      mode: forward_single
+      external_host: https://notifiarr.materia.wtf
+      authorization_flow: !Find [authentik_flows.flow, [slug, "default-provider-authorization-implicit-consent"]]
+      invalidation_flow: !Find [authentik_flows.flow, [slug, "materia-invalidation"]]
+      property_mappings:
+        - !Find [authentik_providers_oauth2.scopemapping, [scope_name, "proxy-outpost-reduced"]]
+
+  - id: app_notifiarr
+    model: authentik_core.application
+    identifiers:
+      slug: notifiarr
+    attrs:
+      name: Notifiarr
+      provider: !KeyOf provider_notifiarr
+      group: media
+      meta_launch_url: https://notifiarr.materia.wtf
+      meta_description: Notifications
+      meta_icon: application-icons/png/notifiarr.png
+      open_in_new_tab: true
+
+  - id: policy_binding_notifiarr
+    model: authentik_policies.policybinding
+    identifiers:
+      target: !KeyOf app_notifiarr
+      group: !Find [authentik_core.group, [name, "media"]]
+    attrs:
+      order: 0
+
+  # ── Stash ────────────────────────────────────────────────────────────────────
+  - id: provider_stash
+    model: authentik_providers_proxy.proxyprovider
+    identifiers:
+      name: stash
+    attrs:
+      mode: forward_single
+      external_host: https://stash.materia.wtf
+      authorization_flow: !Find [authentik_flows.flow, [slug, "default-provider-authorization-implicit-consent"]]
+      invalidation_flow: !Find [authentik_flows.flow, [slug, "materia-invalidation"]]
+      property_mappings:
+        - !Find [authentik_providers_oauth2.scopemapping, [scope_name, "proxy-outpost-reduced"]]
+
+  - id: app_stash
+    model: authentik_core.application
+    identifiers:
+      slug: stash
+    attrs:
+      name: Stash
+      provider: !KeyOf provider_stash
+      group: media
+      meta_launch_url: https://stash.materia.wtf
+      meta_description: Media library
+      meta_icon: application-icons/svg/stash.svg
+      open_in_new_tab: true
+
+  - id: policy_binding_stash
+    model: authentik_policies.policybinding
+    identifiers:
+      target: !KeyOf app_stash
+      group: !Find [authentik_core.group, [name, "media"]]
+    attrs:
+      order: 0
+
+  # ── Calibre ───────────────────────────────────────────────────────────────────
+  - id: provider_calibre
+    model: authentik_providers_proxy.proxyprovider
+    identifiers:
+      name: calibre
+    attrs:
+      mode: forward_single
+      external_host: https://calibre.materia.wtf
+      authorization_flow: !Find [authentik_flows.flow, [slug, "default-provider-authorization-implicit-consent"]]
+      invalidation_flow: !Find [authentik_flows.flow, [slug, "materia-invalidation"]]
+      property_mappings:
+        - !Find [authentik_providers_oauth2.scopemapping, [scope_name, "proxy-outpost-reduced"]]
+
+  - id: app_calibre
+    model: authentik_core.application
+    identifiers:
+      slug: calibre
+    attrs:
+      name: Calibre
+      provider: !KeyOf provider_calibre
+      group: members
+      meta_launch_url: https://calibre.materia.wtf
+      meta_description: eBook library
+      meta_icon: application-icons/svg/calibre-web.svg
+      open_in_new_tab: true
+
+  - id: policy_binding_calibre_members
+    model: authentik_policies.policybinding
+    identifiers:
+      target: !KeyOf app_calibre
+      group: !Find [authentik_core.group, [name, "members"]]
+    attrs:
+      order: 0
+
+  - id: policy_binding_calibre_media
+    model: authentik_policies.policybinding
+    identifiers:
+      target: !KeyOf app_calibre
+      group: !Find [authentik_core.group, [name, "media"]]
+    attrs:
+      order: 10
+
+  # ── Calibre Downloader ────────────────────────────────────────────────────────
+  - id: provider_calibre_dl
+    model: authentik_providers_proxy.proxyprovider
+    identifiers:
+      name: calibre downloader
+    attrs:
+      mode: forward_single
+      external_host: https://calibre-book-downloader.materia.wtf
+      authorization_flow: !Find [authentik_flows.flow, [slug, "default-provider-authorization-implicit-consent"]]
+      invalidation_flow: !Find [authentik_flows.flow, [slug, "materia-invalidation"]]
+      property_mappings:
+        - !Find [authentik_providers_oauth2.scopemapping, [scope_name, "proxy-outpost-reduced"]]
+
+  - id: app_calibre_dl
+    model: authentik_core.application
+    identifiers:
+      slug: calibre-dl
+    attrs:
+      name: Calibre Downloader
+      provider: !KeyOf provider_calibre_dl
+      group: media
+      meta_launch_url: https://calibre-book-downloader.materia.wtf
+      meta_description: Book downloads
+      meta_icon: application-icons/png/calibre-web-automated-book-downloader.png
+      open_in_new_tab: true
+
+  - id: policy_binding_calibre_dl
+    model: authentik_policies.policybinding
+    identifiers:
+      target: !KeyOf app_calibre_dl
+      group: !Find [authentik_core.group, [name, "media"]]
+    attrs:
+      order: 0
+
+  # ── Readarr ───────────────────────────────────────────────────────────────────
+  - id: provider_readarr
+    model: authentik_providers_proxy.proxyprovider
+    identifiers:
+      name: readarr
+    attrs:
+      mode: forward_single
+      external_host: https://readarr.materia.wtf
+      authorization_flow: !Find [authentik_flows.flow, [slug, "default-provider-authorization-implicit-consent"]]
+      invalidation_flow: !Find [authentik_flows.flow, [slug, "materia-invalidation"]]
+      property_mappings:
+        - !Find [authentik_providers_oauth2.scopemapping, [scope_name, "proxy-outpost-reduced"]]
+
+  - id: app_readarr
+    model: authentik_core.application
+    identifiers:
+      slug: readarr
+    attrs:
+      name: Readarr
+      provider: !KeyOf provider_readarr
+      group: media
+      meta_launch_url: https://readarr.materia.wtf
+      meta_description: Books
+      meta_icon: application-icons/svg/readarr.svg
+      open_in_new_tab: true
+
+  - id: policy_binding_readarr
+    model: authentik_policies.policybinding
+    identifiers:
+      target: !KeyOf app_readarr
+      group: !Find [authentik_core.group, [name, "media"]]
+    attrs:
+      order: 0
