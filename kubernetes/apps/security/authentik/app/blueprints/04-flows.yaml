@@ -15,6 +15,7 @@ entries:
       authentication: none
       compatibility_mode: true   # improves compatibility with older browsers/clients
       denied_action: continue    # already-authenticated users are passed through, not errored
+      policy_engine_mode: all   # all([]) = True → flow accessible when no flow-level policies
 
   - id: flow_enrollment
     model: authentik_flows.flow
@@ -25,6 +26,7 @@ entries:
       title: "Welcome to Materia"
       designation: enrollment
       authentication: none
+      policy_engine_mode: all
 
   - id: flow_invalidation
     model: authentik_flows.flow
@@ -35,6 +37,7 @@ entries:
       title: "Signing out…"
       designation: invalidation
       authentication: require_authenticated
+      policy_engine_mode: all
 
   - id: flow_passwordless
     model: authentik_flows.flow
@@ -45,6 +48,7 @@ entries:
       title: "Sign in with a passkey"
       designation: authentication
       authentication: none
+      policy_engine_mode: all
 
   - id: flow_recovery
     model: authentik_flows.flow
@@ -55,6 +59,7 @@ entries:
       title: "Password Recovery"
       designation: recovery
       authentication: none
+      policy_engine_mode: all
 
   - id: flow_user_settings
     model: authentik_flows.flow
@@ -65,6 +70,7 @@ entries:
       title: "User Settings"
       designation: stage_configuration
       authentication: require_authenticated
+      policy_engine_mode: all
 
   # Accessible from user settings → "Change Password" section.
   # A password policy with HaveIBeenPwned + zxcvbn validates the new password.
@@ -77,3 +83,4 @@ entries:
       title: "Change Password"
       designation: stage_configuration
       authentication: require_authenticated
+      policy_engine_mode: all
