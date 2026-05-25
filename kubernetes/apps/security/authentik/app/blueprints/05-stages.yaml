@@ -91,7 +91,7 @@ entries:
 
   # ── MFA — WebAuthn (Passkey) ──────────────────────────────────────────────────
   - id: stage_webauthn_setup
-    model: authentik_stages_authenticator_webauthn.authenticatewebauthnstage
+    model: authentik_stages_authenticator_webauthn.authenticatorwebauthnstage
     identifiers:
       name: materia-authenticator-webauthn-setup
     attrs:
