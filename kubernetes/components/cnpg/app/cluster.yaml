@@ -37,6 +37,14 @@ spec:
     pg_hba:
       - hostssl all all all scram-sha-256
 
+  managed:
+    roles:
+      - name: ${APP}
+        ensure: present
+        login: true
+        passwordSecret:
+          name: postgres-${APP}-secret
+
   bootstrap:
     # Normal path: fresh cluster. For disaster recovery from a barman-cloud
     # backup, use the components/cnpg/restore component overlay instead —
