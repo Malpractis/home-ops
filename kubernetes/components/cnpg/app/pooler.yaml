@@ -13,7 +13,8 @@ spec:
     poolMode: session
     parameters:
       max_client_conn: "200"
-      default_pool_size: "25"
+      default_pool_size: "40"
       server_login_retry: "1"
+      server_idle_timeout: "30"
   monitoring:
     enablePodMonitor: true
