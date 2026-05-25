@@ -2,9 +2,17 @@
 # yaml-language-server: $schema=https://version-2026-5.goauthentik.io/blueprints/v1/schema.json
 version: 1
 metadata:
-  name: Branding
+  name: Materia - Branding
 entries:
-  - id: brand_main
+  # Demote the built-in authentik brand so ours can be set as the sole default
+  - id: brand_authentik_default
+    model: authentik_brands.brand
+    identifiers:
+      domain: authentik-default
+    attrs:
+      default: false
+
+  - id: brand_materia
     model: authentik_brands.brand
     identifiers:
       domain: auth.materia.wtf

@@ -2,7 +2,7 @@
 # yaml-language-server: $schema=https://version-2026-5.goauthentik.io/blueprints/v1/schema.json
 version: 1
 metadata:
-  name: Apps - TrueNAS
+  name: Materia - Apps - TrueNAS
 entries:
   - id: truenas_provider
     model: authentik_providers_oauth2.oauth2provider

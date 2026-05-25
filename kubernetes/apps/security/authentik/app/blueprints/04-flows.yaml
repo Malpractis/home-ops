@@ -2,7 +2,7 @@
 # yaml-language-server: $schema=https://version-2026-5.goauthentik.io/blueprints/v1/schema.json
 version: 1
 metadata:
-  name: Flows
+  name: Materia - Flows
 entries:
   - id: flow_authentication
     model: authentik_flows.flow

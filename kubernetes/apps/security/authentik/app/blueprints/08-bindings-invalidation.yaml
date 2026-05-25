@@ -2,7 +2,7 @@
 # yaml-language-server: $schema=https://version-2026-5.goauthentik.io/blueprints/v1/schema.json
 version: 1
 metadata:
-  name: Flow Bindings - Invalidation
+  name: Materia - Flow Bindings - Invalidation
 entries:
   - id: binding_invalidation_logout
     model: authentik_flows.flowstagebinding

@@ -2,7 +2,7 @@
 # yaml-language-server: $schema=https://version-2026-5.goauthentik.io/blueprints/v1/schema.json
 version: 1
 metadata:
-  name: OAuth Sources
+  name: Materia - OAuth Sources
 entries:
   - id: source_discord
     model: authentik_sources_oauth.oauthsource

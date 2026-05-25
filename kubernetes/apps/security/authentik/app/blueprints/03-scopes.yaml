@@ -2,7 +2,7 @@
 # yaml-language-server: $schema=https://version-2026-5.goauthentik.io/blueprints/v1/schema.json
 version: 1
 metadata:
-  name: OAuth2 Scopes
+  name: Materia - OAuth2 Scopes
 entries:
   - id: scope_groups
     model: authentik_providers_oauth2.scopemapping

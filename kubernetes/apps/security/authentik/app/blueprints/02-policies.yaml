@@ -2,7 +2,7 @@
 # yaml-language-server: $schema=https://version-2026-5.goauthentik.io/blueprints/v1/schema.json
 version: 1
 metadata:
-  name: Policies
+  name: Materia - Policies
 entries:
   - id: policy_reputation_block
     model: authentik_policies_reputation.reputationpolicy

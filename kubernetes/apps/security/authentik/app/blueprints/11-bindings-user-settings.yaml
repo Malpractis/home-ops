@@ -2,7 +2,7 @@
 # yaml-language-server: $schema=https://version-2026-5.goauthentik.io/blueprints/v1/schema.json
 version: 1
 metadata:
-  name: Flow Bindings - User Settings
+  name: Materia - Flow Bindings - User Settings
 entries:
   - id: binding_user_settings_prompt
     model: authentik_flows.flowstagebinding

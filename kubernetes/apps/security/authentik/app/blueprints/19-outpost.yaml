@@ -2,7 +2,7 @@
 # yaml-language-server: $schema=https://version-2026-5.goauthentik.io/blueprints/v1/schema.json
 version: 1
 metadata:
-  name: Embedded Outpost
+  name: Materia - Embedded Outpost
 entries:
   - id: embedded_outpost
     model: authentik_outposts.outpost
