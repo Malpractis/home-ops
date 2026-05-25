@@ -51,6 +51,7 @@ entries:
       stage: !Find [authentik_stages_identification.identificationstage, [name, "materia-authentication-identification"]]
     attrs:
       order: 20
+      policy_engine_mode: all  # all([]) = True → always run when no policies
 
   # Order 30: Password (only for remote clients)
   - id: binding_auth_password
@@ -98,3 +99,4 @@ entries:
       stage: !Find [authentik_stages_user_login.userloginstage, [name, "materia-authentication-login"]]
     attrs:
       order: 100
+      policy_engine_mode: all  # all([]) = True → always run when no policies

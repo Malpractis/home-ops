@@ -11,6 +11,7 @@ entries:
       stage: !Find [authentik_stages_identification.identificationstage, [name, "materia-recovery-identification"]]
     attrs:
       order: 10
+      policy_engine_mode: all  # all([]) = True → always run when no policies
 
   - id: binding_recovery_email
     model: authentik_flows.flowstagebinding
@@ -19,6 +20,7 @@ entries:
       stage: !Find [authentik_stages_email.emailstage, [name, "materia-recovery-email"]]
     attrs:
       order: 20
+      policy_engine_mode: all  # all([]) = True → always run when no policies
 
   - id: binding_recovery_prompt
     model: authentik_flows.flowstagebinding
@@ -27,6 +29,7 @@ entries:
       stage: !Find [authentik_stages_prompt.promptstage, [name, "materia-recovery-password-prompt"]]
     attrs:
       order: 30
+      policy_engine_mode: all  # all([]) = True → always run when no policies
 
   - id: binding_recovery_user_write
     model: authentik_flows.flowstagebinding
@@ -35,6 +38,7 @@ entries:
       stage: !Find [authentik_stages_user_write.userwritestage, [name, "materia-recovery-user-write"]]
     attrs:
       order: 40
+      policy_engine_mode: all  # all([]) = True → always run when no policies
 
   - id: binding_recovery_login
     model: authentik_flows.flowstagebinding
@@ -43,3 +47,4 @@ entries:
       stage: !Find [authentik_stages_user_login.userloginstage, [name, "materia-authentication-login"]]
     attrs:
       order: 50
+      policy_engine_mode: all  # all([]) = True → always run when no policies
