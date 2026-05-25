@@ -19,7 +19,7 @@ spec:
       secrets: []
     global:
       podAnnotations:
-        secret.reloader.stakater.com/reload: authentik-secret,postgres-authentik-secret,authentik-blueprint-secrets
+        secret.reloader.stakater.com/reload: authentik-secret,postgres-authentik-credentials,authentik-blueprint-secrets
         configmap.reloader.stakater.com/reload: authentik-blueprints
       deploymentStrategy:
         type: RollingUpdate
