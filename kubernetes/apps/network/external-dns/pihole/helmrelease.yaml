@@ -22,6 +22,7 @@ spec:
     extraArgs:
       - --pihole-api-version=6
       - --pihole-server=http://192.168.1.2
+      - --gateway-name=envoy-internal
     triggerLoopOnEvent: true
     policy: sync
     sources:
