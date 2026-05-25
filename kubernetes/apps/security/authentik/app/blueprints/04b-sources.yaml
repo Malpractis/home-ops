@@ -15,7 +15,7 @@ entries:
       consumer_key: !Env DISCORD_CLIENT_ID
       consumer_secret: !Env DISCORD_CLIENT_SECRET
       user_matching_mode: email_link
-      authentication_flow: !Find [authentik_flows.flow, [slug, "default-source-authentication"]]
+      authentication_flow: !Find [authentik_flows.flow, [slug, "materia-source-authentication"]]
       enrollment_flow: !Find [authentik_flows.flow, [slug, "materia-enrollment-invitation"]]
 
   - id: source_google
@@ -29,7 +29,7 @@ entries:
       consumer_key: !Env GOOGLE_CLIENT_ID
       consumer_secret: !Env GOOGLE_CLIENT_SECRET
       user_matching_mode: email_link
-      authentication_flow: !Find [authentik_flows.flow, [slug, "default-source-authentication"]]
+      authentication_flow: !Find [authentik_flows.flow, [slug, "materia-source-authentication"]]
       enrollment_flow: !Find [authentik_flows.flow, [slug, "materia-enrollment-invitation"]]
 
   - id: source_github
@@ -43,7 +43,7 @@ entries:
       consumer_key: !Env GITHUB_CLIENT_ID
       consumer_secret: !Env GITHUB_CLIENT_SECRET
       user_matching_mode: email_link
-      authentication_flow: !Find [authentik_flows.flow, [slug, "default-source-authentication"]]
+      authentication_flow: !Find [authentik_flows.flow, [slug, "materia-source-authentication"]]
       enrollment_flow: !Find [authentik_flows.flow, [slug, "materia-enrollment-invitation"]]
 
   - id: source_plex
@@ -57,5 +57,5 @@ entries:
       plex_token: !Env PLEX_TOKEN
       allow_friends: false
       user_matching_mode: email_link
-      authentication_flow: !Find [authentik_flows.flow, [slug, "default-source-authentication"]]
+      authentication_flow: !Find [authentik_flows.flow, [slug, "materia-source-authentication"]]
       enrollment_flow: !Find [authentik_flows.flow, [slug, "materia-enrollment-invitation"]]

@@ -2,7 +2,7 @@
 # yaml-language-server: $schema=https://version-2026-5.goauthentik.io/blueprints/v1/schema.json
 version: 1
 metadata:
-  name: Materia - Flow Bindings - Authentication
+  name: Materia - Flow Bindings - Authentication + Source
 entries:
   # Order 5: Deny (only when reputation is bad — policy is negated)
   - id: binding_auth_deny
@@ -99,4 +99,16 @@ entries:
       stage: !Find [authentik_stages_user_login.userloginstage, [name, "materia-authentication-login"]]
     attrs:
       order: 100
+      policy_engine_mode: all  # all([]) = True → always run when no policies
+
+  # --- materia-source-authentication ---
+  # Used by all OAuth/social sources after the provider has authenticated the user.
+  # Single stage: log the matched user in. No identification or password needed.
+  - id: binding_source_auth_login
+    model: authentik_flows.flowstagebinding
+    identifiers:
+      target: !Find [authentik_flows.flow, [slug, "materia-source-authentication"]]
+      stage: !Find [authentik_stages_user_login.userloginstage, [name, "materia-authentication-login"]]
+    attrs:
+      order: 10
       policy_engine_mode: all  # all([]) = True → always run when no policies

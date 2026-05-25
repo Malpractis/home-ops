@@ -72,6 +72,20 @@ entries:
       authentication: require_authenticated
       policy_engine_mode: all
 
+  # Used by all social/OAuth sources after the provider authenticates the user.
+  # Simply logs the matched/enrolled user in — no identification or password needed
+  # since the external provider already handled that.
+  - id: flow_source_authentication
+    model: authentik_flows.flow
+    identifiers:
+      slug: materia-source-authentication
+    attrs:
+      name: materia-source-authentication
+      title: "Signing in…"
+      designation: authentication
+      authentication: none
+      policy_engine_mode: all
+
   # Accessible from user settings → "Change Password" section.
   # A password policy with HaveIBeenPwned + zxcvbn validates the new password.
   - id: flow_password_change
