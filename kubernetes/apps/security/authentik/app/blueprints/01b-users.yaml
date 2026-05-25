@@ -70,21 +70,3 @@ entries:
       is_active: true
       groups:
         - !Find [authentik_core.group, [name, "members"]]
-
-  - id: user_karl
-    model: authentik_core.user
-    identifiers:
-      username: karl
-    attrs:
-      is_active: true
-      groups:
-        - !Find [authentik_core.group, [name, "members"]]
-
-  - id: user_narks
-    model: authentik_core.user
-    identifiers:
-      username: narks
-    attrs:
-      is_active: true
-      groups:
-        - !Find [authentik_core.group, [name, "members"]]
