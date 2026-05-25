@@ -11,6 +11,9 @@ spec:
   type: rw
   pgbouncer:
     poolMode: transaction
+    authQuerySecret:
+      name: postgres-${APP}-superuser
+    authQuery: "SELECT usename, passwd FROM pg_shadow WHERE usename=$1"
     parameters:
       max_client_conn: "200"
       default_pool_size: "25"
