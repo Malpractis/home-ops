@@ -54,7 +54,7 @@ spec:
         - secretRef:
             name: &secret authentik-secret
         - secretRef:
-            name: postgres-authentik-secret
+            name: postgres-authentik-credentials
         - secretRef:
             name: authentik-blueprint-secrets
     authentik:
@@ -100,20 +100,3 @@ spec:
     prometheus:
       rules:
         enabled: true
-  valuesFrom:
-    - targetPath: authentik.email.host
-      kind: Secret
-      name: *secret
-      valuesKey: EMAIL_SERVER
-    - targetPath: authentik.email.username
-      kind: Secret
-      name: *secret
-      valuesKey: EMAIL_USER
-    - targetPath: authentik.email.from
-      kind: Secret
-      name: *secret
-      valuesKey: EMAIL_FROM
-    - targetPath: authentik.email.password
-      kind: Secret
-      name: *secret
-      valuesKey: EMAIL_PASS
