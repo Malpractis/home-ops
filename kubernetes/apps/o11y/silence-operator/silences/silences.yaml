@@ -73,16 +73,6 @@ spec:
 apiVersion: observability.giantswarm.io/v1alpha2
 kind: Silence
 metadata:
-  name: rook-ceph-csi-metrics-no-targets
-spec:
-  matchers:
-    - name: scrape_job
-      value: serviceScrape/rook-ceph/csi-metrics/0
----
-# yaml-language-server: $schema=https://schemas.materia.wtf/observability.giantswarm.io/silence_v1alpha2.json
-apiVersion: observability.giantswarm.io/v1alpha2
-kind: Silence
-metadata:
   name: victoria-metrics-kube-scheduler
 spec:
   matchers:
@@ -90,4 +80,20 @@ spec:
       value: RecordingRulesNoData
     - name: recording
       value: cluster_quantile:scheduler_.*
+      matchType: "=~"
+---
+# yaml-language-server: $schema=https://schemas.materia.wtf/observability.giantswarm.io/silence_v1alpha2.json
+# These authentik error/exception counters have no series when the system is healthy
+# (django-prometheus only emits a series after the first event). This is expected
+# behaviour — silence rather than pollute the alert feed with "good news" NoData.
+apiVersion: observability.giantswarm.io/v1alpha2
+kind: Silence
+metadata:
+  name: authentik-zero-activity-recording-rules
+spec:
+  matchers:
+    - name: alertname
+      value: RecordingRulesNoData
+    - name: recording
+      value: job:(django_db_errors_total|django_db_new_connection_errors_total|django_http_exceptions_total_by_type|django_http_exceptions_total_by_view):.*
       matchType: "=~"

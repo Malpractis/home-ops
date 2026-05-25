@@ -17,7 +17,7 @@ spec:
       enableCephfsSnapshotter: false
       enableLiveness: true
       serviceMonitor:
-        enabled: true
+        enabled: false  # csi-metrics Service never exists; scrape pool has no targets
       csiRBDProvisionerResource: |
         - name : csi-rbdplugin
           resource:
