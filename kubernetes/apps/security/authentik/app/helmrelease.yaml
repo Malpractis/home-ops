@@ -93,4 +93,4 @@ spec:
         licenseKey: "AUTHENTIK_GEOIP_LICENSE_KEY"
     prometheus:
       rules:
-        enabled: true
+        enabled: false  # managed via prometheusrule.yaml with corrected metric names
