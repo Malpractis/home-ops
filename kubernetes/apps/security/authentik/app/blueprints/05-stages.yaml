@@ -119,7 +119,7 @@ entries:
       not_configured_action: configure
       webauthn_user_verification: preferred
       # Skip MFA if authenticated within the last week — reduces friction without sacrificing security
-      last_auth_threshold: "hours=168;minutes=0;seconds=0"
+      last_auth_threshold: "hours=168"
       configuration_stages:
         - !KeyOf stage_totp_setup
         - !KeyOf stage_webauthn_setup
