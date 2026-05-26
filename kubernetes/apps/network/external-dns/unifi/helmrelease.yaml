@@ -41,6 +41,7 @@ spec:
           timeoutSeconds: 5
     extraArgs:
       - --gateway-name=envoy-internal
+      - --gateway-name=envoy-internal-tls
     triggerLoopOnEvent: true
     policy: sync
     sources:
