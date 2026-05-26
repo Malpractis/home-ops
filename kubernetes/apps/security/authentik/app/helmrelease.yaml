@@ -32,6 +32,13 @@ spec:
         # TODO netpol to limit traffic to gateway pods
         - name: AUTHENTIK_LISTEN__TRUSTED_PROXY_CIDRS
           value: 10.42.0.0/16
+        # Raise policy cache TTL from default 120s — with 30+ proxy apps the
+        # cold evaluation path hits 7-8s p99; keeping results warm longer
+        # prevents every post-blueprint-flush request from being slow.
+        - name: AUTHENTIK_POLICY__CACHE_TIMEOUT
+          value: "600"
+        - name: AUTHENTIK_POLICY__CACHE_TIMEOUT_FLOWS
+          value: "600"
         # PostgreSQL SSL — encrypted transport, no client cert (password auth)
         - name: AUTHENTIK_POSTGRESQL__SSLMODE
           value: require
