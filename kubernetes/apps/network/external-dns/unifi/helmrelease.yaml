@@ -40,8 +40,7 @@ spec:
           initialDelaySeconds: 10
           timeoutSeconds: 5
     extraArgs:
-      - --gateway-name=envoy-internal
-      - --gateway-name=envoy-internal-tls
+      - --gateway-label-filter=external-dns/scope=internal
     triggerLoopOnEvent: true
     policy: sync
     sources:
