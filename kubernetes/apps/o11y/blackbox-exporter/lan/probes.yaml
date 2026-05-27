@@ -35,3 +35,10 @@ spec:
     - targetLabel: service
       replacement: blackbox-exporter-lan
       action: replace
+    # Relabel job to nfs_probe so prometheus-adapter can expose the metric
+    # under the name the zeroscaler HPA component expects. Without this the
+    # actual label is "probe/o11y/lan-tcp" and all torrents HPAs are stuck
+    # with ScalingActive=False (scale-to-zero on NFS failure never fires).
+    - targetLabel: job
+      replacement: nfs_probe
+      action: replace
