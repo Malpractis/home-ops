@@ -62,8 +62,8 @@ spec:
                 path: /api/ping
                 spec:
                   initialDelaySeconds: 120
-                  periodSeconds: 10
-                  failureThreshold: 30
+                  periodSeconds: 30   # cross-seed NFS dir scans block the Node.js
+                  failureThreshold: 30 # event loop; 30×30s = 15min before kill
               readiness:
                 enabled: false
               startup:
