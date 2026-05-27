@@ -114,4 +114,4 @@ snapshot-app ns app:
 
 [private]
 render-local-ks ns ks:
-    docker run --rm --volume "{{ source_directory() }}:/repo" ghcr.io/allenporter/flux-local:latest build ks --namespace "{{ ns }}" --path /repo/flux/cluster "{{ ks }}"
+    flate build ks --namespace "{{ ns }}" --path "{{ justfile_directory() }}/kubernetes" --output yaml "{{ ks }}"
