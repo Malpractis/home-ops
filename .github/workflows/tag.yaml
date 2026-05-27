@@ -61,7 +61,7 @@ jobs:
           TAG_NAME: ${{ steps.determine-next-tag.outputs.result }}
         with:
           github-token: ${{ steps.app-token.outputs.token }}
-          script: |
+          script: |-
             const tagName = process.env.TAG_NAME;
 
             const tag = await github.rest.git.createTag({
