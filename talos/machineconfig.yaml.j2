@@ -2,9 +2,9 @@
 version: v1alpha1
 machine:
   ca:
-    crt: {{ ENV.talsecret_certs_os_crt }}
-    {% if ENV.IS_CONTROLLER %}
-    key: {{ ENV.talsecret_certs_os_key }}
+    crt: ref+op://kubernetes/talos/MACHINE_CA_CRT
+    {% if ENV.CONTROLPLANE %}
+    key: ref+op://kubernetes/talos/MACHINE_CA_KEY
     {% endif %}
   features:
     apidCheckExtKeyUsage: true
@@ -16,7 +16,7 @@ machine:
     kubePrism:
       enabled: true
       port: 7445
-    {% if ENV.IS_CONTROLLER %}
+    {% if ENV.CONTROLPLANE %}
     kubernetesTalosAPIAccess:
       enabled: true
       allowedRoles:
@@ -94,12 +94,12 @@ machine:
     servers:
       - 162.159.200.1
       - 162.159.200.123
-  token: {{ ENV.talsecret_trustdinfo_token }}
+  token: ref+op://kubernetes/talos/MACHINE_TOKEN
 cluster:
   ca:
-    crt: {{ ENV.talsecret_certs_k8s_crt }}
-    {% if ENV.IS_CONTROLLER %}
-    key: {{ ENV.talsecret_certs_k8s_key }}
+    crt: ref+op://kubernetes/talos/CLUSTER_CA_CRT
+    {% if ENV.CONTROLPLANE %}
+    key: ref+op://kubernetes/talos/CLUSTER_CA_KEY
     {% endif %}
   clusterName: matalos
   controlPlane:
@@ -111,7 +111,7 @@ cluster:
         disabled: true
       service:
         disabled: false
-  id: {{ ENV.talsecret_cluster_id }}
+  id: ref+op://kubernetes/talos/CLUSTER_ID
   network:
     cni:
       name: none
@@ -120,12 +120,12 @@ cluster:
       - 10.42.0.0/16
     serviceSubnets:
       - 10.43.0.0/16
-  secret: {{ ENV.talsecret_cluster_secret }}
-  token: {{ ENV.talsecret_secrets_bootstraptoken }}
-  {% if ENV.IS_CONTROLLER %}
+  secret: ref+op://kubernetes/talos/CLUSTER_SECRET
+  token: ref+op://kubernetes/talos/CLUSTER_TOKEN
+  {% if ENV.CONTROLPLANE %}
   aggregatorCA:
-    crt: {{ ENV.talsecret_certs_k8saggregator_crt }}
-    key: {{ ENV.talsecret_certs_k8saggregator_key }}
+    crt: ref+op://kubernetes/talos/CLUSTER_AGGREGATORCA_CRT
+    key: ref+op://kubernetes/talos/CLUSTER_AGGREGATORCA_KEY
   allowSchedulingOnControlPlanes: true
   apiServer:
     auditPolicy:
@@ -151,8 +151,8 @@ cluster:
     advertisedSubnets:
       - 192.168.20.0/24
     ca:
-      crt: {{ ENV.talsecret_certs_etcd_crt }}
-      key: {{ ENV.talsecret_certs_etcd_key }}
+      crt: ref+op://kubernetes/talos/CLUSTER_ETCD_CA_CRT
+      key: ref+op://kubernetes/talos/CLUSTER_ETCD_CA_KEY
     extraArgs:
       listen-metrics-urls: http://0.0.0.0:2381
   proxy:
@@ -179,9 +179,9 @@ cluster:
     extraArgs:
       bind-address: 0.0.0.0
     image: registry.k8s.io/kube-scheduler:v1.36.1
-  secretboxEncryptionSecret: {{ ENV.talsecret_secrets_secretboxencryptionsecret }}
+  secretboxEncryptionSecret: ref+op://kubernetes/talos/CLUSTER_SECRETBOXENCRYPTIONSECRET
   serviceAccount:
-    key: {{ ENV.talsecret_certs_k8sserviceaccount_key }}
+    key: ref+op://kubernetes/talos/CLUSTER_SERVICEACCOUNT_KEY
   {% endif %}
 ---
 apiVersion: v1alpha1

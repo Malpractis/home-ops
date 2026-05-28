@@ -17,7 +17,7 @@ customization:
     - i915.enable_guc=3                   # Intel iGPU
     - sysctl.kernel.kexec_load_disabled=1 # Intel iGPU
     {% endif %}
-    {% if ENV.ISO == 'true' and ENV.NODE_TYPE != 'vm' %}
+    {% if 'ISO' in ENV and ENV.ISO == 'true' and ENV.NODE_TYPE != 'vm' %}
     - bond=bond0:enp3s0,enp4s0:mode=802.3ad,xmit_hash_policy=layer3+4:9000
     - ip={{ ENV.NODE_IP }}::192.168.20.1:255.255.255.0::bond0
     {% endif %}

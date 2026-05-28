@@ -1,11 +1,12 @@
 ---
+# talos:node-type=vm
+# talos:node-ip=192.168.20.10
 machine:
   type: controlplane
   install:
     diskSelector:
       model: INTEL SSDPE21D280GA
-    # renovate: datasource=custom.talos-factory depName=siderolabs/talos
-    image: factory.talos.dev/installer/bc848587d4ea50bf8d03cc48845d51beb359f4caed23887f5cd1ab3408e01cb7:v1.13.2
+    image: factory.talos.dev/installer/{{ ENV.SCHEMATIC }}:v1.13.2
     wipe: false
     grubUseUKICmdline: true
 ---
