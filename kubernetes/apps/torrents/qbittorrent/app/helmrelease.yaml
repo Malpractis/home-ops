@@ -27,29 +27,25 @@ spec:
             probes:
               liveness:
                 enabled: true
-                type: HTTP
-                path: /api/v2/app/version
                 spec:
                   periodSeconds: 30
-                  timeoutSeconds: 30
-                  failureThreshold: 10
+                  timeoutSeconds: 5
+                  failureThreshold: 5
               readiness:
                 enabled: true
-                type: HTTP
-                path: /api/v2/app/version
+                custom: true
                 spec:
-                  periodSeconds: 30
-                  timeoutSeconds: 30
-                  failureThreshold: 6
+                  httpGet:
+                    path: /api/v2/app/version
+                    port: *port
+                  periodSeconds: 10
+                  timeoutSeconds: 5
+                  failureThreshold: 5
               startup:
                 enabled: true
-                type: HTTP
-                path: /api/v2/app/version
                 spec:
-                  initialDelaySeconds: 30
-                  timeoutSeconds: 30
-                  periodSeconds: 30
-                  failureThreshold: 60
+                  failureThreshold: 30
+                  periodSeconds: 10
             securityContext:
               allowPrivilegeEscalation: false
               readOnlyRootFilesystem: true
