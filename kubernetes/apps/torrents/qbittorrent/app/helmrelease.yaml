@@ -61,6 +61,7 @@ spec:
               limits:
                 memory: 12Gi
     defaultPodOptions:
+      terminationGracePeriodSeconds: 300
       annotations:
         k8s.v1.cni.cncf.io/networks: |-
           [{
