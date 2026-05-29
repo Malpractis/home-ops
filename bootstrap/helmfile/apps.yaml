@@ -1,20 +1,27 @@
 ---
 # yaml-language-server: $schema=https://json.schemastore.org/helmfile
-bases:
-  - defaults.yaml
----
-# yaml-language-server: $schema=https://json.schemastore.org/helmfile
+
+# Bootstraps core applications that provide a minimal runtime base for the
+# cluster. These releases are installed first so the cluster has the resources
+# Flux needs before its own reconciliation begins.
+#
+# After this bootstrap phase, Flux is ready to take over management of the
+# application stack and continue reconciling downstream state.
+
 helmDefaults:
   cleanupOnFail: true
   forceConflicts: true
   wait: true
   waitForJobs: true
 
+bases:
+  - default.yaml
+
+defaultInherit: default
+
 releases:
   - name: cilium
     namespace: kube-system
-    inherit:
-      - template: default
     hooks:
       - # Wait for CRDs to be available
         command: kubectl
@@ -43,22 +50,16 @@ releases:
 
   - name: coredns
     namespace: kube-system
-    inherit:
-      - template: default
     needs:
       - kube-system/cilium
 
   - name: spegel
     namespace: system
-    inherit:
-      - template: default
     needs:
       - kube-system/coredns
 
   - name: cert-manager
     namespace: security
-    inherit:
-      - template: default
     hooks:
       - events: [postsync]
         command: kubectl
@@ -75,28 +76,20 @@ releases:
 
   - name: external-secrets
     namespace: security
-    inherit:
-      - template: default
     needs:
       - security/cert-manager
 
   - name: onepassword-connect
     namespace: security
-    inherit:
-      - template: default
     needs:
       - security/external-secrets
 
   - name: flux-operator
     namespace: flux-system
-    inherit:
-      - template: default
     needs:
       - security/onepassword-connect
 
   - name: flux-instance
     namespace: flux-system
-    inherit:
-      - template: default
     needs:
       - flux-system/flux-operator
