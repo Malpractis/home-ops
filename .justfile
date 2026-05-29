@@ -1,4 +1,4 @@
-﻿#!/usr/bin/env -S just --justfile
+#!/usr/bin/env -S just --justfile
 
 set lazy
 set quiet
