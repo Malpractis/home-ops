@@ -26,22 +26,28 @@ spec:
               RADARR__APP__INSTANCENAME: Radarr-Anime
               RADARR__SERVER__PORT: &port 80
               RADARR__APP__THEME: dark
+              RADARR__LOG__DBENABLED: "False"
             envFrom:
               - secretRef:
                   name: radarr-anime-secret
             probes:
-              liveness: &probes
+              liveness:
+                enabled: true
+              readiness:
                 enabled: true
                 custom: true
                 spec:
                   httpGet:
                     path: /ping
                     port: *port
-                  initialDelaySeconds: 0
                   periodSeconds: 10
-                  timeoutSeconds: 1
-                  failureThreshold: 3
-              readiness: *probes
+                  timeoutSeconds: 5
+                  failureThreshold: 5
+              startup:
+                enabled: true
+                spec:
+                  failureThreshold: 30
+                  periodSeconds: 10
             securityContext:
               allowPrivilegeEscalation: false
               readOnlyRootFilesystem: true
