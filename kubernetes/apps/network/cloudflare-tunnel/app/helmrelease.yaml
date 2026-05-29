@@ -33,18 +33,23 @@ spec:
               - tunnel
               - run
             probes:
-              liveness: &probes
+              liveness:
+                enabled: true
+              readiness:
                 enabled: true
                 custom: true
                 spec:
                   httpGet:
                     path: /ready
                     port: &port 8080
-                  initialDelaySeconds: 0
                   periodSeconds: 10
-                  timeoutSeconds: 1
-                  failureThreshold: 3
-              readiness: *probes
+                  timeoutSeconds: 5
+                  failureThreshold: 5
+              startup:
+                enabled: true
+                spec:
+                  failureThreshold: 30
+                  periodSeconds: 10
             securityContext:
               allowPrivilegeEscalation: false
               readOnlyRootFilesystem: true
