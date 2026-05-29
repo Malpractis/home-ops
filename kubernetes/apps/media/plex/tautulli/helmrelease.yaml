@@ -23,18 +23,23 @@ spec:
             env:
               TAUTULLI__PORT: &port 8181
             probes:
-              liveness: &probes
+              liveness:
+                enabled: true
+              readiness:
                 enabled: true
                 custom: true
                 spec:
                   httpGet:
                     path: /status
                     port: *port
-                  initialDelaySeconds: 30
                   periodSeconds: 10
-                  timeoutSeconds: 1
-                  failureThreshold: 3
-              readiness: *probes
+                  timeoutSeconds: 5
+                  failureThreshold: 5
+              startup:
+                enabled: true
+                spec:
+                  failureThreshold: 30
+                  periodSeconds: 10
             securityContext:
               allowPrivilegeEscalation: false
               readOnlyRootFilesystem: true

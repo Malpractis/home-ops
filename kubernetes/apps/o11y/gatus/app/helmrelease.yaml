@@ -41,18 +41,23 @@ spec:
               GATUS_WEB_PORT: &port 80
               TZ: Australia/Melbourne
             probes:
-              liveness: &probes
+              liveness:
+                enabled: true
+              readiness:
                 enabled: true
                 custom: true
                 spec:
                   httpGet:
                     path: /health
                     port: *port
-                  initialDelaySeconds: 0
                   periodSeconds: 10
-                  timeoutSeconds: 1
-                  failureThreshold: 3
-              readiness: *probes
+                  timeoutSeconds: 5
+                  failureThreshold: 5
+              startup:
+                enabled: true
+                spec:
+                  failureThreshold: 30
+                  periodSeconds: 10
             securityContext:
               allowPrivilegeEscalation: false
               readOnlyRootFilesystem: true
