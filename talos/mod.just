@@ -30,6 +30,7 @@ reboot-node node:
 [script]
 render-config node:
     export CONTROLPLANE="$(just talos machine-controller {{ node }})"
+    export NODE_TYPE="$(just talos machine-nodetype {{ node }})"
     export SCHEMATIC="$(just talos schematic-id {{ node }})"
     talosctl machineconfig patch <(just template "{{ source_directory() }}/machineconfig.yaml.j2") \
         -p @<(just template "{{ source_directory() }}/nodes/{{ node }}.yaml.j2")
@@ -78,7 +79,9 @@ machine-nodeip node:
 [script]
 machine-image node:
     export SCHEMATIC="$(just talos schematic-id {{ node }})"
-    just template "{{ source_directory() }}/nodes/{{ node }}.yaml.j2" | yq -e 'select(.machine.install) | .machine.install.image'
+    export CONTROLPLANE="$(just talos machine-controller {{ node }})"
+    export NODE_TYPE="$(just talos machine-nodetype {{ node }})"
+    just template "{{ source_directory() }}/machineconfig.yaml.j2" | yq -e 'select(.machine.install) | .machine.install.image'
 
 [doc('Generate kubeconfig for the cluster')]
 [private]

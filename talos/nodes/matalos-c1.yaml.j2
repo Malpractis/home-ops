@@ -6,9 +6,6 @@ machine:
   install:
     diskSelector:
       model: INTEL SSDPE21D280GA
-    image: factory.talos.dev/installer/{{ ENV.SCHEMATIC }}:v1.13.2
-    wipe: false
-    grubUseUKICmdline: true
 ---
 apiVersion: v1alpha1
 kind: HostnameConfig
