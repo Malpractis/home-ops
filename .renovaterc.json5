@@ -7,6 +7,15 @@
   packageRules: [
     // Auto-merge rules
     {
+      description: "Auto-merge Aqua packages",
+      matchManagers: [ "aqua" ],
+      matchUpdateTypes: [ "minor", "patch" ],
+      automerge: true,
+      automergeType: "branch",
+      minimumReleaseAge: "3 days",
+      ignoreTests: true,
+    },
+    {
       description: "Auto-merge trusted OCI digests",
       matchDatasources: [ "docker" ],
       matchUpdateTypes: [ "digest" ],
