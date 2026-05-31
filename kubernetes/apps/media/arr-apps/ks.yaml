@@ -6,6 +6,7 @@ metadata:
   name: &app bazarr-anime
 spec:
   components:
+    - ../../../../components/theme-park
     - ../../../../components/volsync
     - ../../../../components/zeroscaler
   dependsOn:
@@ -16,6 +17,7 @@ spec:
   postBuild:
     substitute:
       APP: *app
+      THEME_PARK_APP: bazarr
       VOLSYNC_CAPACITY: 5Gi
       VOLSYNC_SCHEDULE: "14 * * * *"
   prune: true
@@ -33,6 +35,7 @@ metadata:
   name: &app bazarr
 spec:
   components:
+    - ../../../../components/theme-park
     - ../../../../components/volsync
     - ../../../../components/zeroscaler
   dependsOn:
@@ -60,6 +63,7 @@ metadata:
   name: &app lidarr
 spec:
   components:
+    - ../../../../components/theme-park
     - ../../../../components/volsync
     - ../../../../components/zeroscaler
   dependsOn:
@@ -87,6 +91,7 @@ metadata:
   name: &app prowlarr
 spec:
   components:
+    - ../../../../components/theme-park
     - ../../../../components/volsync
     - ../../../../components/zeroscaler
   dependsOn:
@@ -114,6 +119,7 @@ metadata:
   name: &app radarr
 spec:
   components:
+    - ../../../../components/theme-park
     - ../../../../components/volsync
     - ../../../../components/zeroscaler
   dependsOn:
@@ -141,6 +147,7 @@ metadata:
   name: &app radarr-anime
 spec:
   components:
+    - ../../../../components/theme-park
     - ../../../../components/volsync
     - ../../../../components/zeroscaler
   dependsOn:
@@ -151,6 +158,7 @@ spec:
   postBuild:
     substitute:
       APP: *app
+      THEME_PARK_APP: radarr
       VOLSYNC_CAPACITY: 5Gi
       VOLSYNC_SCHEDULE: "28 * * * *"
   prune: true
@@ -168,6 +176,7 @@ metadata:
   name: &app radarr-4k
 spec:
   components:
+    - ../../../../components/theme-park
     - ../../../../components/volsync
     - ../../../../components/zeroscaler
   dependsOn:
@@ -178,6 +187,7 @@ spec:
   postBuild:
     substitute:
       APP: *app
+      THEME_PARK_APP: radarr
       VOLSYNC_CAPACITY: 5Gi
       VOLSYNC_SCHEDULE: "26 * * * *"
   prune: true
@@ -195,6 +205,7 @@ metadata:
   name: &app readarr
 spec:
   components:
+    - ../../../../components/theme-park
     - ../../../../components/volsync
     - ../../../../components/zeroscaler
   dependsOn:
@@ -251,6 +262,7 @@ metadata:
   name: &app sonarr
 spec:
   components:
+    - ../../../../components/theme-park
     - ../../../../components/volsync
     - ../../../../components/zeroscaler
   dependsOn:
@@ -278,6 +290,7 @@ metadata:
   name: &app sonarr-anime
 spec:
   components:
+    - ../../../../components/theme-park
     - ../../../../components/volsync
     - ../../../../components/zeroscaler
   dependsOn:
@@ -288,6 +301,7 @@ spec:
   postBuild:
     substitute:
       APP: *app
+      THEME_PARK_APP: sonarr
       VOLSYNC_CAPACITY: 5Gi
       VOLSYNC_SCHEDULE: "40 * * * *"
   prune: true
