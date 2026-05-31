@@ -7,6 +7,7 @@ metadata:
   name: ref-authentik-svc
 spec:
   from:
+    # SecurityPolicy (ext_authz) references to the outpost Service
     - &policy
       group: gateway.envoyproxy.io
       kind: SecurityPolicy
@@ -24,6 +25,25 @@ spec:
     - <<: *policy
       namespace: system
     - <<: *policy
+      namespace: torrents
+    # HTTPRoute (outpost callback path) backendRefs to the outpost Service
+    - &route
+      group: gateway.networking.k8s.io
+      kind: HTTPRoute
+      namespace: database
+    - <<: *route
+      namespace: flux-system
+    - <<: *route
+      namespace: media
+    - <<: *route
+      namespace: network
+    - <<: *route
+      namespace: o11y
+    - <<: *route
+      namespace: storage
+    - <<: *route
+      namespace: system
+    - <<: *route
       namespace: torrents
   to:
     - group: ''
