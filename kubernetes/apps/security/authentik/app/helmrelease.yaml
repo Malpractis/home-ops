@@ -66,7 +66,7 @@ spec:
         port: 587
         use_tls: true
     server:
-      autoscaling: &autoscaling
+      autoscaling:
         enabled: true
         minReplicas: 1
         maxReplicas: 3
