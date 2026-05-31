@@ -86,7 +86,8 @@ spec:
         serviceMonitor:
           enabled: true
     worker:
-      autoscaling: *autoscaling
+      autoscaling:
+        enabled: false
       resources:
         requests:
           cpu: 300m
