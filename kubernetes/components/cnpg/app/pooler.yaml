@@ -16,5 +16,8 @@ spec:
       default_pool_size: "40"
       server_login_retry: "1"
       server_idle_timeout: "30"
+      # Kill connections stuck idle-in-transaction after 30s to prevent
+      # blueprint workers from blocking each other on guardian permission rows.
+      idle_transaction_timeout: "30"
   monitoring:
     enablePodMonitor: true
