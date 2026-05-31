@@ -6,6 +6,7 @@ metadata:
   name: &app seerr
 spec:
   components:
+    - ../../../../components/theme-park
     - ../../../../components/volsync
     - ../../../../components/zeroscaler
   dependsOn:
@@ -16,6 +17,7 @@ spec:
   postBuild:
     substitute:
       APP: *app
+      THEME_PARK_APP: overseerr
       VOLSYNC_CAPACITY: 5Gi
       VOLSYNC_SCHEDULE: "36 * * * *"
   prune: true
