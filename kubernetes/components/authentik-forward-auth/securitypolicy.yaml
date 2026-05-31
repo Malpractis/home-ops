@@ -2,9 +2,10 @@
 # yaml-language-server: $schema=https://schemas.materia.wtf/gateway.envoyproxy.io/securitypolicy_v1alpha1.json
 # Forward-auth via the Authentik embedded outpost (ext_authz).
 # Targets the app's HTTPRoute; unauthenticated requests are redirected to Authentik.
-# Requires: the ref-authentik-svc ReferenceGrant (already present) permitting
-# SecurityPolicy -> ak-outpost-authentik-embedded-outpost (security ns), and the
-# app to be registered as a proxy provider + outpost member in Authentik.
+# The embedded outpost is served by the authentik-server Service (no separate
+# ak-outpost-* Service exists for embedded outposts here). Verified:
+# GET authentik-server:80/outpost.goauthentik.io/ping -> 204.
+# Requires the app to be a proxy provider + embedded-outpost member in Authentik.
 apiVersion: gateway.envoyproxy.io/v1alpha1
 kind: SecurityPolicy
 metadata:
@@ -22,9 +23,9 @@ spec:
       backendRefs:
         - group: ""
           kind: Service
-          name: ak-outpost-authentik-embedded-outpost
+          name: authentik-server
           namespace: security
-          port: 9000
+          port: 80
       path: /outpost.goauthentik.io/auth/envoy
       headersToBackend:
         - authorization
