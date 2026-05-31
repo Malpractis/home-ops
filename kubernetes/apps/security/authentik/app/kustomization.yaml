@@ -36,3 +36,4 @@ configMapGenerator:
       - ./blueprints/17-apps-proxy-media.yaml
       - ./blueprints/18-apps-proxy-admin.yaml
       - ./blueprints/19-outpost.yaml
+      - ./blueprints/20-apps-torrents-oidc.yaml
