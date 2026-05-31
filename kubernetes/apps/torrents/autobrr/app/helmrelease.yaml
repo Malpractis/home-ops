@@ -27,6 +27,11 @@ spec:
               AUTOBRR__METRICS_PORT: &metricsPort 9094
               AUTOBRR__CHECK_FOR_UPDATES: false
               AUTOBRR__LOG_LEVEL: INFO
+              AUTOBRR__OIDC_ENABLED: true
+              AUTOBRR__OIDC_ISSUER: https://auth.materia.wtf/application/o/autobrr/
+              AUTOBRR__OIDC_REDIRECT_URL: https://autobrr.materia.wtf/api/auth/oidc/callback
+              # built-in login kept available as fallback (existing local user)
+              AUTOBRR__OIDC_DISABLE_BUILT_IN_LOGIN: false
             envFrom:
               - secretRef:
                   name: "{{ .Release.Name }}-secret"
