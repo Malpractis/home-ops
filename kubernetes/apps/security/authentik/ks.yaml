@@ -8,7 +8,7 @@ spec:
   components:
     - ../../../../components/cnpg/app
     # Uncomment to trigger a cnpg restore, then comment again once cluster restored and healthy
-    - ../../../../components/cnpg/restore
+    #- ../../../../components/cnpg/restore
   dependsOn:
     - name: cnpg-operator
       namespace: database
