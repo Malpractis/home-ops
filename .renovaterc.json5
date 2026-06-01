@@ -7,8 +7,8 @@
   packageRules: [
     // Auto-merge rules
     {
-      description: "Auto-merge Aqua packages",
-      matchManagers: [ "aqua" ],
+      description: "Auto-merge mise tools",
+      matchManagers: [ "mise" ],
       matchUpdateTypes: [ "minor", "patch" ],
       automerge: true,
       automergeType: "branch",
