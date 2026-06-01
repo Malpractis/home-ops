@@ -27,7 +27,7 @@ spec:
       number: 1
       dataDurability: ${DB_DURABILITY:-preferred}
     parameters:
-      max_connections: "100"
+      max_connections: "200"
       shared_buffers: 256MB
       max_wal_size: 4GB
       checkpoint_timeout: 10min

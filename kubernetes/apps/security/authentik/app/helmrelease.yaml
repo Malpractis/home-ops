@@ -71,7 +71,7 @@ spec:
       autoscaling:
         enabled: true
         minReplicas: 1
-        maxReplicas: 3
+        maxReplicas: 2
         targetCPUUtilizationPercentage: 60
         behavior:
           scaleUp:
@@ -83,13 +83,6 @@ spec:
           cpu: 300m
         limits:
           memory: 1Gi
-      # authentik does heavy bursty reconcile work (rebuilding outpost/provider
-      # permissions, blueprint discovery) that can stall the health endpoint for
-      # tens of seconds. The chart default liveness (failureThreshold 3, period
-      # 10s, timeout 3s ≈ 30s grace) restarts an otherwise-healthy pod mid-burst,
-      # which throws it back into the reconcile storm. Widen to ~90s of grace and
-      # give each probe longer to respond. Only these fields are overridden; the
-      # httpGet path etc. are deep-merged from the chart defaults.
       livenessProbe:
         failureThreshold: 6
         periodSeconds: 15
@@ -102,7 +95,15 @@ spec:
           enabled: true
     worker:
       autoscaling:
-        enabled: false
+        enabled: true
+        minReplicas: 1
+        maxReplicas: 2
+        targetCPUUtilizationPercentage: 60
+        behavior:
+          scaleUp:
+            stabilizationWindowSeconds: 300
+          scaleDown:
+            stabilizationWindowSeconds: 300
       resources:
         requests:
           cpu: 300m
