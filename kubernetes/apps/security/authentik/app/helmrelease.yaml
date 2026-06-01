@@ -51,6 +51,8 @@ spec:
           value: "true"
         - name: AUTHENTIK_STORAGE__MEDIA__S3__SECURE_URLS
           value: "true"
+        - name: AUTHENTIK_STORAGE__MEDIA__S3__QUERYSTRING_AUTH
+          value: "false"
       envFrom:
         - secretRef:
             name: &secret authentik-secret

@@ -19,6 +19,8 @@ spec:
   postBuild:
     substitute:
       APP: *app
+      DB_INSTANCES: "3"
+      DB_DURABILITY: required
   prune: true
   sourceRef:
     kind: GitRepository

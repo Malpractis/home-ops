@@ -5,7 +5,7 @@ kind: Cluster
 metadata:
   name: postgres-${APP}
 spec:
-  instances: 2
+  instances: ${DB_INSTANCES:-2}
   imageName: ghcr.io/cloudnative-pg/postgresql:18
 
   storage:
@@ -17,13 +17,15 @@ spec:
       value: garage
 
   postgresql:
-    # dataDurability=preferred: writes fall back to local-commit if the standby
-    # is unavailable rather than blocking. Safe for 2-instance clusters.
-    # Switch to dataDurability=required if you ever move to 3+ instances.
+    # dataDurability=preferred (default): writes fall back to local-commit if the
+    # standby is unavailable rather than blocking — the right call at 2 instances.
+    # At 3+ instances set DB_DURABILITY=required: with number=1 and two standbys, a
+    # single node loss still leaves a sync standby to ack, giving zero-data-loss
+    # synchronous replication without write-stalling on single-node failure.
     synchronous:
       method: any
       number: 1
-      dataDurability: preferred
+      dataDurability: ${DB_DURABILITY:-preferred}
     parameters:
       max_connections: "100"
       shared_buffers: 256MB
