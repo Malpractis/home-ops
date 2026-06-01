@@ -15,6 +15,7 @@ metadata:
   name: postgres-${APP}
 spec:
   bootstrap:
+    initdb: null
     recovery:
       source: postgres-${APP}
       # recoveryTarget:
