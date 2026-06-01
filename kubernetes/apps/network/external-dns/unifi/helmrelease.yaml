@@ -51,7 +51,7 @@ spec:
       - gateway-udproute
       - service
     txtOwnerId: matalos
-    txtPrefix: k8s.matalos.
+    txtPrefix: k8s.matalos.%{record_type}-
     domainFilters: ["materia.wtf"]
     serviceMonitor:
       enabled: true
