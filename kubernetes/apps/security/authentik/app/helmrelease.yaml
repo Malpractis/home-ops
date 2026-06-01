@@ -110,7 +110,7 @@ spec:
         limits:
           memory: 1Gi
     geoip:
-      enabled: true
+      enabled: false
       existingSecret:
         secretName: *secret
         accountId: "AUTHENTIK_GEOIP_ACCOUNT_ID"
