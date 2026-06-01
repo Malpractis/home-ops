@@ -6,6 +6,7 @@ metadata:
   name: &app notifiarr
 spec:
   components:
+    - ../../../../components/authentik-forward-auth
     - ../../../../components/volsync
   dependsOn:
     - name: rook-ceph-cluster
