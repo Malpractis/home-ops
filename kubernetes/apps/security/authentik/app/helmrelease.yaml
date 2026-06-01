@@ -101,6 +101,12 @@ spec:
         secretName: *secret
         accountId: "AUTHENTIK_GEOIP_ACCOUNT_ID"
         licenseKey: "AUTHENTIK_GEOIP_LICENSE_KEY"
+      resources:
+        requests:
+          cpu: 10m
+          memory: 64Mi
+        limits:
+          memory: 128Mi
     prometheus:
       rules:
         enabled: false  # managed via prometheusrule.yaml with corrected metric names
