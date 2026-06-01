@@ -81,6 +81,7 @@ spec:
       resources:
         requests:
           cpu: 300m
+          memory: 256Mi
         limits:
           memory: 1Gi
       livenessProbe:
@@ -107,6 +108,7 @@ spec:
       resources:
         requests:
           cpu: 300m
+          memory: 256Mi
         limits:
           memory: 1Gi
     geoip:

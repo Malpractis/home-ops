@@ -53,6 +53,8 @@ spec:
                     containers:
                       - name: manager
                         resources:
+                          requests:
+                            memory: 512Mi
                           limits:
                             memory: 2Gi
             target:
