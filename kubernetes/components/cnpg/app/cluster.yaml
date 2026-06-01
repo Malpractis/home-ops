@@ -10,7 +10,7 @@ spec:
 
   storage:
     size: ${DB_SIZE:-10Gi}
-    storageClass: ceph-block
+    storageClass: ${DB_STORAGE_CLASS:-openebs-hostpath}
 
   env:
     - name: AWS_DEFAULT_REGION
