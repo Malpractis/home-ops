@@ -203,6 +203,13 @@ spec:
           maxLabelsPerTimeseries: "100"
           search.maxConcurrentRequests: "8"
           search.maxQueueDuration: "30s"
+          search.maxMemoryPerQuery: "300MB"
+        resources:
+          requests:
+            cpu: 150m
+            memory: 1Gi
+          limits:
+            memory: 3Gi
         retentionPeriod: 90d
         storage:
           accessModes:
