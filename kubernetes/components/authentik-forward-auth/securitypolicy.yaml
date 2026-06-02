@@ -19,6 +19,15 @@ spec:
     # failOpen=true: if the outpost is unreachable, allow the request through
     # (matches today's no-auth behaviour; flip to false once trusted for fail-closed).
     failOpen: true
+    # Headers forwarded FROM the client request TO the outpost (ext_authz check).
+    # For an HTTP auth service, Envoy Gateway otherwise sends only Host/Method/Path/
+    # Content-Length/Authorization — it strips Cookie, so the outpost never sees the
+    # session and loops post-login (ERR_TOO_MANY_REDIRECTS). 'accept' lets Authentik
+    # choose a 302 redirect (browser) vs 401 (API).
+    headersToExtAuth:
+      - authorization
+      - cookie
+      - accept
     http:
       backendRefs:
         - group: ""
@@ -27,15 +36,6 @@ spec:
           namespace: security
           port: 80
       path: /outpost.goauthentik.io/auth/envoy
-      # Headers forwarded FROM the client request TO the outpost (ext_authz check).
-      # For an HTTP auth service, Envoy Gateway otherwise sends only Host/Method/Path/
-      # Content-Length/Authorization — it strips Cookie, so the outpost never sees the
-      # session and loops post-login (ERR_TOO_MANY_REDIRECTS). 'accept' lets Authentik
-      # choose a 302 redirect (browser) vs 401 (API).
-      headersToExtAuth:
-        - authorization
-        - cookie
-        - accept
       headersToBackend:
         - authorization
         - cookie
