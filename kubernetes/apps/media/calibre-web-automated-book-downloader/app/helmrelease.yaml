@@ -27,6 +27,10 @@ spec:
               BOOK_LANGUAGE: en
               CUSTOM_DNS: cloudflare
               USE_DOH: true
+              # AA rotates TLDs after takedowns; .org and .se are dead (NXDOMAIN).
+              # .net resolves AND is reachable from the cluster (verified http 200);
+              # the image still defaults to the dead .org. Revisit if .net dies too.
+              AA_BASE_URL: https://annas-archive.net
             securityContext:
               allowPrivilegeEscalation: false
             resources:
