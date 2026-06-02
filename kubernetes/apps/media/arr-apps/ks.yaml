@@ -91,6 +91,7 @@ metadata:
   name: &app prowlarr
 spec:
   components:
+    - ../../../../components/authentik-forward-auth
     - ../../../../components/theme-park
     - ../../../../components/volsync
     - ../../../../components/zeroscaler
