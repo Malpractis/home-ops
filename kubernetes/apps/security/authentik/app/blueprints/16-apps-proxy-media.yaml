@@ -450,36 +450,39 @@ entries:
   # Calibre-Web-Automated moved to native OIDC — see 15-apps-oidc.yaml.
   # (The "Calibre Downloader" below stays a proxy provider.)
 
-  # ── Calibre Downloader ────────────────────────────────────────────────────────
-  - id: provider_calibre_dl
+  # ── Shelfmark (formerly Calibre Downloader) ───────────────────────────────────
+  # Renamed from "calibre downloader" / slug "calibre-dl" — the old proxy provider,
+  # application and policy binding are orphaned by this rename and must be deleted
+  # via ak shell / UI after this applies (blueprint removal ≠ DB delete).
+  - id: provider_shelfmark
     model: authentik_providers_proxy.proxyprovider
     identifiers:
-      name: calibre downloader
+      name: shelfmark
     attrs:
       mode: forward_single
-      external_host: https://calibre-book-downloader.materia.wtf
+      external_host: https://shelfmark.materia.wtf
       authorization_flow: !Find [authentik_flows.flow, [slug, "default-provider-authorization-implicit-consent"]]
       invalidation_flow: !Find [authentik_flows.flow, [slug, "materia-invalidation"]]
       property_mappings:
         - !Find [authentik_providers_oauth2.scopemapping, [scope_name, "proxy-outpost-reduced"]]
 
-  - id: app_calibre_dl
+  - id: app_shelfmark
     model: authentik_core.application
     identifiers:
-      slug: calibre-dl
+      slug: shelfmark
     attrs:
-      name: Calibre Downloader
-      provider: !KeyOf provider_calibre_dl
+      name: Shelfmark
+      provider: !KeyOf provider_shelfmark
       group: media
-      meta_launch_url: https://calibre-book-downloader.materia.wtf
-      meta_description: Book downloads
+      meta_launch_url: https://shelfmark.materia.wtf
+      meta_description: Book search & downloads
       meta_icon: application-icons/png/calibre-web-automated-book-downloader.png
       open_in_new_tab: true
 
-  - id: policy_binding_calibre_dl
+  - id: policy_binding_shelfmark
     model: authentik_policies.policybinding
     identifiers:
-      target: !KeyOf app_calibre_dl
+      target: !KeyOf app_shelfmark
       group: !Find [authentik_core.group, [name, "media"]]
     attrs:
       order: 0

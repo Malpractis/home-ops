@@ -1,0 +1,97 @@
+---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/bjw-s-labs/helm-charts/main/charts/other/app-template/schemas/helmrelease-helm-v2.schema.json
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: &app shelfmark
+spec:
+  chartRef:
+    kind: OCIRepository
+    name: shelfmark
+  interval: 1h
+  values:
+    controllers:
+      shelfmark:
+        annotations:
+          reloader.stakater.com/auto: "true"
+        containers:
+          app:
+            nameOverride: *app
+            image:
+              # Shelfmark — the rebrand of calibre-web-automated-book-downloader.
+              # New canonical image with proper semver tags (Renovate-trackable again).
+              repository: ghcr.io/calibrain/shelfmark
+              tag: v1.0.4@sha256:53e80dc62c1720d15ee59e44c8b98c4aea2a9a456fdd978e87e882c14eb55361
+            env:
+              FLASK_PORT: &port 8084
+              UID: 1000
+              GID: 1000
+              # AA mirror: .org/.se are dead (NXDOMAIN), .net is parked; .li is the live
+              # one. The ISP DNS- and IP-blocks AA, so this is reachable only via the VPN
+              # macvlan below (CUSTOM_DNS/USE_DOH cover the DNS side).
+              AA_BASE_URL: https://annas-archive.li
+              CUSTOM_DNS: cloudflare
+              USE_DOH: true
+              # AA's evasive mirrors serve incomplete/non-standard TLS chains that won't
+              # validate; Shelfmark verifies certs by default. Disabled so the shadow-
+              # library mirrors are usable (scoped to this tool's egress only).
+              CERTIFICATE_VALIDATION: disabled
+            securityContext:
+              allowPrivilegeEscalation: false
+            resources:
+              requests:
+                cpu: 10m
+                memory: 256Mi
+              limits:
+                memory: 2Gi
+    defaultPodOptions:
+      # Attach to the VPN macvlan (VLAN 90) so AA egress bypasses the ISP block —
+      # same pattern as qbittorrent (.10) and blackbox-exporter (.13). .11 is free.
+      # The pod keeps its cluster IP for the web UI/route; only public traffic
+      # (per the vpn NAD routes) goes out 192.168.90.1.
+      annotations:
+        k8s.v1.cni.cncf.io/networks: |-
+          [{
+            "name": "vpn",
+            "namespace": "network",
+            "ips": ["192.168.90.11/24"],
+            "mac": "5a:9c:1d:2e:3f:4b"
+          }]
+      securityContext:
+        fsGroup: 1000
+        fsGroupChangePolicy: OnRootMismatch
+    service:
+      app:
+        ports:
+          http:
+            port: *port
+    route:
+      app:
+        hostnames:
+          - "shelfmark.materia.wtf"
+        parentRefs:
+          - name: envoy-internal
+            namespace: network
+        rules:
+          - backendRefs:
+              - name: *app
+                port: *port
+    persistence:
+      # Shelfmark persists settings (sources, download clients, auth/OIDC) in /config.
+      # The old downloader was stateless; this PVC is new (backed up via volsync).
+      config:
+        existingClaim: "{{ .Release.Name }}"
+        globalMounts:
+          - path: /config
+      # Completed books land in INGEST_DIR (default /books) → CWA watches this same NFS
+      # path (ebooks_watch) and auto-imports into the Calibre library.
+      ingest:
+        type: nfs
+        server: nas.internal
+        path: /mnt/apps/apps-nfs/torrents/ebooks_watch
+        globalMounts:
+          - path: /books
+      tmp:
+        type: emptyDir
+        globalMounts:
+          - path: /tmp
