@@ -79,7 +79,10 @@ entries:
       private_key: !Env TURNSTILE_SECRET_KEY
       js_url: https://challenges.cloudflare.com/turnstile/v0/api.js
       api_url: https://challenges.cloudflare.com/turnstile/v0/siteverify
-      interactive: false
+      # Cloudflare widget is "Managed" mode: high-risk clients (e.g. mobile/cellular)
+      # get an interactive challenge. Must be true so that challenge can render —
+      # interactive:false hides it and the flow hangs on "Verifying…" forever.
+      interactive: true
 
   # ── MFA — TOTP ────────────────────────────────────────────────────────────────
   - id: stage_totp_setup
@@ -133,6 +136,20 @@ entries:
       device_classes:
         - webauthn
       not_configured_action: deny
+      webauthn_user_verification: required
+
+  # First-factor passkey for the MAIN authentication flow (order 25). Only reached
+  # when the identified user has a passkey (gated by materia-has-passkey), so
+  # not_configured_action=skip is just defensive. user_verification=required makes
+  # the passkey a strong single factor (biometric/PIN), letting us skip password+MFA.
+  - id: stage_passkey_first_validate
+    model: authentik_stages_authenticator_validate.authenticatorvalidatestage
+    identifiers:
+      name: materia-authentication-passkey-validation
+    attrs:
+      device_classes:
+        - webauthn
+      not_configured_action: skip
       webauthn_user_verification: required
 
   # ── User Login ────────────────────────────────────────────────────────────────

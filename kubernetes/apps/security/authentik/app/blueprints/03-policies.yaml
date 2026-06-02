@@ -28,3 +28,41 @@ entries:
             ip_network("192.168.0.0/16"),
         ]
         return not any(client_ip in net for net in local_networks)
+
+  # ── Passkey detection (drives passkey-first login) ────────────────────────────
+  # True when the identified (pending) user has at least one confirmed WebAuthn
+  # passkey. Gates the order-25 passkey stage so it is only PROMPTED to users who
+  # have one. Fails CLOSED (returns False → passkey not prompted, password shown)
+  # on any error, so a broken lookup can never block login.
+  - id: policy_has_passkey
+    model: authentik_policies_expression.expressionpolicy
+    identifiers:
+      name: materia-has-passkey
+    attrs:
+      expression: |
+        try:
+            from authentik.stages.authenticator_webauthn.models import WebAuthnDevice
+            user = request.context.get("pending_user")
+            if user is None:
+                return False
+            return WebAuthnDevice.objects.filter(user=user, confirmed=True).exists()
+        except Exception:
+            return False
+
+  # Inverse of the above. Gates the Password + MFA stages so they are SKIPPED for
+  # passkey users (single-gesture passkey login). Fails OPEN (returns True → show
+  # password) on any error, so a broken lookup never locks anyone out.
+  - id: policy_no_passkey
+    model: authentik_policies_expression.expressionpolicy
+    identifiers:
+      name: materia-no-passkey
+    attrs:
+      expression: |
+        try:
+            from authentik.stages.authenticator_webauthn.models import WebAuthnDevice
+            user = request.context.get("pending_user")
+            if user is None:
+                return True
+            return not WebAuthnDevice.objects.filter(user=user, confirmed=True).exists()
+        except Exception:
+            return True
