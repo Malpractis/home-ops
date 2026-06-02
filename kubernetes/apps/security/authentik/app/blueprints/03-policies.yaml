@@ -13,21 +13,17 @@ entries:
       check_ip: true
       check_username: true
 
-  - id: policy_require_remote_network
+  # Reusable predicate: True when the client is on a local/private network.
+  # ak_client_ip is Authentik's properly-resolved client IP. .is_private covers
+  # RFC1918 + loopback + link-local + CGNAT. Compose with `negate: true` on a binding to gate "remote
+  # only" (e.g. the captcha).
+  - id: policy_lan_check
     model: authentik_policies_expression.expressionpolicy
     identifiers:
-      name: materia-require-remote-network
+      name: materia-lan-check
     attrs:
       expression: |
-        from ipaddress import ip_address, ip_network
-
-        client_ip = ip_address(request.http_request.META.get("REMOTE_ADDR", "0.0.0.0"))
-        local_networks = [
-            ip_network("10.0.0.0/8"),
-            ip_network("172.16.0.0/12"),
-            ip_network("192.168.0.0/16"),
-        ]
-        return not any(client_ip in net for net in local_networks)
+        return ak_client_ip.is_private
 
   # ── Passkey detection (drives passkey-first login) ────────────────────────────
   # True when the identified (pending) user has at least one confirmed WebAuthn

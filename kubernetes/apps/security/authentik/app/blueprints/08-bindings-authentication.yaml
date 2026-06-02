@@ -24,7 +24,7 @@ entries:
       negate: false  # ReputationPolicy passes=True when score <= threshold (bad rep); no negate needed
       failure_result: true  # policy error → show deny stage (fail safe)
 
-  # Order 10: Captcha (only for remote/non-RFC1918 clients)
+  # Order 10: Captcha (remote clients only — i.e. NOT on the LAN)
   - id: binding_auth_captcha
     model: authentik_flows.flowstagebinding
     identifiers:
@@ -38,9 +38,10 @@ entries:
     model: authentik_policies.policybinding
     identifiers:
       target: !KeyOf binding_auth_captcha
-      policy: !Find [authentik_policies_expression.expressionpolicy, [name, "materia-require-remote-network"]]
+      policy: !Find [authentik_policies_expression.expressionpolicy, [name, "materia-lan-check"]]
     attrs:
       order: 0
+      negate: true          # captcha runs only when NOT on the LAN (remote)
       failure_result: true  # policy error → show captcha (fail safe)
 
   # Order 20: Identification (always shown)
