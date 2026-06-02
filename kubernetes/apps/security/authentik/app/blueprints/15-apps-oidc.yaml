@@ -250,11 +250,8 @@ entries:
       order: 0
 
   # ── Calibre-Web-Automated ─────────────────────────────────────────────────────
-  # NOTE: replaced the old calibre forward-auth proxy provider. Reuses slug "calibre";
-  # on reconcile Authentik repoints the existing app at this OAuth2 provider. Delete the
-  # orphaned proxy provider (named "calibre") manually in the UI (System > Providers).
-  # CWA's redirect path for a generic OIDC provider is /login/generic/authorized
-  # (cps/oauth_bb.py).
+  # OIDC provider for CWA. CWA's redirect path for a generic
+  # OIDC provider is /login/generic/authorized (cps/oauth_bb.py).
   - id: calibre_provider
     model: authentik_providers_oauth2.oauth2provider
     identifiers:
