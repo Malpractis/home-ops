@@ -6,6 +6,7 @@ metadata:
   name: &app bazarr-anime
 spec:
   components:
+    - ../../../../components/authentik-forward-auth
     - ../../../../components/theme-park
     - ../../../../components/volsync
     - ../../../../components/zeroscaler
@@ -35,6 +36,7 @@ metadata:
   name: &app bazarr
 spec:
   components:
+    - ../../../../components/authentik-forward-auth
     - ../../../../components/theme-park
     - ../../../../components/volsync
     - ../../../../components/zeroscaler
@@ -63,6 +65,7 @@ metadata:
   name: &app lidarr
 spec:
   components:
+    - ../../../../components/authentik-forward-auth
     - ../../../../components/theme-park
     - ../../../../components/volsync
     - ../../../../components/zeroscaler
@@ -120,6 +123,7 @@ metadata:
   name: &app radarr
 spec:
   components:
+    - ../../../../components/authentik-forward-auth
     - ../../../../components/theme-park
     - ../../../../components/volsync
     - ../../../../components/zeroscaler
@@ -148,6 +152,7 @@ metadata:
   name: &app radarr-anime
 spec:
   components:
+    - ../../../../components/authentik-forward-auth
     - ../../../../components/theme-park
     - ../../../../components/volsync
     - ../../../../components/zeroscaler
@@ -177,6 +182,7 @@ metadata:
   name: &app radarr-4k
 spec:
   components:
+    - ../../../../components/authentik-forward-auth
     - ../../../../components/theme-park
     - ../../../../components/volsync
     - ../../../../components/zeroscaler
@@ -206,6 +212,7 @@ metadata:
   name: &app readarr
 spec:
   components:
+    - ../../../../components/authentik-forward-auth
     - ../../../../components/theme-park
     - ../../../../components/volsync
     - ../../../../components/zeroscaler
@@ -263,6 +270,7 @@ metadata:
   name: &app sonarr
 spec:
   components:
+    - ../../../../components/authentik-forward-auth
     - ../../../../components/theme-park
     - ../../../../components/volsync
     - ../../../../components/zeroscaler
@@ -291,6 +299,7 @@ metadata:
   name: &app sonarr-anime
 spec:
   components:
+    - ../../../../components/authentik-forward-auth
     - ../../../../components/theme-park
     - ../../../../components/volsync
     - ../../../../components/zeroscaler
