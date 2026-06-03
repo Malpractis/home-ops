@@ -98,6 +98,11 @@ spec:
         medium: Memory
         globalMounts:
           - path: /tmp
+      tmpfs-run:
+        type: emptyDir
+        medium: Memory
+        globalMounts:
+          - path: /run
       ebooks:
         type: nfs
         server: nas.internal
