@@ -23,19 +23,26 @@ spec:
               repository: ghcr.io/calibrain/shelfmark
               tag: v1.3.0@sha256:e891eda444b261da48a839db652034bce4e20ac09c167f14adf939dedf96b572
             env:
-              FLASK_PORT: &port 8084
-              UID: 1000
-              GID: 1000
               # AA mirror: .org/.se are dead (NXDOMAIN), .net is parked; .li is the live
               # one. The ISP DNS- and IP-blocks AA, so this is reachable only via the VPN
               # macvlan below (CUSTOM_DNS/USE_DOH cover the DNS side).
               AA_BASE_URL: https://annas-archive.li
-              CUSTOM_DNS: cloudflare
-              USE_DOH: true
+              AUTH_METHOD: oidc
               # AA's evasive mirrors serve incomplete/non-standard TLS chains that won't
               # validate; Shelfmark verifies certs by default. Disabled so the shadow-
               # library mirrors are usable (scoped to this tool's egress only).
               CERTIFICATE_VALIDATION: disabled
+              CUSTOM_DNS: cloudflare
+              FLASK_PORT: &port 8084
+              GID: 1000
+              OIDC_ADMIN_GROUP: admins
+              OIDC_DISCOVERY_URL: https://auth.materia.wtf/application/o/shelfmark/.well-known/openid-configuration
+              OIDC_SCOPES: openid,email,profile,groups
+              UID: 1000
+              USE_DOH: true
+            envFrom:
+              - secretRef:
+                  name: shelfmark-secret
             securityContext:
               allowPrivilegeEscalation: false
             resources:
