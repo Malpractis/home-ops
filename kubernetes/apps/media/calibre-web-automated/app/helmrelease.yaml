@@ -65,11 +65,17 @@ spec:
     defaultPodOptions:
       terminationGracePeriodSeconds: 300
       securityContext:
-        runAsUser: 0
-        runAsGroup: 0
+        runAsNonRoot: true
+        runAsUser: 1000
+        runAsGroup: 1000
         fsGroup: 1000
         fsGroupChangePolicy: OnRootMismatch
-        supplementalGroups: [ 44 ]
+      # securityContext:
+      #   runAsUser: 0
+      #   runAsGroup: 0
+      #   fsGroup: 1000
+      #   fsGroupChangePolicy: OnRootMismatch
+      #   supplementalGroups: [ 44 ]
     service:
       app:
         controller: *app
