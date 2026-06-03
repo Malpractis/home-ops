@@ -19,7 +19,7 @@ spec:
             nameOverride: *app
             image:
               repository: crocodilestick/calibre-web-automated
-              tag: v4.0.6
+              tag: v4.0.6@sha256:c31a738b6d5ec6982c050063dd3f063b6943eb1051fc81144789f840d9093a8d
             env:
               CACHE_DIR: /cache
               CWA_WATCH_MODE: poll
@@ -71,12 +71,6 @@ spec:
         runAsGroup: 1000
         fsGroup: 1000
         fsGroupChangePolicy: OnRootMismatch
-      # securityContext:
-      #   runAsUser: 0
-      #   runAsGroup: 0
-      #   fsGroup: 1000
-      #   fsGroupChangePolicy: OnRootMismatch
-      #   supplementalGroups: [ 44 ]
     service:
       app:
         controller: *app
