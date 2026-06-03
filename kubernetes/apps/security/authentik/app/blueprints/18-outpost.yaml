@@ -11,32 +11,30 @@ entries:
     attrs:
       type: proxy
       providers:
-        # Media apps
+        # Media apps ("calibre" and "shelfmark" are native OIDC — see 15-apps-oidc.yaml)
+        - !Find [authentik_providers_proxy.proxyprovider, [name, "bazarr"]]
+        - !Find [authentik_providers_proxy.proxyprovider, [name, "bazarr anime"]]
+        - !Find [authentik_providers_proxy.proxyprovider, [name, "lidarr"]]
+        - !Find [authentik_providers_proxy.proxyprovider, [name, "notifiarr"]]
+        - !Find [authentik_providers_proxy.proxyprovider, [name, "prowlarr"]]
+        - !Find [authentik_providers_proxy.proxyprovider, [name, "qbittorrent"]]
         - !Find [authentik_providers_proxy.proxyprovider, [name, "radarr"]]
         - !Find [authentik_providers_proxy.proxyprovider, [name, "radarr 4k"]]
         - !Find [authentik_providers_proxy.proxyprovider, [name, "radarr anime"]]
+        - !Find [authentik_providers_proxy.proxyprovider, [name, "readarr"]]
+        - !Find [authentik_providers_proxy.proxyprovider, [name, "sabnzbd"]]
         - !Find [authentik_providers_proxy.proxyprovider, [name, "sonarr"]]
         - !Find [authentik_providers_proxy.proxyprovider, [name, "sonarr anime"]]
-        - !Find [authentik_providers_proxy.proxyprovider, [name, "prowlarr"]]
-        - !Find [authentik_providers_proxy.proxyprovider, [name, "lidarr"]]
-        - !Find [authentik_providers_proxy.proxyprovider, [name, "bazarr"]]
-        - !Find [authentik_providers_proxy.proxyprovider, [name, "bazarr anime"]]
-        - !Find [authentik_providers_proxy.proxyprovider, [name, "sabnzbd"]]
-        - !Find [authentik_providers_proxy.proxyprovider, [name, "qbittorrent"]]
-        - !Find [authentik_providers_proxy.proxyprovider, [name, "notifiarr"]]
         - !Find [authentik_providers_proxy.proxyprovider, [name, "stash"]]
-        # "calibre" moved to native OIDC (15-apps-oidc.yaml) — no longer a proxy provider.
-        - !Find [authentik_providers_proxy.proxyprovider, [name, "shelfmark"]]
-        - !Find [authentik_providers_proxy.proxyprovider, [name, "readarr"]]
         # Admin apps
-        - !Find [authentik_providers_proxy.proxyprovider, [name, "victoriametrics"]]
-        - !Find [authentik_providers_proxy.proxyprovider, [name, "vmalert"]]
         - !Find [authentik_providers_proxy.proxyprovider, [name, "alertmanager"]]
-        - !Find [authentik_providers_proxy.proxyprovider, [name, "status"]]
         - !Find [authentik_providers_proxy.proxyprovider, [name, "flux"]]
-        - !Find [authentik_providers_proxy.proxyprovider, [name, "proxmox"]]
         - !Find [authentik_providers_proxy.proxyprovider, [name, "pi-hole (0)"]]
         - !Find [authentik_providers_proxy.proxyprovider, [name, "pi-hole (1)"]]
+        - !Find [authentik_providers_proxy.proxyprovider, [name, "proxmox"]]
+        - !Find [authentik_providers_proxy.proxyprovider, [name, "status"]]
+        - !Find [authentik_providers_proxy.proxyprovider, [name, "victoriametrics"]]
+        - !Find [authentik_providers_proxy.proxyprovider, [name, "vmalert"]]
       config:
         authentik_host: https://auth.materia.wtf
         authentik_host_insecure: false

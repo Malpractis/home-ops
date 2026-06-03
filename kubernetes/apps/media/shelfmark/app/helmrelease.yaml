@@ -68,7 +68,7 @@ spec:
     route:
       app:
         hostnames:
-          - "shelfmark.materia.wtf"
+          - "{{ .Release.Name }}.materia.wtf"
         parentRefs:
           - name: envoy-internal
             namespace: network
@@ -77,14 +77,17 @@ spec:
               - name: *app
                 port: *port
     persistence:
-      # Shelfmark persists settings (sources, download clients, auth/OIDC) in /config.
-      # The old downloader was stateless; this PVC is new (backed up via volsync).
       config:
         existingClaim: "{{ .Release.Name }}"
         globalMounts:
           - path: /config
-      # Completed books land in INGEST_DIR (default /books) → CWA watches this same NFS
-      # path (ebooks_watch) and auto-imports into the Calibre library.
+      downloads:
+        type: nfs
+        server: nas.internal
+        path: /mnt/tank/data
+        globalMounts:
+          - path: /data
+            readOnly: true
       ingest:
         type: nfs
         server: nas.internal

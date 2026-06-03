@@ -4,6 +4,7 @@
 # 16-apps-proxy-media.yaml / 17-apps-proxy-admin.yaml; the embedded outpost is 18.
 # NOTE: this is a single shared failure domain — a bad entry (e.g. a !Find that can't
 # resolve, or a missing !Env secret) can block this whole blueprint from applying.
+# Apps are kept alphabetical within each section.
 version: 1
 metadata:
   name: Materia - Apps - OIDC
@@ -105,103 +106,6 @@ entries:
   # Media
   # ════════════════════════════════════════════════════════════════════════════
 
-  # ── Seerr ─────────────────────────────────────────────────────────────────────
-  - id: seerr_provider
-    model: authentik_providers_oauth2.oauth2provider
-    identifiers:
-      name: seerr
-    attrs:
-      client_id: !Env SEERR_CLIENT_ID
-      client_secret: !Env SEERR_CLIENT_SECRET
-      client_type: confidential
-      redirect_uris:
-        - url: https://requests.materia.wtf/auth/oidc-callback
-          matching_mode: strict
-      signing_key: !Find [authentik_crypto.certificatekeypair, [name, "authentik Self-signed Certificate"]]
-      authorization_flow: !Find [authentik_flows.flow, [slug, "default-provider-authorization-implicit-consent"]]
-      invalidation_flow: !Find [authentik_flows.flow, [slug, "materia-invalidation"]]
-      property_mappings:
-        - !Find [authentik_providers_oauth2.scopemapping, [scope_name, "openid"]]
-        - !Find [authentik_providers_oauth2.scopemapping, [scope_name, "profile"]]
-        - !Find [authentik_providers_oauth2.scopemapping, [scope_name, "email"]]
-      grant_types:
-        - authorization_code
-        - refresh_token
-
-  - id: seerr_application
-    model: authentik_core.application
-    identifiers:
-      slug: seerr
-    attrs:
-      name: Seerr
-      provider: !KeyOf seerr_provider
-      group: members
-      meta_launch_url: https://requests.materia.wtf
-      meta_description: "Media requests"
-      meta_icon: application-icons/png/seerr.png
-      open_in_new_tab: true
-
-  - id: seerr_members_policy_binding
-    model: authentik_policies.policybinding
-    identifiers:
-      target: !KeyOf seerr_application
-      group: !Find [authentik_core.group, [name, "members"]]
-    attrs:
-      order: 0
-
-  - id: seerr_media_policy_binding
-    model: authentik_policies.policybinding
-    identifiers:
-      target: !KeyOf seerr_application
-      group: !Find [authentik_core.group, [name, "media"]]
-    attrs:
-      order: 10
-
-  # ── qui (autobrr suite) ─────────────────────────────────────────────────────────
-  - id: qui_provider
-    model: authentik_providers_oauth2.oauth2provider
-    identifiers:
-      name: qui
-    attrs:
-      client_id: !Env QUI_CLIENT_ID
-      client_secret: !Env QUI_CLIENT_SECRET
-      client_type: confidential
-      redirect_uris:
-        - url: https://qui.materia.wtf/api/auth/oidc/callback
-          matching_mode: strict
-      signing_key: !Find [authentik_crypto.certificatekeypair, [name, "authentik Self-signed Certificate"]]
-      authorization_flow: !Find [authentik_flows.flow, [slug, "default-provider-authorization-implicit-consent"]]
-      invalidation_flow: !Find [authentik_flows.flow, [slug, "materia-invalidation"]]
-      property_mappings:
-        - !Find [authentik_providers_oauth2.scopemapping, [scope_name, "openid"]]
-        - !Find [authentik_providers_oauth2.scopemapping, [scope_name, "profile"]]
-        - !Find [authentik_providers_oauth2.scopemapping, [scope_name, "email"]]
-        - !Find [authentik_providers_oauth2.scopemapping, [scope_name, "groups"]]
-      grant_types:
-        - authorization_code
-        - refresh_token
-
-  - id: qui_application
-    model: authentik_core.application
-    identifiers:
-      slug: qui
-    attrs:
-      name: qui
-      provider: !KeyOf qui_provider
-      group: media
-      meta_launch_url: https://qui.materia.wtf
-      meta_description: "Torrent management"
-      meta_icon: application-icons/svg/qbittorrent.svg
-      open_in_new_tab: true
-
-  - id: qui_policy_binding
-    model: authentik_policies.policybinding
-    identifiers:
-      target: !KeyOf qui_application
-      group: !Find [authentik_core.group, [name, "media"]]
-    attrs:
-      order: 0
-
   # ── autobrr ─────────────────────────────────────────────────────────────────────
   # NOTE: the old autobrr forward-auth proxy provider + application were deleted
   # manually in the Authentik UI during migration. The OIDC application reuses slug
@@ -300,6 +204,158 @@ entries:
     model: authentik_policies.policybinding
     identifiers:
       target: !KeyOf calibre_application
+      group: !Find [authentik_core.group, [name, "media"]]
+    attrs:
+      order: 10
+
+  # ── qui (autobrr suite) ─────────────────────────────────────────────────────────
+  - id: qui_provider
+    model: authentik_providers_oauth2.oauth2provider
+    identifiers:
+      name: qui
+    attrs:
+      client_id: !Env QUI_CLIENT_ID
+      client_secret: !Env QUI_CLIENT_SECRET
+      client_type: confidential
+      redirect_uris:
+        - url: https://qui.materia.wtf/api/auth/oidc/callback
+          matching_mode: strict
+      signing_key: !Find [authentik_crypto.certificatekeypair, [name, "authentik Self-signed Certificate"]]
+      authorization_flow: !Find [authentik_flows.flow, [slug, "default-provider-authorization-implicit-consent"]]
+      invalidation_flow: !Find [authentik_flows.flow, [slug, "materia-invalidation"]]
+      property_mappings:
+        - !Find [authentik_providers_oauth2.scopemapping, [scope_name, "openid"]]
+        - !Find [authentik_providers_oauth2.scopemapping, [scope_name, "profile"]]
+        - !Find [authentik_providers_oauth2.scopemapping, [scope_name, "email"]]
+        - !Find [authentik_providers_oauth2.scopemapping, [scope_name, "groups"]]
+      grant_types:
+        - authorization_code
+        - refresh_token
+
+  - id: qui_application
+    model: authentik_core.application
+    identifiers:
+      slug: qui
+    attrs:
+      name: qui
+      provider: !KeyOf qui_provider
+      group: media
+      meta_launch_url: https://qui.materia.wtf
+      meta_description: "Torrent management"
+      meta_icon: application-icons/svg/qbittorrent.svg
+      open_in_new_tab: true
+
+  - id: qui_policy_binding
+    model: authentik_policies.policybinding
+    identifiers:
+      target: !KeyOf qui_application
+      group: !Find [authentik_core.group, [name, "media"]]
+    attrs:
+      order: 0
+
+  # ── Seerr ─────────────────────────────────────────────────────────────────────
+  - id: seerr_provider
+    model: authentik_providers_oauth2.oauth2provider
+    identifiers:
+      name: seerr
+    attrs:
+      client_id: !Env SEERR_CLIENT_ID
+      client_secret: !Env SEERR_CLIENT_SECRET
+      client_type: confidential
+      redirect_uris:
+        - url: https://requests.materia.wtf/auth/oidc-callback
+          matching_mode: strict
+      signing_key: !Find [authentik_crypto.certificatekeypair, [name, "authentik Self-signed Certificate"]]
+      authorization_flow: !Find [authentik_flows.flow, [slug, "default-provider-authorization-implicit-consent"]]
+      invalidation_flow: !Find [authentik_flows.flow, [slug, "materia-invalidation"]]
+      property_mappings:
+        - !Find [authentik_providers_oauth2.scopemapping, [scope_name, "openid"]]
+        - !Find [authentik_providers_oauth2.scopemapping, [scope_name, "profile"]]
+        - !Find [authentik_providers_oauth2.scopemapping, [scope_name, "email"]]
+      grant_types:
+        - authorization_code
+        - refresh_token
+
+  - id: seerr_application
+    model: authentik_core.application
+    identifiers:
+      slug: seerr
+    attrs:
+      name: Seerr
+      provider: !KeyOf seerr_provider
+      group: members
+      meta_launch_url: https://requests.materia.wtf
+      meta_description: "Media requests"
+      meta_icon: application-icons/png/seerr.png
+      open_in_new_tab: true
+
+  - id: seerr_members_policy_binding
+    model: authentik_policies.policybinding
+    identifiers:
+      target: !KeyOf seerr_application
+      group: !Find [authentik_core.group, [name, "members"]]
+    attrs:
+      order: 0
+
+  - id: seerr_media_policy_binding
+    model: authentik_policies.policybinding
+    identifiers:
+      target: !KeyOf seerr_application
+      group: !Find [authentik_core.group, [name, "media"]]
+    attrs:
+      order: 10
+
+  # ── Shelfmark (book downloader) ───────────────────────────────────────────────
+  # Native OIDC (replaced the proxy provider that was in 16/18). Callback path is
+  # /api/auth/oidc/callback. client_id + secret are !Env from 1Password.
+  - id: shelfmark_provider
+    model: authentik_providers_oauth2.oauth2provider
+    identifiers:
+      name: shelfmark
+    attrs:
+      client_id: !Env SHELFMARK_CLIENT_ID
+      client_secret: !Env SHELFMARK_CLIENT_SECRET
+      client_type: confidential
+      redirect_uris:
+        - url: https://shelfmark.materia.wtf/api/auth/oidc/callback
+          matching_mode: strict
+      signing_key: !Find [authentik_crypto.certificatekeypair, [name, "authentik Self-signed Certificate"]]
+      authorization_flow: !Find [authentik_flows.flow, [slug, "default-provider-authorization-implicit-consent"]]
+      invalidation_flow: !Find [authentik_flows.flow, [slug, "materia-invalidation"]]
+      property_mappings:
+        - !Find [authentik_providers_oauth2.scopemapping, [scope_name, "openid"]]
+        - !Find [authentik_providers_oauth2.scopemapping, [scope_name, "profile"]]
+        - !Find [authentik_providers_oauth2.scopemapping, [scope_name, "email"]]
+        - !Find [authentik_providers_oauth2.scopemapping, [scope_name, "groups"]]
+      grant_types:
+        - authorization_code
+        - refresh_token
+
+  - id: shelfmark_application
+    model: authentik_core.application
+    identifiers:
+      slug: shelfmark
+    attrs:
+      name: Shelfmark
+      provider: !KeyOf shelfmark_provider
+      group: media
+      meta_launch_url: https://shelfmark.materia.wtf
+      meta_description: Book search & downloads
+      meta_icon: application-icons/png/calibre-web-automated-book-downloader.png
+      open_in_new_tab: true
+
+  - id: shelfmark_members_policy_binding
+    model: authentik_policies.policybinding
+    identifiers:
+      target: !KeyOf shelfmark_application
+      group: !Find [authentik_core.group, [name, "members"]]
+    attrs:
+      order: 0
+
+  - id: shelfmark_media_policy_binding
+    model: authentik_policies.policybinding
+    identifiers:
+      target: !KeyOf shelfmark_application
       group: !Find [authentik_core.group, [name, "media"]]
     attrs:
       order: 10
