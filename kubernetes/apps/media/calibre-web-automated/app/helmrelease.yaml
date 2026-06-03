@@ -39,6 +39,7 @@ spec:
                     key: HARDCOVER_TOKEN
               PUID: 1000
               PGID: 1000
+              S6_READ_ONLY_ROOT: 1
               TRUSTED_PROXY_COUNT: 2
               TZ: Australia/Melbourne
             probes:
