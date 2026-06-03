@@ -18,19 +18,11 @@ spec:
           app:
             nameOverride: *app
             image:
-              # Shelfmark — the rebrand of calibre-web-automated-book-downloader.
-              # New canonical image with proper semver tags (Renovate-trackable again).
               repository: ghcr.io/calibrain/shelfmark
               tag: v1.3.0@sha256:e891eda444b261da48a839db652034bce4e20ac09c167f14adf939dedf96b572
             env:
-              # AA mirror: .org/.se are dead (NXDOMAIN), .net is parked; .li is the live
-              # one. The ISP DNS- and IP-blocks AA, so this is reachable only via the VPN
-              # macvlan below (CUSTOM_DNS/USE_DOH cover the DNS side).
               AA_BASE_URL: https://annas-archive.li
               AUTH_METHOD: oidc
-              # AA's evasive mirrors serve incomplete/non-standard TLS chains that won't
-              # validate; Shelfmark verifies certs by default. Disabled so the shadow-
-              # library mirrors are usable (scoped to this tool's egress only).
               CERTIFICATE_VALIDATION: disabled
               CUSTOM_DNS: cloudflare
               FLASK_PORT: &port 8084
@@ -52,10 +44,6 @@ spec:
               limits:
                 memory: 2Gi
     defaultPodOptions:
-      # Attach to the VPN macvlan (VLAN 90) so AA egress bypasses the ISP block —
-      # same pattern as qbittorrent (.10) and blackbox-exporter (.13). .11 is free.
-      # The pod keeps its cluster IP for the web UI/route; only public traffic
-      # (per the vpn NAD routes) goes out 192.168.90.1.
       annotations:
         k8s.v1.cni.cncf.io/networks: |-
           [{
@@ -100,7 +88,7 @@ spec:
         server: nas.internal
         path: /mnt/apps/apps-nfs/torrents/ebooks_watch
         globalMounts:
-          - path: /books
+          - path: /cwa-book-ingest
       tmp:
         type: emptyDir
         globalMounts:

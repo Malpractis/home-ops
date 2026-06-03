@@ -22,9 +22,6 @@ spec:
               tag: v4.0.6
             env:
               CACHE_DIR: /cache
-              TZ: Australia/Melbourne
-              PUID: 1000
-              PGID: 1000
               DOCKER_MODS: >-
                 {{- $items := list
                   "// renovate: lsio-docker-mod"
@@ -34,6 +31,14 @@ spec:
                     {{- $filtered = append $filtered $item -}}
                   {{- end -}}
                 {{- end -}} {{- $filtered | join "|" -}}
+              HARDCOVER_TOKEN:
+                valueFrom:
+                  secretKeyRef:
+                    name: calibre-secret
+                    key: HARDCOVER_TOKEN
+              PUID: 1000
+              PGID: 1000
+              TZ: Australia/Melbourne
             probes:
               liveness:
                 enabled: true
@@ -102,7 +107,7 @@ spec:
         server: nas.internal
         path: /mnt/apps/apps-nfs/torrents/ebooks_watch
         globalMounts:
-          - path: /cws-book-ingest
+          - path: /cwa-book-ingest
       cache:
         type: emptyDir
         globalMounts:
