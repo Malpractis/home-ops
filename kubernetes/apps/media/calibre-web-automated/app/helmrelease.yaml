@@ -23,15 +23,6 @@ spec:
             env:
               CACHE_DIR: /cache
               CWA_WATCH_MODE: poll
-              # DOCKER_MODS: >-
-              #   {{- $items := list
-              #     "// renovate: lsio-docker-mod"
-              #     "ghcr.io/linuxserver/mods:universal-calibre-v7.26.0"
-              #   -}} {{- $filtered := list -}} {{- range $item := $items -}}
-              #     {{- if not (hasPrefix "//" $item) -}}
-              #       {{- $filtered = append $filtered $item -}}
-              #     {{- end -}}
-              #   {{- end -}} {{- $filtered | join "|" -}}
               HARDCOVER_TOKEN:
                 valueFrom:
                   secretKeyRef:
@@ -39,8 +30,6 @@ spec:
                     key: HARDCOVER_TOKEN
               PUID: 1000
               PGID: 1000
-              S6_READ_ONLY_ROOT: 1
-              S6_YES_I_WANT_A_WORLD_WRITABLE_RUN_BECAUSE_KUBERNETES: "1"
               TRUSTED_PROXY_COUNT: 2
               TZ: Australia/Melbourne
             probes:
