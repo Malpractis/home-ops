@@ -17,6 +17,7 @@ permissions:
 
 env:
   DUFS_DOMAIN: dufs.materia.wtf
+  DUFS_UPLOAD_URL: http://dufs.default.svc.cluster.local
   DUFS_USERNAME: flate
 
 jobs:
@@ -36,7 +37,7 @@ jobs:
     if: ${{ needs.filter.outputs.changed-files != '[]' && github.event.action != 'closed' }}
     needs: filter
     name: Flate
-    runs-on: ubuntu-latest
+    runs-on: home-ops-runner
     outputs:
       diff: ${{ steps.flate.outputs.diff }}
     steps:
@@ -81,7 +82,7 @@ jobs:
             const fs = require("fs");
             const crypto = require("crypto");
             const pr = context.issue.number;
-            const dir = `https://${process.env.DUFS_DOMAIN}/flate/`;
+            const dir = `${process.env.DUFS_UPLOAD_URL}/flate/`;
             const url = `${dir}${pr}.html`;
             const auth = "Basic " + Buffer.from(`${process.env.DUFS_USERNAME}:${process.env.DUFS_PASSWORD}`).toString("base64");
 
@@ -162,7 +163,7 @@ jobs:
   prune:
     if: ${{ github.event.action == 'closed' }}
     name: Flate - Prune
-    runs-on: ubuntu-latest
+    runs-on: home-ops-runner
     steps:
       - name: Load Secrets
         id: load-secrets
@@ -178,7 +179,7 @@ jobs:
         with:
           script: |
             const pr = context.issue.number;
-            const url = `https://${process.env.DUFS_DOMAIN}/flate/${pr}.html`;
+            const url = `${process.env.DUFS_UPLOAD_URL}/flate/${pr}.html`;
             const auth = "Basic " + Buffer.from(`${process.env.DUFS_USERNAME}:${process.env.DUFS_PASSWORD}`).toString("base64");
             const res = await fetch(url, { method: "DELETE", headers: { Authorization: auth } });
             if (res.ok) core.info(`Deleted ${url}`);
