@@ -1,0 +1,123 @@
+---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/bjw-s-labs/helm-charts/main/charts/other/app-template/schemas/helmrelease-helm-v2.schema.json
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: proton-mail-bridge-relay
+spec:
+  chartRef:
+    kind: OCIRepository
+    name: proton-mail-bridge-relay
+  interval: 1h
+  values:
+    controllers:
+      proton-mail-bridge-relay:
+        annotations:
+          reloader.stakater.com/auto: "true"
+        containers:
+          postfix:
+            image:
+              repository: ghcr.io/bokysan/postfix
+              tag: latest
+            env:
+              TZ: Australia/Melbourne
+              RELAYHOST: "[127.0.0.1]:1025"
+              RELAYHOST_TLS_LEVEL: may
+              ALLOWED_SENDER_DOMAINS: materia.wtf
+              MYNETWORKS: "127.0.0.0/8 10.42.0.0/16"
+            envFrom:
+              - secretRef:
+                  name: proton-mail-bridge-relay-secret
+            probes:
+              liveness:
+                enabled: true
+                custom: true
+                spec:
+                  tcpSocket:
+                    port: &smtp 25
+                  initialDelaySeconds: 30
+                  periodSeconds: 30
+                  timeoutSeconds: 5
+                  failureThreshold: 5
+              readiness:
+                enabled: true
+                custom: true
+                spec:
+                  tcpSocket:
+                    port: *smtp
+                  initialDelaySeconds: 30
+                  periodSeconds: 30
+                  timeoutSeconds: 5
+                  failureThreshold: 5
+            securityContext:
+              allowPrivilegeEscalation: false
+              capabilities:
+                drop: ["ALL"]
+                add: ["NET_BIND_SERVICE"]
+            resources:
+              requests:
+                cpu: 10m
+              limits:
+                memory: 128Mi
+          bridge:
+            image:
+              repository: ghcr.io/videocurio/proton-mail-bridge
+              tag: latest
+            env:
+              TZ: Australia/Melbourne
+              CONTAINER_SMTP_PORT: 1025
+              CONTAINER_IMAP_PORT: &imap 1143
+            probes:
+              liveness:
+                enabled: true
+                custom: true
+                spec:
+                  tcpSocket:
+                    port: 1025
+                  initialDelaySeconds: 30
+                  periodSeconds: 30
+                  timeoutSeconds: 5
+                  failureThreshold: 5
+              readiness:
+                enabled: true
+                custom: true
+                spec:
+                  tcpSocket:
+                    port: 1025
+                  initialDelaySeconds: 30
+                  periodSeconds: 30
+                  timeoutSeconds: 5
+                  failureThreshold: 5
+            securityContext:
+              allowPrivilegeEscalation: false
+              capabilities:
+                drop: ["ALL"]
+            resources:
+              requests:
+                cpu: 10m
+              limits:
+                memory: 256Mi
+    defaultPodOptions:
+      securityContext:
+        runAsNonRoot: false
+        runAsUser: 0
+        runAsGroup: 0
+        fsGroup: 0
+        fsGroupChangePolicy: OnRootMismatch
+    service:
+      app:
+        ports:
+          # Apps point at this: smtp://proton-mail-bridge-relay.default.svc:25
+          smtp:
+            port: *smtp
+          # Optional: direct IMAP to Bridge (bypasses the relay, needs Bridge
+          # creds + STARTTLS-skip-verify). Remove if you only send mail.
+          imap:
+            port: *imap
+    persistence:
+      config:
+        existingClaim: "{{ .Release.Name }}"
+        advancedMounts:
+          proton-mail-bridge-relay:
+            bridge:
+              - path: /root
