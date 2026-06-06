@@ -69,6 +69,13 @@
       automergeType: "branch",
       ignoreTests: true,
     },
+    // Version constraint rules
+    {
+      description: "Proton Mail Bridge — only track v-prefixed release tags (repo mixes schemes)",
+      matchDatasources: [ "docker" ],
+      matchPackageNames: [ "/videocurio\\/proton-mail-bridge/" ],
+      allowedVersions: "/^v\\d/",
+    },
     // Grouping rules
     {
       description: "Actions Runner Controller Group",
