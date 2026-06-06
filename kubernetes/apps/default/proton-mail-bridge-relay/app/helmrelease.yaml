@@ -67,15 +67,15 @@ spec:
               tag: v3.24.2@sha256:d44f6b12650c6b0f9e0aefee192d65c6e46d0a22bd5ec189e8624812fd139c8b
             env:
               TZ: Australia/Melbourne
-              CONTAINER_SMTP_PORT: 1025
-              CONTAINER_IMAP_PORT: &imap 1143
+              CONTAINER_SMTP_PORT: 2025
+              CONTAINER_IMAP_PORT: &imap 2143
             probes:
               liveness:
                 enabled: true
                 custom: true
                 spec:
                   tcpSocket:
-                    port: 1025
+                    port: 2025
                   initialDelaySeconds: 30
                   periodSeconds: 30
                   timeoutSeconds: 5
@@ -85,7 +85,7 @@ spec:
                 custom: true
                 spec:
                   tcpSocket:
-                    port: 1025
+                    port: 2025
                   initialDelaySeconds: 30
                   periodSeconds: 30
                   timeoutSeconds: 5
@@ -115,8 +115,9 @@ spec:
           # Apps point at this: smtp://proton-mail-bridge-relay.default.svc:25
           smtp:
             port: *smtp
-          # Optional: direct IMAP to Bridge (bypasses the relay, needs Bridge
-          # creds + STARTTLS-skip-verify). Remove if you only send mail.
+          # Optional: direct IMAP to Bridge via socat (port 2143 → 127.0.0.1:1143).
+          # Bypasses the relay; needs Bridge creds + STARTTLS-skip-verify. Remove
+          # if you only send mail.
           imap:
             port: *imap
     persistence:
