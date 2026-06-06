@@ -61,8 +61,6 @@ spec:
                 memory: 128Mi
           bridge:
             image:
-              # Community headless Proton Mail Bridge (no official image). Tag tracks
-              # the upstream Proton Bridge version.
               repository: ghcr.io/videocurio/proton-mail-bridge
               tag: v3.24.2@sha256:d44f6b12650c6b0f9e0aefee192d65c6e46d0a22bd5ec189e8624812fd139c8b
             env:
@@ -112,12 +110,8 @@ spec:
     service:
       app:
         ports:
-          # Apps point at this: smtp://proton-mail-bridge-relay.default.svc:25
           smtp:
             port: *smtp
-          # Optional: direct IMAP to Bridge via socat (port 2143 → 127.0.0.1:1143).
-          # Bypasses the relay; needs Bridge creds + STARTTLS-skip-verify. Remove
-          # if you only send mail.
           imap:
             port: *imap
     persistence:
