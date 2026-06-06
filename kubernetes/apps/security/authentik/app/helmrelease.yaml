@@ -65,8 +65,12 @@ spec:
         host: postgres-authentik-pooler.security.svc.cluster.local
         port: 5432
       email:
-        port: 587
-        use_tls: true
+        # In-cluster Proton Mail Bridge relay (default ns) — no auth, no TLS.
+        host: proton-mail-bridge-relay.default.svc.cluster.local
+        port: 25
+        use_tls: false
+        use_ssl: false
+        from: "Authentik <noreply@materia.wtf>"
     server:
       autoscaling:
         enabled: true

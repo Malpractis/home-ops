@@ -42,6 +42,13 @@ spec:
       plugin_admin_enabled: "false"
     security:
       angular_support_enabled: "true"
+    smtp:
+      # In-cluster Proton Mail Bridge relay (default ns) — no auth, no TLS.
+      enabled: "true"
+      host: proton-mail-bridge-relay.default.svc.cluster.local:25
+      from_address: noreply@materia.wtf
+      from_name: Grafana
+      skip_verify: "true"
     server:
       root_url: https://grafana.materia.wtf
       enable_gzip: "true"

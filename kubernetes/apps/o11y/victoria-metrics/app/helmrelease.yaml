@@ -16,6 +16,11 @@ spec:
         registry: quay.io
     alertmanager:
       config:
+        global:
+          # In-cluster Proton Mail Bridge relay (default ns) — no auth, no TLS.
+          smtp_smarthost: proton-mail-bridge-relay.default.svc.cluster.local:25
+          smtp_from: "Alertmanager <noreply@materia.wtf>"
+          smtp_require_tls: false
         route:
           receiver: pushover
           repeat_interval: 12h
@@ -74,6 +79,10 @@ spec:
                 user_key:
                   name: vmalertmanager-secret
                   key: PUSHOVER_USER_KEY
+            email_configs:
+              # Mirror alerts to email via the in-cluster relay (no auth/TLS).
+              - to: vince.odriscoll@proton.me
+                send_resolved: true
       route:
         enabled: true
         hostnames:

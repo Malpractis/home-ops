@@ -17,7 +17,7 @@ spec:
       APP: proton-mail-bridge-relay
       VOLSYNC_PUID: "0"
       VOLSYNC_PGID: "0"
-      VOLSYNC_CAPACITY: 1Gi
+      VOLSYNC_CAPACITY: 5Gi
   prune: true
   sourceRef:
     kind: GitRepository
