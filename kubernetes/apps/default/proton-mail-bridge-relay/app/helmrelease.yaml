@@ -17,8 +17,8 @@ spec:
         containers:
           postfix:
             image:
-              repository: ghcr.io/bokysan/postfix
-              tag: latest
+              repository: mirror.gcr.io/boky/postfix
+              tag: 5.1.0@sha256:aafc772384232497bed875e1eb66b4d3e54ba1ebc86e2e185a6dc1dbc48182ef
             env:
               TZ: Australia/Melbourne
               RELAYHOST: "[127.0.0.1]:1025"
@@ -61,8 +61,10 @@ spec:
                 memory: 128Mi
           bridge:
             image:
+              # Community headless Proton Mail Bridge (no official image). Tag tracks
+              # the upstream Proton Bridge version.
               repository: ghcr.io/videocurio/proton-mail-bridge
-              tag: latest
+              tag: v3.24.2@sha256:d44f6b12650c6b0f9e0aefee192d65c6e46d0a22bd5ec189e8624812fd139c8b
             env:
               TZ: Australia/Melbourne
               CONTAINER_SMTP_PORT: 1025
@@ -95,8 +97,11 @@ spec:
             resources:
               requests:
                 cpu: 10m
-              limits:
                 memory: 256Mi
+              # Bridge spikes during the initial full sync (scales with mailbox
+              # size), then settles much lower. 256Mi gets OOMKilled mid-sync.
+              limits:
+                memory: 2Gi
     defaultPodOptions:
       securityContext:
         runAsNonRoot: false
