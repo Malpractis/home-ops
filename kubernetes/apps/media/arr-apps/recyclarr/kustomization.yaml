@@ -15,14 +15,6 @@ configMapGenerator:
       - radarr.yaml=./config/radarr.yaml
       - sonarr-anime.yaml=./config/sonarr-anime.yaml
       - sonarr.yaml=./config/sonarr.yaml
-  - name: recyclarr-includes
-    files:
-      - web-720p-v4.yaml=./config/includes/sonarr/web-720p-v4.yaml
-  - name: recyclarr-custom-formats
-    files:
-      - bhdstudio.json=./config/custom-formats/sonarr/!bhdstudio.json
-      - not-original-language.json=./config/custom-formats/sonarr/!not-original-language.json
-      - uhd-bluray-tier-01.json=./config/custom-formats/sonarr/!uhd-bluray-tier-01.json
 
 generatorOptions:
   disableNameSuffixHash: true

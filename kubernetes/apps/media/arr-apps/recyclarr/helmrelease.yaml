@@ -74,27 +74,3 @@ spec:
               - path: /config/configs/sonarr.yaml
                 subPath: sonarr.yaml
                 readOnly: true
-      includes:
-        type: configMap
-        name: recyclarr-includes
-        advancedMounts:
-          recyclarr:
-            app:
-              - path: /config/configs/includes/sonarr/web-720p-v4.yaml
-                subPath: web-720p-v4.yaml
-                readOnly: true
-      custom-formats:
-        type: configMap
-        name: recyclarr-custom-formats
-        advancedMounts:
-          recyclarr:
-            app:
-              - path: /config/configs/custom_formats/sonarr/!bhdstudio.json
-                subPath: bhdstudio.json
-                readOnly: true
-              - path: /config/configs/custom_formats/sonarr/!not-original-language.json
-                subPath: not-original-language.json
-                readOnly: true
-              - path: /config/configs/custom_formats/sonarr/!uhd-bluray-tier-01.json
-                subPath: uhd-bluray-tier-01.json
-                readOnly: true
