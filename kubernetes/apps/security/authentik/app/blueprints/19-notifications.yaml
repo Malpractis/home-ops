@@ -1,0 +1,159 @@
+---
+# yaml-language-server: $schema=https://version-2026-5.goauthentik.io/blueprints/v1/schema.json
+version: 1
+metadata:
+  name: Materia - Notifications (Notifiarr)
+# Routes Authentik's operational health events to Discord via Notifiarr's
+# passthrough integration (generic webhook + a Discord-shaped body mapping that
+# Notifiarr expects).
+#
+# These mirror the four rules authentik ships in its `default-notify-*` blueprint
+# (configuration error/warning, update available, policy/property-mapping
+# exception), but are independent `materia-*` objects so we never fight the
+# system blueprint over a shared row. The stock rules keep firing to email + the
+# in-app inbox; these add Notifiarr on top.
+#
+# The webhook URL embeds the Notifiarr API key (NOTIFIARR_API_KEY env, sourced
+# from 1Password via the authentik-blueprint-secrets ExternalSecret).
+# `send_once: true` => one POST per event, not one per member of the group.
+entries:
+  # ── Notifiarr body mapping ─────────────────────────────────────────────────────
+  # Payload shape required by Notifiarr's authentik integration (per their wiki).
+  - id: mapping_notifiarr
+    model: authentik_events.notificationwebhookmapping
+    identifiers:
+      name: Notifiarr
+    attrs:
+      expression: |
+        return {
+          "client_ip": notification.event.client_ip,
+          "severity": notification.severity,
+          "action": notification.event.action,
+          "request": request,
+          "user": user,
+          "context": notification.event.context,
+          "notif_event": notification.event,
+        }
+
+  # ── Transport ────────────────────────────────────────────────────────────────
+  - id: transport_notifiarr
+    model: authentik_events.notificationtransport
+    identifiers:
+      name: materia-notifiarr
+    attrs:
+      mode: webhook
+      webhook_url: !Format
+        - "https://notifiarr.com/api/v1/notification/authentik/%s"
+        - !Env NOTIFIARR_API_KEY
+      webhook_mapping_body: !KeyOf mapping_notifiarr
+      send_once: true
+
+  # ── Event-matcher policies ─────────────────────────────────────────────────────
+  - id: match_configuration_error
+    model: authentik_policies_event_matcher.eventmatcherpolicy
+    identifiers:
+      name: materia-match-configuration-error
+    attrs:
+      action: configuration_error
+
+  - id: match_configuration_warning
+    model: authentik_policies_event_matcher.eventmatcherpolicy
+    identifiers:
+      name: materia-match-configuration-warning
+    attrs:
+      action: configuration_warning
+
+  - id: match_update
+    model: authentik_policies_event_matcher.eventmatcherpolicy
+    identifiers:
+      name: materia-match-update
+    attrs:
+      action: update_available
+
+  - id: match_policy_exception
+    model: authentik_policies_event_matcher.eventmatcherpolicy
+    identifiers:
+      name: materia-match-policy-exception
+    attrs:
+      action: policy_exception
+
+  - id: match_property_mapping_exception
+    model: authentik_policies_event_matcher.eventmatcherpolicy
+    identifiers:
+      name: materia-match-property-mapping-exception
+    attrs:
+      action: property_mapping_exception
+
+  # ── Notification rules ─────────────────────────────────────────────────────────
+  # destination_group gates who the rule fires for (>=1 member required, else the
+  # webhook never sends). `admins` is our superuser group from 01-groups.
+  - id: notify_configuration_error
+    model: authentik_events.notificationrule
+    identifiers:
+      name: materia-notify-configuration-error
+    attrs:
+      severity: alert
+      destination_group: !Find [authentik_core.group, [name, admins]]
+      transports:
+        - !KeyOf transport_notifiarr
+
+  - id: notify_configuration_warning
+    model: authentik_events.notificationrule
+    identifiers:
+      name: materia-notify-configuration-warning
+    attrs:
+      severity: warning
+      destination_group: !Find [authentik_core.group, [name, admins]]
+      transports:
+        - !KeyOf transport_notifiarr
+
+  - id: notify_update
+    model: authentik_events.notificationrule
+    identifiers:
+      name: materia-notify-update
+    attrs:
+      severity: alert
+      destination_group: !Find [authentik_core.group, [name, admins]]
+      transports:
+        - !KeyOf transport_notifiarr
+
+  - id: notify_exception
+    model: authentik_events.notificationrule
+    identifiers:
+      name: materia-notify-exception
+    attrs:
+      severity: alert
+      destination_group: !Find [authentik_core.group, [name, admins]]
+      transports:
+        - !KeyOf transport_notifiarr
+
+  # ── Policy bindings (matcher → rule) ───────────────────────────────────────────
+  - model: authentik_policies.policybinding
+    identifiers:
+      order: 0
+      policy: !KeyOf match_configuration_error
+      target: !KeyOf notify_configuration_error
+
+  - model: authentik_policies.policybinding
+    identifiers:
+      order: 0
+      policy: !KeyOf match_configuration_warning
+      target: !KeyOf notify_configuration_warning
+
+  - model: authentik_policies.policybinding
+    identifiers:
+      order: 0
+      policy: !KeyOf match_update
+      target: !KeyOf notify_update
+
+  - model: authentik_policies.policybinding
+    identifiers:
+      order: 0
+      policy: !KeyOf match_policy_exception
+      target: !KeyOf notify_exception
+
+  - model: authentik_policies.policybinding
+    identifiers:
+      order: 1
+      policy: !KeyOf match_property_mapping_exception
+      target: !KeyOf notify_exception
