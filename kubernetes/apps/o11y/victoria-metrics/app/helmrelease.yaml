@@ -101,7 +101,7 @@ spec:
               resources:
                 requests:
                   storage: 1Gi
-      useManagedConfig: true
+      useManagedConfig: false
     defaultDashboards:
       grafanaOperator:
         enabled: true
