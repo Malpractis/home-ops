@@ -250,6 +250,20 @@ spec:
                 expr: (kube_pod_container_status_restarts_total - kube_pod_container_status_restarts_total offset 10m >= 1) and ignoring (reason) min_over_time(kube_pod_container_status_last_terminated_reason{reason="OOMKilled"}[10m]) == 1
                 labels:
                   severity: critical
+      recyclarr-rules:
+        create: true
+        groups:
+          - name: recyclarr
+            type: vlogs
+            interval: 30m
+            rules:
+              - alert: RecyclarrLogErrors
+                annotations:
+                  summary: Recyclarr logged {{ $value }} error/warning line(s) in the last 30m. Check the recyclarr logs in VictoriaLogs.
+                expr: |-
+                  kubernetes.pod_namespace:=media kubernetes.container_name:=recyclarr ("[ERR]" OR "[WRN]" OR "[FTL]" OR "level=error") | stats count() as errors | filter errors:>0
+                labels:
+                  severity: warning
       zfs-rules:
         create: true
         groups:
