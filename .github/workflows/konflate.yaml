@@ -16,12 +16,15 @@ permissions:
   contents: read
 
 env:
-  KONFLATE_DOMAIN: konflate.materia.wtf
+  # In-cluster Service URL — bypasses Cloudflare, whose WAF / Bot Fight Mode
+  # 403s GitHub-hosted (datacenter) runners. This job runs on the self-hosted
+  # in-cluster runner, so it reaches konflate directly over ClusterIP.
+  KONFLATE_URL: http://konflate.flux-system.svc.cluster.local:8080
 
 jobs:
   comment:
     name: Konflate - Comment
-    runs-on: ubuntu-latest
+    runs-on: home-ops-runner
     steps:
       - name: Fetch rendered summary
         id: fetch
@@ -31,7 +34,7 @@ jobs:
           if status="$(curl -fsS --retry 10 --retry-delay 3 \
                -H 'Accept: text/markdown' \
                -o summary.md -w '%header{x-konflate-render-status}' \
-               "https://${KONFLATE_DOMAIN}/api/prs/${PR}/summary")" \
+               "${KONFLATE_URL}/api/prs/${PR}/summary")" \
              && [ -s summary.md ]; then
             {
               echo "ready=true"
