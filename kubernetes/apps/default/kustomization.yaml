@@ -9,7 +9,6 @@ components:
 
 resources:
   - ./namespace.yaml
-  - ./dufs/ks.yaml
   - ./proton-mail-bridge-relay/ks.yaml
   - ./thelounge/ks.yaml
   - ./theme-park/ks.yaml
