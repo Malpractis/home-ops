@@ -62,6 +62,7 @@ spec:
         useAllDevices: false
         devicePathFilter: /dev/disk/by-id/nvme-Micron_7450_MTFDKBA960TFR_.*
         config:
+          deviceClass: nvme
           osdsPerDevice: "1"
       resources:
         mgr:
