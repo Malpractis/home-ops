@@ -31,8 +31,10 @@ jobs:
         env:
           PR: ${{ github.event.pull_request.number }}
         run: |
-          if status="$(curl -fsS --retry 10 --retry-delay 3 \
+          if status="$(curl -fsS --retry 10 --retry-delay 3 --retry-all-errors \
                -H 'Accept: text/markdown' \
+               -H 'X-Forwarded-Proto: https' \
+               -H 'X-Forwarded-Host: konflate.materia.wtf' \
                -o summary.md -w '%header{x-konflate-render-status}' \
                "${KONFLATE_URL}/api/prs/${PR}/summary")" \
              && [ -s summary.md ]; then
