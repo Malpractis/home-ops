@@ -56,6 +56,8 @@ spec:
       # resourceClaims:
       #   - name: gpu
       #     resourceClaimTemplateName: stash-gpu
+      nodeSelector:
+        intel.feature.node.kubernetes.io/gpu: "true"
       securityContext:
         runAsNonRoot: false
         runAsUser: 0
@@ -63,6 +65,7 @@ spec:
         fsGroup: 1000
         fsGroupChangePolicy: OnRootMismatch
         seccompProfile: { type: RuntimeDefault }
+        supplementalGroups: [ 44, 226 ]
     service:
       app:
         controller: *app
@@ -102,3 +105,9 @@ spec:
         path: /mnt/tank/data/stash
         globalMounts:
           - path: /data
+      dev-dri:
+        type: hostPath
+        hostPath: /dev/dri
+        hostPathType: Directory
+        globalMounts:
+          - path: /dev/dri
