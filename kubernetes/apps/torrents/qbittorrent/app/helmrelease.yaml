@@ -116,12 +116,6 @@ spec:
         path: /mnt/tank/data
         globalMounts:
           - path: /data
-      backup:
-        type: nfs
-        server: nas.internal
-        path: /mnt/apps/apps-nfs/torrents/BT_backup
-        globalMounts:
-          - path: /config/qBittorrent/BT_backup
       tmpfs:
         type: emptyDir
         advancedMounts:
