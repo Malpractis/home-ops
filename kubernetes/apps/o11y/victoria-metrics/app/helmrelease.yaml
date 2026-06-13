@@ -156,22 +156,6 @@ spec:
           enabled: false
       operator:
         enable_converter_ownership: true
-      # Self-heal a wedged /metrics endpoint: the operator's objectCollector can
-      # deadlock its mutex (objects_stat.go Collect vs countByController), hanging
-      # :8080/metrics indefinitely while the process stays otherwise healthy. Probe
-      # the metrics port so kubelet restarts the pod when it stops responding.
-      probe:
-        liveness:
-          # null out the chart default tcpSocket handler so the merged probe
-          # has a single (httpGet) handler; both handlers is rejected by the API
-          tcpSocket: null
-          httpGet:
-            path: /metrics
-            port: http
-          initialDelaySeconds: 5
-          periodSeconds: 15
-          timeoutSeconds: 5
-          failureThreshold: 3
     vmagent:
       spec:
         additionalScrapeConfigs:
