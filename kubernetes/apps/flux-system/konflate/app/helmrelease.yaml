@@ -13,6 +13,9 @@ spec:
     config:
       repo: github://Malpractis/home-ops
       refreshInterval: 15m
+      statusChecks: true
+      prComments: true
+      publicUrl: https://konflate.materia.wtf
     secret:
       existingSecret: konflate-webhook-token-secret
     httpRoute:
