@@ -3,7 +3,7 @@
 apiVersion: helm.toolkit.fluxcd.io/v2
 kind: HelmRelease
 metadata:
-  name: &app emby
+  name: emby
 spec:
   chartRef:
     kind: OCIRepository
@@ -16,7 +16,7 @@ spec:
           reloader.stakater.com/auto: "true"
         containers:
           app:
-            nameOverride: *app
+            nameOverride: "{{ .Release.Name }}"
             image:
               repository: ghcr.io/home-operations/emby
               tag: 4.9.5.0@sha256:137b8d2de08dc5c82799318c9c4d876c80ad8c9b4733a9bc0db18b26f2943dc0
@@ -82,6 +82,10 @@ spec:
         parentRefs:
           - name: envoy-internal
             namespace: network
+        rules:
+          - backendRefs:
+              - name: "{{ .Release.Name }}"
+                port: *port
     persistence:
       config:
         existingClaim: "{{ .Release.Name }}"
