@@ -39,8 +39,6 @@ spec:
             port: http-webhook
           initialDelaySeconds: 10
           timeoutSeconds: 5
-    extraArgs:
-      - --gateway-label-filter=external-dns/scope=internal
     triggerLoopOnEvent: true
     policy: sync
     sources:
