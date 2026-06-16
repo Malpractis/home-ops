@@ -5,15 +5,16 @@ kind: HTTPRoute
 metadata:
   name: authentik
   annotations:
-    gatus.home-operations.com/path: "/-/health/live/"
-    gatus.home-operations.com/conditions: "['[STATUS] == 200']"
+    gatus.home-operations.com/endpoint: |-
+      path: /-/health/live/
+      conditions: ["[STATUS] == 200"]
 spec:
   hostnames:
     - auth.materia.wtf
   parentRefs:
-    - name: envoy-internal
-      namespace: network
     - name: envoy-external
+      namespace: network
+    - name: envoy-internal
       namespace: network
   rules:
     - backendRefs:

@@ -22,24 +22,6 @@ endpoints:
     interval: 1m
     conditions:
       - "[CONNECTED] == true"
-  - name: emby
-    group: media
-    url: http://emby.media.svc.cluster.local:8096/System/Info/Public
-    interval: 1m
-    conditions:
-      - "[STATUS] == 200"
-  # - name: jellyfin
-  #   group: media
-  #   url: http://jellyfin.media.svc.cluster.local:8096/health
-  #   interval: 1m
-  #   conditions:
-  #     - "[STATUS] == 200"
-  - name: plex-internal
-    group: media
-    url: http://plex.media.svc.cluster.local:32400/identity
-    interval: 1m
-    conditions:
-      - "[STATUS] == 200"
 metrics: true
 storage:
   type: sqlite
@@ -48,7 +30,7 @@ storage:
 ui:
   title: Status | Gatus
   header: Status
-  logo: https://avatars.githubusercontent.com/u/213795
+  logo: https://avatars.githubusercontent.com/u/31232305
   link: https://github.com/Malpractis
   buttons:
     - name: Github
