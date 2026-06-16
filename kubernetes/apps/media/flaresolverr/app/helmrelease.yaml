@@ -3,7 +3,7 @@
 apiVersion: helm.toolkit.fluxcd.io/v2
 kind: HelmRelease
 metadata:
-  name: &app flaresolverr
+  name: flaresolverr
 spec:
   chartRef:
     kind: OCIRepository
@@ -18,10 +18,12 @@ spec:
         strategy: RollingUpdate
         containers:
           app:
-            nameOverride: *app
+            nameOverride: "{{ .Release.Name }}"
             image:
               repository: ghcr.io/flaresolverr/flaresolverr
               tag: v3.5.0
+            env:
+              PORT: "80"
             resources:
               requests:
                 cpu: 15m
@@ -31,4 +33,4 @@ spec:
         type: ClusterIP
         ports:
           http:
-            port: 8191
+            port: 80

@@ -70,7 +70,8 @@ spec:
           lbipam.cilium.io/ips: "192.168.10.110"
         ports:
           http:
-            port: &port 8096
+            primary: true
+            port: 80
             protocol: HTTP
           autodiscovery:
             port: 7359
@@ -82,10 +83,6 @@ spec:
         parentRefs:
           - name: envoy-internal
             namespace: network
-        rules:
-          - backendRefs:
-              - name: "{{ .Release.Name }}"
-                port: *port
     persistence:
       config:
         existingClaim: "{{ .Release.Name }}"

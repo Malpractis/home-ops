@@ -16,6 +16,7 @@ spec:
           reloader.stakater.com/auto: "true"
         containers:
           app:
+            nameOverride: "{{ .Release.Name }}"
             image:
               repository: ghcr.io/thelounge/thelounge
               tag: 4.5.0@sha256:b3c6432e1db54d0b4753bbb5dba0ccb127b3271afaf5e1b818e1259a35bb7014

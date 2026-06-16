@@ -3,7 +3,7 @@
 apiVersion: helm.toolkit.fluxcd.io/v2
 kind: HelmRelease
 metadata:
-  name: &app shelfmark
+  name: shelfmark
 spec:
   chartRef:
     kind: OCIRepository
@@ -16,7 +16,7 @@ spec:
           reloader.stakater.com/auto: "true"
         containers:
           app:
-            nameOverride: *app
+            nameOverride: "{{ .Release.Name }}"
             image:
               repository: ghcr.io/calibrain/shelfmark
               tag: v1.3.1@sha256:80c8d561ae6ff9407d51f37266cd2ab44a38bf4df17834e42fde01982eefe6af

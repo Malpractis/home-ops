@@ -3,14 +3,14 @@
 apiVersion: helm.toolkit.fluxcd.io/v2
 kind: HelmRelease
 metadata:
-  name: &app external-dns-pihole
+  name: external-dns-pihole
 spec:
   chartRef:
     kind: OCIRepository
     name: external-dns-pihole
   interval: 1h
   values:
-    fullnameOverride: *app
+    fullnameOverride: "{{ .Release.Name }}"
     provider:
       name: pihole
     env:

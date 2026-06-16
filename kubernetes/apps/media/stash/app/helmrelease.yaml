@@ -3,7 +3,7 @@
 apiVersion: helm.toolkit.fluxcd.io/v2
 kind: HelmRelease
 metadata:
-  name: &app stash
+  name: stash
 spec:
   chartRef:
     kind: OCIRepository
@@ -16,7 +16,7 @@ spec:
           reloader.stakater.com/auto: "true"
         containers:
           app:
-            nameOverride: *app
+            nameOverride: "{{ .Release.Name }}"
             image:
               repository: docker.io/stashapp/stash
               tag: v0.31.1@sha256:df744af5a0c976e2ec671052ecc1f8a9aa757fa12b8f9930b59910b7295f0da6

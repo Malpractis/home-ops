@@ -18,6 +18,7 @@ spec:
           reloader.stakater.com/auto: "true"
         containers:
           app:
+            nameOverride: "{{ .Release.Name }}"
             image:
               repository: mirror.gcr.io/cloudflare/cloudflared
               tag: 2026.6.0@sha256:ba461b8aa9c042156dbd39c38657fe7431bafa063220eab8d5330a523863da9f

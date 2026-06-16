@@ -3,7 +3,7 @@
 apiVersion: helm.toolkit.fluxcd.io/v2
 kind: HelmRelease
 metadata:
-  name: &app plex
+  name: plex
 spec:
   chartRef:
     kind: OCIRepository
@@ -16,7 +16,7 @@ spec:
           reloader.stakater.com/auto: "true"
         containers:
           app:
-            nameOverride: *app
+            nameOverride: "{{ .Release.Name }}"
             image:
               repository: ghcr.io/home-operations/plex
               tag: 1.43.2.10687@sha256:be00a2ad851ea3193cd870636f908eb6425ad89390f23cdb08daa35ab5cceacc
@@ -112,7 +112,7 @@ spec:
                   type: PathPrefix
                   value: /library/streams
           - backendRefs:
-              - name: *app
+              - name: "{{ .Release.Name }}"
                 port: *port
     persistence:
       config:
