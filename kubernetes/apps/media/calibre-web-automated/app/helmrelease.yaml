@@ -84,10 +84,9 @@ spec:
           type: RuntimeDefault
     service:
       app:
-        controller: *app
         ports:
           http:
-            port: &port 8083
+            port: 8083
     route:
       app:
         hostnames:
@@ -95,20 +94,13 @@ spec:
         parentRefs:
           - name: envoy-internal
             namespace: network
-        rules:
-          - backendRefs:
-              - name: *app
-                port: *port
     persistence:
       config:
         existingClaim: "{{ .Release.Name }}"
-        globalMounts:
-          - path: /config
-      tmpfs:
+      cache:
         type: emptyDir
-        medium: Memory
         globalMounts:
-          - path: /tmp
+          - path: /cache
       ebooks:
         type: nfs
         server: nas.internal
@@ -122,7 +114,5 @@ spec:
         path: /mnt/apps/apps-nfs/torrents/ebooks_watch
         globalMounts:
           - path: /cwa-book-ingest
-      cache:
+      tmp:
         type: emptyDir
-        globalMounts:
-          - path: /cache

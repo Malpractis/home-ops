@@ -27,7 +27,7 @@ spec:
               POSTFIX_mynetworks: "127.0.0.0/8 10.42.0.0/16"
             envFrom:
               - secretRef:
-                  name: proton-mail-bridge-relay-secret
+                  name: "{{ .Release.Name }}-secret"
             probes:
               liveness:
                 enabled: true

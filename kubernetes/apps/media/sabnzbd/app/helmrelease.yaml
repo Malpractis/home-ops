@@ -31,21 +31,29 @@ spec:
                 sabnzbd.materia.wtf
             envFrom:
               - secretRef:
-                  name: sabnzbd-secret
+                  name: "{{ .Release.Name }}-secret"
             probes:
+              liveness:
+                enabled: true
+                spec:
+                  periodSeconds: 30
+                  timeoutSeconds: 5
+                  failureThreshold: 5
+              readiness:
+                enabled: true
+                custom: true
+                spec:
+                  httpGet:
+                    path: /api?mode=version
+                    port: *port
+                  periodSeconds: 10
+                  timeoutSeconds: 5
+                  failureThreshold: 5
               startup:
                 enabled: true
                 spec:
                   failureThreshold: 30
-                  periodSeconds: 5
-              liveness: &probes
-                enabled: true
-                spec:
-                  initialDelaySeconds: 0
-                  timeoutSeconds: 10
-                  periodSeconds: 30
-                  failureThreshold: 5
-              readiness: *probes
+                  periodSeconds: 10
             securityContext:
               allowPrivilegeEscalation: false
               readOnlyRootFilesystem: true
@@ -66,7 +74,6 @@ spec:
         seccompProfile: { type: RuntimeDefault }
     service:
       app:
-        controller: *app
         ports:
           http:
             port: *port
@@ -77,33 +84,14 @@ spec:
         parentRefs:
           - name: envoy-internal
             namespace: network
-        rules:
-          - backendRefs:
-              - name: *app
-                port: *port
     persistence:
       config:
-        enabled: true
         existingClaim: "{{ .Release.Name }}"
-        advancedMounts:
-          sabnzbd:
-            app:
-              - path: /config
-      tmpfs:
-        type: emptyDir
-        medium: Memory
-        globalMounts:
-          - path: /config/logs
-          - path: /tmp
       data:
         type: nfs
         server: nas.internal
         path: /mnt/tank/data
         globalMounts:
           - path: /data
-      backup:
-        type: nfs
-        server: nas.internal
-        path: /mnt/apps/backup/apps/sabnzbd
-        globalMounts:
-          - path: /backup
+      tmp:
+        type: emptyDir

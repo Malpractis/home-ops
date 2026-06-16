@@ -21,18 +21,25 @@ spec:
               repository: ghcr.io/home-operations/sonarr
               tag: 4.0.17.2969@sha256:6806001ccc2ec95d941c9c0de012dbcb59c6a33932cfc17f71e300bdd48cabfe
             env:
+              SONARR__APP__INSTANCENAME: Sonarr-Anime
+              SONARR__APP__THEME: dark
               SONARR__AUTH__METHOD: External
               SONARR__AUTH__REQUIRED: DisabledForLocalAddresses
-              SONARR__APP__INSTANCENAME: Sonarr-Anime
-              SONARR__SERVER__PORT: &port 80
-              SONARR__APP__THEME: dark
               SONARR__LOG__DBENABLED: "False"
+              SONARR__LOG__LEVEL: info
+              SONARR__SERVER__PORT: &port 80
+              SONARR__UPDATE__BRANCH: develop
+              TZ: Australia/Melbourne
             envFrom:
               - secretRef:
-                  name: sonarr-anime-secret
+                  name: "{{ .Release.Name }}-secret"
             probes:
               liveness:
                 enabled: true
+                spec:
+                  periodSeconds: 30
+                  timeoutSeconds: 5
+                  failureThreshold: 5
               readiness:
                 enabled: true
                 custom: true
@@ -77,26 +84,22 @@ spec:
         parentRefs:
           - name: envoy-internal
             namespace: network
-        rules:
-          - backendRefs:
-              - name: *app
-                port: *port
     persistence:
       config:
         existingClaim: "{{ .Release.Name }}"
         globalMounts:
           - path: /config
-      tmp:
-        type: emptyDir
-      data:
-        type: nfs
-        server: nas.internal
-        path: /mnt/tank/data
-        globalMounts:
-          - path: /data
       backup:
         type: nfs
         server: nas.internal
         path: /mnt/apps/backup/arr-apps/sonarr-anime
         globalMounts:
           - path: /backup
+      data:
+        type: nfs
+        server: nas.internal
+        path: /mnt/tank/data
+        globalMounts:
+          - path: /data
+      tmp:
+        type: emptyDir

@@ -80,7 +80,6 @@ spec:
                 memory: 3Gi
     service:
       app:
-        controller: *app
         ports:
           http:
             port: *port
@@ -91,13 +90,6 @@ spec:
           cross-seed:
             app:
               - path: /config
-      secret-file:
-        type: secret
-        name: cross-seed-secret
-        globalMounts:
-          - path: /config/config.js
-            subPath: config.js
-            readOnly: true
       cross-seed:
         type: nfs
         server: nas.internal
@@ -110,13 +102,20 @@ spec:
         path: /mnt/tank/data
         globalMounts:
           - path: /data
+      logs:
+        type: emptyDir
+        globalMounts:
+          - path: /config/logs
+      secret-file:
+        type: secret
+        name: cross-seed-secret
+        globalMounts:
+          - path: /config/config.js
+            subPath: config.js
+            readOnly: true
       torrents:
         type: nfs
         server: nas.internal
         path: /mnt/apps/apps-nfs/torrents/BT_backup
         globalMounts:
           - path: /torrents
-      logs:
-        type: emptyDir
-        globalMounts:
-          - path: /config/logs

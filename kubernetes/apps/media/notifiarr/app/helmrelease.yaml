@@ -90,7 +90,7 @@ spec:
               DN_TAUTULLI_TIMEOUT: 15s
             envFrom:
               - secretRef:
-                  name: notifiarr-secret
+                  name: "{{ .Release.Name }}-secret"
             probes:
               liveness:
                 enabled: true
@@ -120,13 +120,12 @@ spec:
         fsGroupChangePolicy: OnRootMismatch
     service:
       app:
-        controller: *app
         type: LoadBalancer
         annotations:
           lbipam.cilium.io/ips: "192.168.10.113"
         ports:
           http:
-            port: &port 5454
+            port: 5454
     route:
       app:
         hostnames:
@@ -134,10 +133,6 @@ spec:
         parentRefs:
           - name: envoy-internal
             namespace: network
-        rules:
-          - backendRefs:
-              - name: *app
-                port: *port
     persistence:
       config:
         existingClaim: "{{ .Release.Name }}"
@@ -145,4 +140,3 @@ spec:
           - path: /config
       tmp:
         type: emptyDir
-        medium: Memory

@@ -53,7 +53,7 @@ spec:
               API_ENABLED: "true"
             envFrom:
               - secretRef:
-                  name: pihole-nebula-sync-secret
+                  name: "{{ .Release.Name }}-secret"
             securityContext:
               allowPrivilegeEscalation: false
               readOnlyRootFilesystem: true

@@ -65,7 +65,6 @@ spec:
         supplementalGroups: [ 44 ]
     service:
       app:
-        controller: *app
         type: LoadBalancer
         annotations:
           lbipam.cilium.io/ips: "192.168.10.110"
@@ -83,21 +82,15 @@ spec:
         parentRefs:
           - name: envoy-internal
             namespace: network
-        rules:
-          - backendRefs:
-              - name: *app
-                port: *port
     persistence:
       config:
         existingClaim: "{{ .Release.Name }}"
+      backup:
+        type: nfs
+        server: nas.internal
+        path: /mnt/apps/backup/apps/emby
         globalMounts:
-          - path: /config
-      tmpfs:
-        type: emptyDir
-        medium: Memory
-        globalMounts:
-          - path: /tmp
-          - path: /transcode
+          - path: /backup
       data:
         type: nfs
         server: nas.internal
@@ -105,9 +98,6 @@ spec:
         globalMounts:
           - path: /data
             readOnly: false
-      backup:
-        type: nfs
-        server: nas.internal
-        path: /mnt/apps/backup/apps/emby
-        globalMounts:
-          - path: /backup
+      tmp:
+        type: emptyDir
+        medium: Memory

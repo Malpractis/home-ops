@@ -21,18 +21,25 @@ spec:
               repository: ghcr.io/home-operations/radarr
               tag: 6.2.1.10461@sha256:0756fffa75b30219e3dbac8d027a5389f53cbb34ae83fa4b0976c1b0524c8eb1
             env:
+              RADARR__APP__INSTANCENAME: Radarr-4k
+              RADARR__APP__THEME: dark
               RADARR__AUTH__METHOD: External
               RADARR__AUTH__REQUIRED: DisabledForLocalAddresses
-              RADARR__APP__INSTANCENAME: Radarr-4k
-              RADARR__SERVER__PORT: &port 80
-              RADARR__APP__THEME: dark
               RADARR__LOG__DBENABLED: "False"
+              RADARR__LOG__LEVEL: info
+              RADARR__SERVER__PORT: &port 80
+              RADARR__UPDATE__BRANCH: develop
+              TZ: Australia/Melbourne
             envFrom:
               - secretRef:
-                  name: radarr-4k-secret
+                  name: "{{ .Release.Name }}-secret"
             probes:
               liveness:
                 enabled: true
+                spec:
+                  periodSeconds: 30
+                  timeoutSeconds: 5
+                  failureThreshold: 5
               readiness:
                 enabled: true
                 custom: true
@@ -77,26 +84,21 @@ spec:
         parentRefs:
           - name: envoy-internal
             namespace: network
-        rules:
-          - backendRefs:
-              - name: *app
-                port: *port
     persistence:
       config:
         existingClaim: "{{ .Release.Name }}"
+      backup:
+        type: nfs
+        server: nas.internal
+        path: /mnt/apps/backup/arr-apps/radarr-4k
         globalMounts:
-          - path: /config
-      tmp:
-        type: emptyDir
+          - path: /backu
       data:
         type: nfs
         server: nas.internal
         path: /mnt/tank/data
         globalMounts:
           - path: /data
-      backup:
-        type: nfs
-        server: nas.internal
-        path: /mnt/apps/backup/arr-apps/radarr-4k
-        globalMounts:
-          - path: /backup
+
+      tmp:
+        type: emptyDir

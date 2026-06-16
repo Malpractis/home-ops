@@ -68,7 +68,6 @@ spec:
         supplementalGroups: [ 44, 226 ]
     service:
       app:
-        controller: *app
         ports:
           http:
             port: *port
@@ -79,10 +78,6 @@ spec:
         parentRefs:
           - name: envoy-internal
             namespace: network
-        rules:
-          - backendRefs:
-              - name: *app
-                port: *port
     persistence:
       app-data:
         existingClaim: stash

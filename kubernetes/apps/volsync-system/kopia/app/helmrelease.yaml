@@ -25,7 +25,7 @@ spec:
               TZ: Australia/Melbourne
             envFrom:
               - secretRef:
-                  name: kopia-secret
+                  name: "{{ .Release.Name }}-secret"
             args:
               - --refresh-interval=5m
               - --without-password
@@ -105,7 +105,7 @@ spec:
         path: /mnt/apps/kopia
         globalMounts:
           - path: /repository
-      tmpfs:
+      tmp:
         type: emptyDir
         advancedMounts:
           kopia:

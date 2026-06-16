@@ -21,9 +21,10 @@ spec:
               repository: ghcr.io/home-operations/qbittorrent
               tag: 5.2.1@sha256:8d58d9ad18a1fb5e556e68bde7ac06046847cc97069257f01d2e1ec0d27ff019
             env:
-              UMASK: "022"
-              QBT_WEBUI_PORT: &port 80
               QBT_TORRENTING_PORT: 50413
+              QBT_WEBUI_PORT: &port 80
+              TZ: Australia/Melbourne
+              UMASK: "022"
             probes:
               liveness:
                 enabled: true
@@ -74,8 +75,8 @@ spec:
         fsGroupChangePolicy: OnRootMismatch
     service:
       app:
+        forceRename: "{{ .Release.Name }}"
         primary: true
-        forceRename: *app
         ports:
           http:
             port: *port
@@ -86,39 +87,14 @@ spec:
         parentRefs:
           - name: envoy-internal
             namespace: network
-        rules:
-          - backendRefs:
-              - name: *app
-                port: *port
-    configMaps:
-      config:
-        data:
-          .qbt.toml: |-
-            [qbittorrent]
-            addr = "http://localhost:80"
     persistence:
       config:
-        enabled: true
         existingClaim: "{{ .Release.Name }}"
-        advancedMounts:
-          qbittorrent:
-            app:
-              - path: /config
-      config-file:
-        type: configMap
-        identifier: config
-        globalMounts:
-          - path: /config/.qbt.toml
-            subPath: .qbt.toml
       data:
         type: nfs
         server: nas.internal
         path: /mnt/tank/data
         globalMounts:
           - path: /data
-      tmpfs:
+      tmp:
         type: emptyDir
-        advancedMounts:
-          qbittorrent:
-            app:
-              - path: /tmp

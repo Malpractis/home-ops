@@ -34,7 +34,7 @@ spec:
               USE_DOH: true
             envFrom:
               - secretRef:
-                  name: shelfmark-secret
+                  name: "{{ .Release.Name }}-secret"
             securityContext:
               allowPrivilegeEscalation: false
             resources:
@@ -67,15 +67,9 @@ spec:
         parentRefs:
           - name: envoy-internal
             namespace: network
-        rules:
-          - backendRefs:
-              - name: *app
-                port: *port
     persistence:
       config:
         existingClaim: "{{ .Release.Name }}"
-        globalMounts:
-          - path: /config
       downloads:
         type: nfs
         server: nas.internal
@@ -91,5 +85,3 @@ spec:
           - path: /cwa-book-ingest
       tmp:
         type: emptyDir
-        globalMounts:
-          - path: /tmp

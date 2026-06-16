@@ -21,27 +21,27 @@ spec:
               repository: ghcr.io/home-operations/plex
               tag: 1.43.2.10687@sha256:be00a2ad851ea3193cd870636f908eb6425ad89390f23cdb08daa35ab5cceacc
             env:
+              ADVERTISE_IP: "https://plex.materia.wtf:443,http://192.168.10.111:32400"
+              ALLOWED_NETWORKS: "192.168.1.0/24,192.168.20.0/24,192.168.10.0/24,10.42.0.0/16,materia.wtf"
               PLEX_ADVERTISE_URL: "https://plex.materia.wtf:443,http://192.168.10.111:32400,http://plex.media.svc.cluster.local:32400"
-              ADVERTISE_IP: "https://plex.materia.wtf:443,http://192.168.10.111:\
-                32400"
-              ALLOWED_NETWORKS: "192.168.1.0/24,192.168.20.0/24,192.168.10.0/24,10.42.0.0/16,\
-                materia.wtf"
               PLEX_NO_AUTH_NETWORKS: "192.168.1.0/24, 192.168.20.0/24, 10.42.0.0/16"
-              PLEX_UID: 1000
-              PLEX_GID: 1000
             probes:
-              liveness: &probes
+              liveness:
+                enabled: true
+                spec:
+                  periodSeconds: 30
+                  timeoutSeconds: 5
+                  failureThreshold: 5
+              readiness:
                 enabled: true
                 custom: true
                 spec:
                   httpGet:
                     path: /identity
                     port: &port 32400
-                  initialDelaySeconds: 0
                   periodSeconds: 10
-                  timeoutSeconds: 1
-                  failureThreshold: 3
-              readiness: *probes
+                  timeoutSeconds: 5
+                  failureThreshold: 5
               startup:
                 enabled: true
                 spec:
@@ -73,17 +73,14 @@ spec:
                     values:
                       - emby
               topologyKey: "kubernetes.io/hostname"
-      terminationGracePeriodSeconds: 300
       securityContext:
         runAsNonRoot: true
         runAsUser: 1000
         runAsGroup: 1000
         fsGroup: 1000
         fsGroupChangePolicy: OnRootMismatch
-        supplementalGroups: [ 44 ]
     service:
       app:
-        controller: *app
         type: LoadBalancer
         annotations:
           lbipam.cilium.io/ips: 192.168.10.111
@@ -120,14 +117,6 @@ spec:
     persistence:
       config:
         existingClaim: "{{ .Release.Name }}"
-        globalMounts:
-          - path: /config
-      tmpfs:
-        type: emptyDir
-        medium: Memory
-        globalMounts:
-          - path: /tmp
-          - path: /transcode
       media:
         type: nfs
         server: nas.internal
@@ -135,15 +124,6 @@ spec:
         globalMounts:
           - path: /media
             readOnly: true
-      logs:
-        type: nfs
-        server: nas.internal
-        path: /mnt/apps/apps-nfs/plex-logs
-        globalMounts:
-          - path: "/config/Library/Application Support/Plex Media Server/Logs"
-      backup:
-        type: nfs
-        server: nas.internal
-        path: /mnt/apps/backup/apps/plex
-        globalMounts:
-          - path: /backup
+      tmp:
+        type: emptyDir
+        medium: Memory

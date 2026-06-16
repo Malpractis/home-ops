@@ -105,7 +105,7 @@ spec:
             port: 53
             protocol: TCP
     persistence:
-      tmpfs:
+      config:
         type: emptyDir
         medium: Memory
         globalMounts:
