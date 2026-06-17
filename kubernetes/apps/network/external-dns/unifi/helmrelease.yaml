@@ -3,14 +3,14 @@
 apiVersion: helm.toolkit.fluxcd.io/v2
 kind: HelmRelease
 metadata:
-  name: external-dns-unifi
+  name: &app external-dns-unifi
 spec:
   chartRef:
     kind: OCIRepository
     name: external-dns-unifi
   interval: 1h
   values:
-    fullnameOverride: "{{ .Release.Name }}"
+    fullnameOverride: *app
     provider:
       name: webhook
       webhook:
