@@ -3,14 +3,14 @@
 apiVersion: helm.toolkit.fluxcd.io/v2
 kind: HelmRelease
 metadata:
-  name: smartctl-exporter
+  name: &app smartctl-exporter
 spec:
   chartRef:
     kind: OCIRepository
     name: smartctl-exporter
   interval: 1h
   values:
-    fullnameOverride: "{{ .Release.Name }}"
+    fullnameOverride: *app
     prometheusRules:
       enabled: false
     serviceMonitor:
