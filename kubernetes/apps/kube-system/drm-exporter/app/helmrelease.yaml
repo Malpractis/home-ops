@@ -13,6 +13,9 @@ spec:
     dra:
       enabled: true
       deviceClassName: gpu.intel.com
+    # Pin to nodes with an Intel iGPU (c2/c3); the VM node has no GPU to claim
+    nodeSelector:
+      intel.feature.node.kubernetes.io/gpu: "true"
     securityContext:
       capabilities:
         add:
