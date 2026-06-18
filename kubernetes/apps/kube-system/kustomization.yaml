@@ -11,5 +11,6 @@ resources:
   - ./cilium/ks.yaml
   - ./coredns/ks.yaml
   - ./crd-schema-publisher/ks.yaml
+  - ./drm-exporter/ks.yaml
   - ./intel-gpu-resource-driver/ks.yaml
   - ./metrics-server/ks.yaml
