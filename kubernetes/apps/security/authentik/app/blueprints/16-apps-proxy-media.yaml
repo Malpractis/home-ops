@@ -12,6 +12,7 @@ entries:
     attrs:
       mode: forward_single
       external_host: https://radarr.materia.wtf
+      skip_path_regex: ^/api
       authorization_flow: !Find [authentik_flows.flow, [slug, "default-provider-authorization-implicit-consent"]]
       invalidation_flow: !Find [authentik_flows.flow, [slug, "materia-invalidation"]]
       property_mappings:
@@ -46,6 +47,7 @@ entries:
     attrs:
       mode: forward_single
       external_host: https://radarr-4k.materia.wtf
+      skip_path_regex: ^/api
       authorization_flow: !Find [authentik_flows.flow, [slug, "default-provider-authorization-implicit-consent"]]
       invalidation_flow: !Find [authentik_flows.flow, [slug, "materia-invalidation"]]
       property_mappings:
@@ -80,6 +82,7 @@ entries:
     attrs:
       mode: forward_single
       external_host: https://radarr-anime.materia.wtf
+      skip_path_regex: ^/api
       authorization_flow: !Find [authentik_flows.flow, [slug, "default-provider-authorization-implicit-consent"]]
       invalidation_flow: !Find [authentik_flows.flow, [slug, "materia-invalidation"]]
       property_mappings:
@@ -114,6 +117,7 @@ entries:
     attrs:
       mode: forward_single
       external_host: https://sonarr.materia.wtf
+      skip_path_regex: ^/api
       authorization_flow: !Find [authentik_flows.flow, [slug, "default-provider-authorization-implicit-consent"]]
       invalidation_flow: !Find [authentik_flows.flow, [slug, "materia-invalidation"]]
       property_mappings:
@@ -148,6 +152,7 @@ entries:
     attrs:
       mode: forward_single
       external_host: https://sonarr-anime.materia.wtf
+      skip_path_regex: ^/api
       authorization_flow: !Find [authentik_flows.flow, [slug, "default-provider-authorization-implicit-consent"]]
       invalidation_flow: !Find [authentik_flows.flow, [slug, "materia-invalidation"]]
       property_mappings:
@@ -182,6 +187,7 @@ entries:
     attrs:
       mode: forward_single
       external_host: https://prowlarr.materia.wtf
+      skip_path_regex: ^/api
       authorization_flow: !Find [authentik_flows.flow, [slug, "default-provider-authorization-implicit-consent"]]
       invalidation_flow: !Find [authentik_flows.flow, [slug, "materia-invalidation"]]
       property_mappings:
@@ -216,6 +222,7 @@ entries:
     attrs:
       mode: forward_single
       external_host: https://lidarr.materia.wtf
+      skip_path_regex: ^/api
       authorization_flow: !Find [authentik_flows.flow, [slug, "default-provider-authorization-implicit-consent"]]
       invalidation_flow: !Find [authentik_flows.flow, [slug, "materia-invalidation"]]
       property_mappings:
@@ -250,6 +257,7 @@ entries:
     attrs:
       mode: forward_single
       external_host: https://bazarr.materia.wtf
+      skip_path_regex: ^/api
       authorization_flow: !Find [authentik_flows.flow, [slug, "default-provider-authorization-implicit-consent"]]
       invalidation_flow: !Find [authentik_flows.flow, [slug, "materia-invalidation"]]
       property_mappings:
@@ -284,6 +292,7 @@ entries:
     attrs:
       mode: forward_single
       external_host: https://bazarr-anime.materia.wtf
+      skip_path_regex: ^/api
       authorization_flow: !Find [authentik_flows.flow, [slug, "default-provider-authorization-implicit-consent"]]
       invalidation_flow: !Find [authentik_flows.flow, [slug, "materia-invalidation"]]
       property_mappings:
@@ -457,6 +466,7 @@ entries:
     attrs:
       mode: forward_single
       external_host: https://readarr.materia.wtf
+      skip_path_regex: ^/api
       authorization_flow: !Find [authentik_flows.flow, [slug, "default-provider-authorization-implicit-consent"]]
       invalidation_flow: !Find [authentik_flows.flow, [slug, "materia-invalidation"]]
       property_mappings:
