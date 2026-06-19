@@ -1,0 +1,14 @@
+---
+apiVersion: externaldns.k8s.io/v1alpha1
+kind: DNSEndpoint
+metadata:
+  name: plex
+spec:
+  endpoints:
+    - dnsName: plex.materia.wtf
+      recordType: CNAME
+      targets:
+        - dynamic.materia.wtf
+      providerSpecific:
+        - name: external-dns.alpha.kubernetes.io/cloudflare-proxied
+          value: "false"
