@@ -104,22 +104,22 @@
         mode: "0755"
       notify: Restart dnscrypt-proxy
 
-- name: Fetch dnscrypt upstream stamps from 1Password Connect
-  onepassword.connect.field_info:
-    item: "{{ dnscrypt_op_item }}"
-    vault: "{{ dnscrypt_op_vault }}"
-    field: "{{ item.value }}"
+- name: Fetch dnscrypt upstream stamps from 1Password
+  ansible.builtin.command:
+    cmd: op read "op://{{ dnscrypt_op_vault }}/{{ dnscrypt_op_item }}/{{ item.value }}"
   loop: "{{ dnscrypt_stamp_fields | dict2items }}"
   loop_control:
     label: "{{ item.key }}"
-  delegate_to: localhost
+  delegate_to: localhost   # runs on the controller (runner) which holds OP_SERVICE_ACCOUNT_TOKEN + op CLI
   become: false
   no_log: true
+  changed_when: false
+  check_mode: false        # read-only; must run in --check so the template can render
   register: _dnscrypt_stamp_results
 
 - name: Assemble dnscrypt_stamps map
   ansible.builtin.set_fact:
-    dnscrypt_stamps: "{{ dnscrypt_stamps | default({}) | combine({ item.item.key: item.field.value }) }}"
+    dnscrypt_stamps: "{{ dnscrypt_stamps | default({}) | combine({ item.item.key: item.stdout }) }}"
   loop: "{{ _dnscrypt_stamp_results.results }}"
   loop_control:
     label: "{{ item.item.key }}"
