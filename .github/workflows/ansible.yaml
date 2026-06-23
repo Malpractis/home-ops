@@ -63,6 +63,22 @@ jobs:
           chmod +x "$HOME/.local/bin/op"
           echo "$HOME/.local/bin" >> "$GITHUB_PATH"
           "$HOME/.local/bin/op" --version
+      - name: Debug 1Password access (temporary)
+        env:
+          OP_SERVICE_ACCOUNT_TOKEN: ${{ secrets.OP_SERVICE_ACCOUNT_TOKEN }}
+        run: |
+          echo "--- whoami ---"; op whoami || true
+          echo "--- vaults the SA can see ---"; op vault list || true
+          echo "--- field labels on item 'dnscrypt' (values NOT printed) ---"
+          op item get dnscrypt --vault kubernetes --format json 2>item_err.txt \
+            | python3 -c "import sys,json;d=json.load(sys.stdin);print(sorted(f.get('label') for f in d.get('fields',[])))" \
+            || { echo 'item get failed:'; cat item_err.txt; }
+          echo "--- read test (value redirected to /dev/null) ---"
+          if op read 'op://kubernetes/dnscrypt/nextdns_stamp' >/dev/null 2>read_err.txt; then
+            echo 'READ OK'
+          else
+            echo 'READ FAILED:'; cat read_err.txt
+          fi
       - name: Run Ansible Playbook (Check Mode)
         working-directory: infrastructure
         env:
