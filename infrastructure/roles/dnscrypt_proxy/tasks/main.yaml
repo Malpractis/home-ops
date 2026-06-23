@@ -88,15 +88,22 @@
         dest: "/tmp/dnscrypt-proxy-{{ dnscrypt_version }}.tar.gz"
         mode: "0644"
 
+    - name: Create extraction directory
+      ansible.builtin.file:
+        path: /tmp/dnscrypt-proxy-extract
+        state: directory
+        mode: "0755"
+
     - name: Extract dnscrypt-proxy binary
       ansible.builtin.unarchive:
         src: "/tmp/dnscrypt-proxy-{{ dnscrypt_version }}.tar.gz"
-        dest: "/tmp"
+        dest: /tmp/dnscrypt-proxy-extract
         remote_src: true
+        extra_opts: ["--strip-components=1"]   # tarball top dir is linux-arm64/ etc.; flatten it
 
     - name: Install binary
       ansible.builtin.copy:
-        src: "/tmp/{{ dnscrypt_arch }}/dnscrypt-proxy"
+        src: /tmp/dnscrypt-proxy-extract/dnscrypt-proxy
         dest: "{{ dnscrypt_install_dir }}/dnscrypt-proxy"
         remote_src: true
         owner: "{{ dnscrypt_user }}"
