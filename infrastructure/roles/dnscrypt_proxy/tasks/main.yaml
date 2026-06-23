@@ -47,6 +47,7 @@
   ansible.builtin.group:
     name: "{{ dnscrypt_group }}"
     system: true
+  check_mode: false   # later chown tasks need the group to actually exist, incl. in --check
 
 - name: Create dnscrypt user
   ansible.builtin.user:
@@ -56,6 +57,7 @@
     shell: /usr/sbin/nologin
     home: "{{ dnscrypt_install_dir }}"
     create_home: false
+  check_mode: false   # later chown tasks need the user to actually exist, incl. in --check
 
 - name: Create install and config directories
   ansible.builtin.file:
@@ -76,7 +78,9 @@
   check_mode: false   # read-only probe; must run even in --check so dry-runs are accurate
 
 - name: Download and install dnscrypt-proxy
-  when: dnscrypt_version not in (dnscrypt_installed_version.stdout | default(''))
+  when:
+    - dnscrypt_version not in (dnscrypt_installed_version.stdout | default(''))
+    - not ansible_check_mode   # download/extract can't be dry-run on a fresh host
   block:
     - name: Download dnscrypt-proxy release tarball
       ansible.builtin.get_url:
