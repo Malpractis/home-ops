@@ -38,7 +38,7 @@ spec:
               SYNC_CONFIG_DNS: "true"
               SYNC_CONFIG_DHCP: "false"
               SYNC_CONFIG_NTP: "true"
-              SYNC_CONFIG_RESOLVER: "false"
+              SYNC_CONFIG_RESOLVER: "true"
               SYNC_CONFIG_DATABASE: "false"
               SYNC_CONFIG_MISC: "true"
               SYNC_CONFIG_DEBUG: "true"
