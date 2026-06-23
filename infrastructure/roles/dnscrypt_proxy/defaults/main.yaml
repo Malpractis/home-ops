@@ -1,0 +1,33 @@
+---
+# dnscrypt-proxy role defaults
+# renovate: datasource=github-releases depName=DNSCrypt/dnscrypt-proxy
+dnscrypt_version: "2.1.16"
+
+# Architecture is derived automatically from gathered facts
+_dnscrypt_arch_map:
+  aarch64: linux_arm64
+  armv7l: linux_arm
+  armv6l: linux_arm
+  x86_64: linux_x86_64
+dnscrypt_arch: "{{ _dnscrypt_arch_map[ansible_architecture] | default('linux_arm64') }}"
+
+dnscrypt_user: "dnscrypt"
+dnscrypt_group: "dnscrypt"
+dnscrypt_install_dir: "/opt/dnscrypt-proxy"
+dnscrypt_config_dir: "/etc/dnscrypt-proxy"
+
+# Pihole-local instance: loopback, non-53 (Pihole FTL owns 53)
+dnscrypt_listen_addresses:
+  - "127.0.0.1:5053"
+
+# Upstreams (pinned). Names must match keys in dnscrypt_stamp_fields.
+dnscrypt_server_names:
+  - "nextdns"
+
+# 1Password Connect source for the upstream sdns:// stamps.
+dnscrypt_op_item: "dnscrypt"
+dnscrypt_op_vault: "kubernetes"
+dnscrypt_stamp_fields:
+  nextdns: "nextdns_stamp"
+
+dnscrypt_ipv6_servers: false

@@ -3,6 +3,16 @@ name: Configure Infrastructure
 
 on:
   workflow_dispatch:
+    inputs:
+      limit:
+        description: "Restrict to host(s)/group (ansible --limit). Blank = all."
+        required: false
+        type: string
+      check_only:
+        description: "Dry run only — run Check (--check --diff) and skip Apply."
+        required: false
+        type: boolean
+        default: true
   pull_request:
     branches: ["main"]
     paths:
@@ -44,14 +54,17 @@ jobs:
           echo "StrictHostKeyChecking no" >> ~/.ssh/config
       - name: Run Ansible Playbook (Check Mode)
         working-directory: infrastructure
+        env:
+          OP_CONNECT_HOST: http://onepassword-connect.security.svc.cluster.local
+          OP_CONNECT_TOKEN: ${{ secrets.OP_CONNECT_TOKEN }}
         run: |
-          ansible-playbook -i inventory/hosts.yaml playbook.yaml --check --diff -e 'ansible_python_interpreter=/usr/bin/python3'
+          ansible-playbook -i inventory/hosts.yaml playbook.yaml --check --diff ${{ inputs.limit && format('--limit {0}', inputs.limit) || '' }} -e 'ansible_python_interpreter=/usr/bin/python3'
 
   # Job 2: Apply (Runs ONLY on push to main, after Check passes)
   apply:
     name: Ansible Apply
     needs: check
-    if: (github.event_name == 'push' || github.event_name == 'workflow_dispatch') && github.ref == 'refs/heads/main'
+    if: (github.event_name == 'push' || (github.event_name == 'workflow_dispatch' && !inputs.check_only)) && github.ref == 'refs/heads/main'
     runs-on: home-ops-runner
     steps:
       - name: Checkout
@@ -76,5 +89,8 @@ jobs:
           echo "StrictHostKeyChecking no" >> ~/.ssh/config
       - name: Run Ansible Playbook (Apply)
         working-directory: infrastructure
+        env:
+          OP_CONNECT_HOST: http://onepassword-connect.security.svc.cluster.local
+          OP_CONNECT_TOKEN: ${{ secrets.OP_CONNECT_TOKEN }}
         run: |
-          ansible-playbook -i inventory/hosts.yaml playbook.yaml -e 'ansible_python_interpreter=/usr/bin/python3'
+          ansible-playbook -i inventory/hosts.yaml playbook.yaml ${{ inputs.limit && format('--limit {0}', inputs.limit) || '' }} -e 'ansible_python_interpreter=/usr/bin/python3'

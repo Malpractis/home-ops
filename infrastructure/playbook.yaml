@@ -50,3 +50,9 @@
     - name: Reload Systemd
       ansible.builtin.systemd:
         daemon_reload: true
+
+- name: Configure dnscrypt-proxy on Piholes
+  hosts: raspberry_pis
+  become: true
+  roles:
+    - role: dnscrypt_proxy

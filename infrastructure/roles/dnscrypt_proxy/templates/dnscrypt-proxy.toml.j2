@@ -1,0 +1,64 @@
+##############################################
+#  dnscrypt-proxy  (managed by Ansible)      #
+#  Design: NextDNS is the filtering layer    #
+##############################################
+
+server_names = [{% for s in dnscrypt_server_names %}'{{ s }}'{% if not loop.last %}, {% endif %}{% endfor %}]
+
+listen_addresses = [{% for a in dnscrypt_listen_addresses %}'{{ a }}'{% if not loop.last %}, {% endif %}{% endfor %}]
+max_clients = 250
+
+ipv4_servers = true
+ipv6_servers = {{ dnscrypt_ipv6_servers | lower }}
+dnscrypt_servers = true
+doh_servers = true
+odoh_servers = false
+
+# NOTE: require_dnssec/nolog/nofilter only filter servers auto-selected from
+# [sources]. We pin a static server (below) with no [sources], so they are inert
+# and omitted. DNSSEC + no-log/no-filter is the upstream resolver's job (NextDNS).
+disabled_server_names = []
+
+force_tcp = false
+http3 = true
+timeout = 5000
+keepalive = 30
+cert_refresh_delay = 240
+
+bootstrap_resolvers = ['9.9.9.9:53', '1.1.1.1:53']
+ignore_system_dns = true
+netprobe_timeout = 60
+netprobe_address = '9.9.9.9:53'
+
+log_files_max_size = 10
+log_files_max_age = 7
+log_files_max_backups = 1
+
+block_ipv6 = false
+block_unqualified = true
+block_undelegated = true
+reject_ttl = 10
+
+cache = true
+cache_size = 4096
+cache_min_ttl = 60      # respect upstream TTLs; 60s floor only (Pihole caches in front)
+cache_max_ttl = 86400
+cache_neg_min_ttl = 60
+cache_neg_max_ttl = 600
+
+[query_log]
+  file = '/dev/stdout'  # queries surface in `journalctl -u dnscrypt-proxy`
+  format = 'tsv'
+
+[nx_log]
+  file = '/dev/stdout'
+  format = 'tsv'
+
+# No [sources]: only a static server is pinned, so no public-resolvers list is
+# needed (removes a GitHub startup dependency + recurring list fetch/disk write).
+
+[static]
+{% for name, stamp in dnscrypt_stamps.items() %}
+  [static.'{{ name }}']
+    stamp = '{{ stamp }}'
+{% endfor %}
