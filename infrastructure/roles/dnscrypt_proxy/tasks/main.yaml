@@ -107,6 +107,8 @@
 - name: Fetch dnscrypt upstream stamps from 1Password
   ansible.builtin.command:
     cmd: op read "op://{{ dnscrypt_op_vault }}/{{ dnscrypt_op_item }}/{{ item.value }}"
+  environment:
+    OP_SERVICE_ACCOUNT_TOKEN: "{{ lookup('env', 'OP_SERVICE_ACCOUNT_TOKEN') }}"
   loop: "{{ dnscrypt_stamp_fields | dict2items }}"
   loop_control:
     label: "{{ item.key }}"
