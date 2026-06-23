@@ -30,4 +30,7 @@ dnscrypt_op_vault: "kubernetes"
 dnscrypt_stamp_fields:
   nextdns: "nextdns_stamp"
 
+# Domain queried against 127.0.0.1:5053 to validate a working resolve after apply
+dnscrypt_validate_domain: "example.com"
+
 dnscrypt_ipv6_servers: false
