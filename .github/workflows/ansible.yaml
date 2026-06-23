@@ -3,6 +3,16 @@ name: Configure Infrastructure
 
 on:
   workflow_dispatch:
+    inputs:
+      limit:
+        description: "Restrict to host(s)/group (ansible --limit). Blank = all."
+        required: false
+        type: string
+      check_only:
+        description: "Dry run only — run Check (--check --diff) and skip Apply."
+        required: false
+        type: boolean
+        default: true
   pull_request:
     branches: ["main"]
     paths:
@@ -42,16 +52,30 @@ jobs:
           echo "${{ secrets.ANSIBLE_PRIVATE_KEY }}" > ~/.ssh/id_ed25519
           chmod 600 ~/.ssh/id_ed25519
           echo "StrictHostKeyChecking no" >> ~/.ssh/config
+      - name: Install 1Password CLI
+        run: |
+          set -euo pipefail
+          ARCH="$(dpkg --print-architecture)"
+          OP_VERSION="v2.31.1"
+          curl -sSfL "https://cache.agilebits.com/dist/1P/op2/pkg/${OP_VERSION}/op_linux_${ARCH}_${OP_VERSION}.zip" -o /tmp/op.zip
+          mkdir -p "$HOME/.local/bin"
+          python3 -c "import zipfile; zipfile.ZipFile('/tmp/op.zip').extract('op', '$HOME/.local/bin')"
+          chmod +x "$HOME/.local/bin/op"
+          echo "$HOME/.local/bin" >> "$GITHUB_PATH"
+          "$HOME/.local/bin/op" --version
       - name: Run Ansible Playbook (Check Mode)
         working-directory: infrastructure
+        env:
+          OP_SERVICE_ACCOUNT_TOKEN: ${{ secrets.OP_SERVICE_ACCOUNT_TOKEN }}
         run: |
-          ansible-playbook -i inventory/hosts.yaml playbook.yaml --check --diff -e 'ansible_python_interpreter=/usr/bin/python3'
+          ansible-playbook -i inventory/hosts.yaml playbook.yaml --check --diff ${{ inputs.limit && format('--limit {0}', inputs.limit) || '' }} -e 'ansible_python_interpreter=/usr/bin/python3'
 
-  # Job 2: Apply (Runs ONLY on push to main, after Check passes)
+  # Job 2: Apply (manual only — workflow_dispatch with check_only=false, after Check passes).
+  # Merging to main no longer auto-applies; trigger an apply explicitly, optionally with `limit`.
   apply:
     name: Ansible Apply
     needs: check
-    if: (github.event_name == 'push' || github.event_name == 'workflow_dispatch') && github.ref == 'refs/heads/main'
+    if: github.event_name == 'workflow_dispatch' && !inputs.check_only && github.ref == 'refs/heads/main'
     runs-on: home-ops-runner
     steps:
       - name: Checkout
@@ -74,7 +98,20 @@ jobs:
           echo "${{ secrets.ANSIBLE_PRIVATE_KEY }}" > ~/.ssh/id_ed25519
           chmod 600 ~/.ssh/id_ed25519
           echo "StrictHostKeyChecking no" >> ~/.ssh/config
+      - name: Install 1Password CLI
+        run: |
+          set -euo pipefail
+          ARCH="$(dpkg --print-architecture)"
+          OP_VERSION="v2.31.1"
+          curl -sSfL "https://cache.agilebits.com/dist/1P/op2/pkg/${OP_VERSION}/op_linux_${ARCH}_${OP_VERSION}.zip" -o /tmp/op.zip
+          mkdir -p "$HOME/.local/bin"
+          python3 -c "import zipfile; zipfile.ZipFile('/tmp/op.zip').extract('op', '$HOME/.local/bin')"
+          chmod +x "$HOME/.local/bin/op"
+          echo "$HOME/.local/bin" >> "$GITHUB_PATH"
+          "$HOME/.local/bin/op" --version
       - name: Run Ansible Playbook (Apply)
         working-directory: infrastructure
+        env:
+          OP_SERVICE_ACCOUNT_TOKEN: ${{ secrets.OP_SERVICE_ACCOUNT_TOKEN }}
         run: |
-          ansible-playbook -i inventory/hosts.yaml playbook.yaml -e 'ansible_python_interpreter=/usr/bin/python3'
+          ansible-playbook -i inventory/hosts.yaml playbook.yaml ${{ inputs.limit && format('--limit {0}', inputs.limit) || '' }} -e 'ansible_python_interpreter=/usr/bin/python3'

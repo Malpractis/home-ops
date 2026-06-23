@@ -110,9 +110,9 @@ spec:
         medium: Memory
         globalMounts:
           - path: /config
-      config-map:
-        type: configMap
-        name: dnscrypt-proxy-configmap
+      config-file:
+        type: secret
+        name: dnscrypt-proxy-secret
         advancedMounts:
           *app :
             app:
