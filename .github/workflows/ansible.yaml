@@ -70,12 +70,14 @@ jobs:
         run: |
           ansible-playbook -i inventory/hosts.yaml playbook.yaml --check --diff ${{ inputs.limit && format('--limit {0}', inputs.limit) || '' }} -e 'ansible_python_interpreter=/usr/bin/python3'
 
-  # Job 2: Apply (manual only — workflow_dispatch with check_only=false, after Check passes).
-  # Merging to main no longer auto-applies; trigger an apply explicitly, optionally with `limit`.
+  # Job 2: Apply. Auto-runs on push to main (after Check passes); can also be triggered
+  # manually via workflow_dispatch (check_only=false), optionally scoped with `limit`.
+  # The dnscrypt play is serial:1 + any_errors_fatal + a resolve check, so the rollout
+  # is gated one Pi at a time (pi-1 then pi-0) regardless of how it's triggered.
   apply:
     name: Ansible Apply
     needs: check
-    if: github.event_name == 'workflow_dispatch' && !inputs.check_only && github.ref == 'refs/heads/main'
+    if: (github.event_name == 'push' || (github.event_name == 'workflow_dispatch' && !inputs.check_only)) && github.ref == 'refs/heads/main'
     runs-on: home-ops-runner
     steps:
       - name: Checkout
