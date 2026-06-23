@@ -2,6 +2,7 @@
 - name: Configure Infrastructure Observability
   hosts: all
   become: true
+  tags: ["observability"]
 
   pre_tasks:
     - name: Update apt cache (Debian/Ubuntu only)
@@ -54,6 +55,7 @@
 - name: Configure dnscrypt-proxy on Piholes
   hosts: raspberry_pis
   become: true
+  tags: ["dnscrypt"]
   serial: 1               # roll one Pi at a time (inventory order: pi-1 then pi-0)
   any_errors_fatal: true  # if a Pi fails, abort before touching the next one
   roles:

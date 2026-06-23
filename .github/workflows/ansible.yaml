@@ -4,6 +4,10 @@ name: Configure Infrastructure
 on:
   workflow_dispatch:
     inputs:
+      tags:
+        description: "Ansible --tags (comma-sep: dnscrypt, observability). Blank = all."
+        required: false
+        type: string
       limit:
         description: "Restrict to host(s)/group (ansible --limit). Blank = all."
         required: false
@@ -27,9 +31,60 @@ on:
 permissions: {}
 
 jobs:
+  # Job 0: decide which play tags to run from the changed paths.
+  # Only roles/dnscrypt_proxy changed -> dnscrypt; only group_vars -> observability;
+  # structural files (playbook/inventory/requirements/cfg) or a manual blank -> all.
+  plan:
+    name: Plan (decide tags)
+    runs-on: home-ops-runner
+    permissions:
+      contents: read
+      pull-requests: read
+    outputs:
+      tags: ${{ steps.decide.outputs.tags }}
+    steps:
+      - name: Decide ansible --tags from changed paths
+        id: decide
+        env:
+          GH_TOKEN: ${{ github.token }}
+          EVENT: ${{ github.event_name }}
+          DISPATCH_TAGS: ${{ inputs.tags }}
+          REPO: ${{ github.repository }}
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+          BEFORE: ${{ github.event.before }}
+          SHA: ${{ github.sha }}
+        run: |
+          set -uo pipefail
+          if [ "$EVENT" = "workflow_dispatch" ]; then
+            echo "tags=${DISPATCH_TAGS}" >> "$GITHUB_OUTPUT"
+            echo "dispatch -> tags='${DISPATCH_TAGS}' (blank = all)"
+            exit 0
+          fi
+          api() { curl -fsSL -H "Authorization: Bearer $GH_TOKEN" -H "Accept: application/vnd.github+json" "$1"; }
+          if [ "$EVENT" = "pull_request" ]; then
+            FILES="$(api "https://api.github.com/repos/$REPO/pulls/$PR_NUMBER/files?per_page=100" \
+              | python3 -c 'import sys,json; print("\n".join(f["filename"] for f in json.load(sys.stdin)))')"
+          else
+            if [ -z "$BEFORE" ] || [ "$BEFORE" = "0000000000000000000000000000000000000000" ]; then
+              echo "tags=" >> "$GITHUB_OUTPUT"; echo "no before sha -> all"; exit 0
+            fi
+            FILES="$(api "https://api.github.com/repos/$REPO/compare/$BEFORE...$SHA" \
+              | python3 -c 'import sys,json; d=json.load(sys.stdin); print("\n".join(f["filename"] for f in d.get("files",[])))')"
+          fi
+          echo "Changed files:"; printf '%s\n' "$FILES"
+          if printf '%s\n' "$FILES" | grep -qE '^infrastructure/(playbook\.yaml|requirements\.ya?ml|requirements\.txt|ansible\.cfg|inventory/hosts\.yaml)$'; then
+            echo "tags=" >> "$GITHUB_OUTPUT"; echo "structural change -> all"; exit 0
+          fi
+          SEL=""
+          if printf '%s\n' "$FILES" | grep -qE '^infrastructure/roles/dnscrypt_proxy/'; then SEL="${SEL:+$SEL,}dnscrypt"; fi
+          if printf '%s\n' "$FILES" | grep -qE '^infrastructure/inventory/group_vars/'; then SEL="${SEL:+$SEL,}observability"; fi
+          echo "tags=$SEL" >> "$GITHUB_OUTPUT"
+          echo "resolved tags='$SEL' (blank = all)"
+
   # Job 1: Dry Run (Runs on PRs and Main)
   check:
     name: Ansible Check (Dry Run)
+    needs: plan
     runs-on: home-ops-runner
     steps:
       - name: Checkout
@@ -68,15 +123,15 @@ jobs:
         env:
           OP_SERVICE_ACCOUNT_TOKEN: ${{ secrets.OP_SERVICE_ACCOUNT_TOKEN }}
         run: |
-          ansible-playbook -i inventory/hosts.yaml playbook.yaml --check --diff ${{ inputs.limit && format('--limit {0}', inputs.limit) || '' }} -e 'ansible_python_interpreter=/usr/bin/python3'
+          ansible-playbook -i inventory/hosts.yaml playbook.yaml --check --diff ${{ needs.plan.outputs.tags && format('--tags {0}', needs.plan.outputs.tags) || '' }} ${{ inputs.limit && format('--limit {0}', inputs.limit) || '' }} -e 'ansible_python_interpreter=/usr/bin/python3'
 
   # Job 2: Apply. Auto-runs on push to main (after Check passes); can also be triggered
-  # manually via workflow_dispatch (check_only=false), optionally scoped with `limit`.
+  # manually via workflow_dispatch (check_only=false), optionally scoped with `limit`/`tags`.
   # The dnscrypt play is serial:1 + any_errors_fatal + a resolve check, so the rollout
   # is gated one Pi at a time (pi-1 then pi-0) regardless of how it's triggered.
   apply:
     name: Ansible Apply
-    needs: check
+    needs: [plan, check]
     if: (github.event_name == 'push' || (github.event_name == 'workflow_dispatch' && !inputs.check_only)) && github.ref == 'refs/heads/main'
     runs-on: home-ops-runner
     steps:
@@ -116,4 +171,4 @@ jobs:
         env:
           OP_SERVICE_ACCOUNT_TOKEN: ${{ secrets.OP_SERVICE_ACCOUNT_TOKEN }}
         run: |
-          ansible-playbook -i inventory/hosts.yaml playbook.yaml ${{ inputs.limit && format('--limit {0}', inputs.limit) || '' }} -e 'ansible_python_interpreter=/usr/bin/python3'
+          ansible-playbook -i inventory/hosts.yaml playbook.yaml ${{ needs.plan.outputs.tags && format('--tags {0}', needs.plan.outputs.tags) || '' }} ${{ inputs.limit && format('--limit {0}', inputs.limit) || '' }} -e 'ansible_python_interpreter=/usr/bin/python3'
