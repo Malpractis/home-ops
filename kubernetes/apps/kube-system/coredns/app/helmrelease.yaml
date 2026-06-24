@@ -20,6 +20,25 @@ spec:
       clusterIP: 10.43.0.10
     replicaCount: 2
     servers:
+      # Local split-horizon names (*.internal) and LAN reverse DNS stay on the
+      # Pi-holes — they hold those records; NextDNS doesn't.
+      - zones:
+          - zone: internal
+            scheme: dns://
+          - zone: 168.192.in-addr.arpa
+            scheme: dns://
+        port: 53
+        plugins:
+          - name: errors
+          - name: cache
+            parameters: "30"
+          - name: forward
+            parameters: . 192.168.1.2 192.168.20.2
+          - name: loop
+          - name: reload
+      # Cluster (cluster.local) + everything else. External queries go to the
+      # in-cluster dnscrypt VIP, which uses the dedicated NextDNS "kubernetes"
+      # profile — separate from the home profile the Pi-holes use.
       - zones:
           - zone: .
             scheme: dns://
@@ -39,7 +58,7 @@ spec:
           - name: autopath
             parameters: "@kubernetes"
           - name: forward
-            parameters: . /etc/resolv.conf
+            parameters: . 192.168.10.2
           - name: cache
             configBlock: |-
               prefetch 20
