@@ -16,9 +16,18 @@
         name: smartmontools
         state: "{{ smartmontools_state | default('present') }}"
 
-  roles:
-    - role: prometheus.prometheus.node_exporter
-    - role: prometheus.prometheus.smartctl_exporter
+  # Use include_role (not the `roles:` keyword) so that under `--tags dnscrypt`
+  # these are skipped cleanly. The `roles:` keyword leaks each role's
+  # `always`-tagged validation through the tag filter, which then fails because
+  # its setup tasks were filtered out.
+  tasks:
+    - name: Node Exporter
+      ansible.builtin.include_role:
+        name: prometheus.prometheus.node_exporter
+
+    - name: Smartctl Exporter
+      ansible.builtin.include_role:
+        name: prometheus.prometheus.smartctl_exporter
 
   post_tasks:
     - name: Cleanup Smartctl Exporter
