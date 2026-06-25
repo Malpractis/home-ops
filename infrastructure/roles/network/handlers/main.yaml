@@ -1,0 +1,6 @@
+---
+# Reapply (not `up`) so profile changes take effect without bouncing the link
+# we're connected over.
+- name: Reapply connection
+  ansible.builtin.command: "nmcli device reapply {{ network_ifname }}"
+  changed_when: true

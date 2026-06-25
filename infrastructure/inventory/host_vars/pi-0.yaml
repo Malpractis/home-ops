@@ -1,0 +1,6 @@
+# host_vars/pi-0.yaml
+
+# Networking (managed by the `network` role) — VLAN 1 / materia.local
+network_v4_address: 192.168.1.2/24
+network_v4_gateway: 192.168.1.1
+network_v6_address: fdbd:4657:e91a:1::2/64

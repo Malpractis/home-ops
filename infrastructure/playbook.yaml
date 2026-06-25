@@ -16,10 +16,6 @@
         name: smartmontools
         state: "{{ smartmontools_state | default('present') }}"
 
-  # Use include_role (not the `roles:` keyword) so that under `--tags dnscrypt`
-  # these are skipped cleanly. The `roles:` keyword leaks each role's
-  # `always`-tagged validation through the tag filter, which then fails because
-  # its setup tasks were filtered out.
   tasks:
     - name: Node Exporter
       ansible.builtin.include_role:
@@ -61,11 +57,22 @@
       ansible.builtin.systemd:
         daemon_reload: true
 
+- name: Configure Raspberry Pi networking
+  hosts: raspberry_pis
+  become: true
+  tags: ["network"]
+  serial: 1
+  any_errors_fatal: true
+  tasks:
+    - name: Networking
+      ansible.builtin.include_role:
+        name: network
+
 - name: Configure dnscrypt-proxy on Piholes
   hosts: raspberry_pis
   become: true
   tags: ["dnscrypt"]
-  serial: 1               # roll one Pi at a time (inventory order: pi-1 then pi-0)
-  any_errors_fatal: true  # if a Pi fails, abort before touching the next one
+  serial: 1
+  any_errors_fatal: true
   roles:
     - role: dnscrypt_proxy

@@ -1,0 +1,60 @@
+---
+# Declaratively manage the Pi's primary NetworkManager connection. On the first
+# run this is a no-op: the declared values mirror what's already on the Pis, so
+# nothing is reapplied and there's no chance of dropping the session Ansible is
+# connected over. Future reimages/drift converge back to this spec.
+
+- name: Configure the primary NetworkManager connection
+  community.general.nmcli:
+    conn_name: "{{ network_conn_name }}"
+    ifname: "{{ network_ifname }}"
+    type: ethernet
+    autoconnect: true
+    state: present
+    # IPv4: static, mirrors current reality exactly (address + gateway + upstream DNS).
+    method4: manual
+    ip4:
+      - "{{ network_v4_address }}"
+    gw4: "{{ network_v4_gateway }}"
+    dns4: "{{ network_v4_dns }}"
+    may_fail4: true
+    # IPv6: keep SLAAC (auto) so the ABB GUA + RA default route still configure,
+    # and pin the stable ULA used as this Pi's advertised DNS address. dns6 is
+    # left untouched (empty) — the Pi resolves via network_v4_dns.
+    method6: auto
+    ip6:
+      - "{{ network_v6_address }}"
+    may_fail6: true
+  notify: Reapply connection
+
+# Apply any profile change to the live interface before validating (reapply, not
+# `up`, so the interface isn't bounced). Fires only on change → the no-op first
+# run never reaches it.
+- name: Flush handlers so the connection is reapplied before validation
+  ansible.builtin.meta: flush_handlers
+
+# Functional gates: with serial:1 + any_errors_fatal, a failure on pi-1 (the
+# replica, rolled first) aborts the play before pi-0 (primary) is touched.
+- name: Verify the interface is still connected
+  ansible.builtin.command: "nmcli -g GENERAL.STATE device show {{ network_ifname }}"
+  register: _net_state
+  changed_when: false
+  failed_when: "'connected' not in _net_state.stdout"
+  when: not ansible_check_mode
+
+- name: Verify the IPv6 RA default route is still present (SLAAC intact)
+  ansible.builtin.command: ip -6 route show default
+  register: _net_v6_default
+  changed_when: false
+  # Catches a regression where v6 drops to method=manual and loses the RA route.
+  failed_when: "'default via fe80' not in _net_v6_default.stdout"
+  when: not ansible_check_mode
+
+- name: Verify DNS still resolves
+  ansible.builtin.command: getent hosts example.com
+  register: _net_resolve
+  changed_when: false
+  until: _net_resolve.rc == 0
+  retries: 5
+  delay: 3
+  when: not ansible_check_mode
