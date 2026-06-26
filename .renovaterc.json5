@@ -25,6 +25,15 @@
       ignoreTests: false,
     },
     {
+      description: "Auto-merge wlogs-parser image digests (own rolling :latest)",
+      matchDatasources: [ "docker" ],
+      matchUpdateTypes: [ "digest" ],
+      matchPackageNames: [ "/wlogs-parser/" ],
+      automerge: true,
+      automergeType: "pr",
+      ignoreTests: false,
+    },
+    {
       description: "Auto-merge high-cadence OCI packages weekly",
       matchDatasources: [ "docker" ],
       matchUpdateTypes: [ "minor", "patch" ],

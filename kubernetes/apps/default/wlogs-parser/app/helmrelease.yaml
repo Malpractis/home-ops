@@ -18,9 +18,9 @@ spec:
           app:
             nameOverride: "{{ .Release.Name }}"
             image:
-              # First build publishes :latest; renovate can pin a digest afterwards.
+              # Rolling :latest, digest-pinned so Renovate PRs each new build.
               repository: ghcr.io/malpractis/wlogs-parser
-              tag: latest
+              tag: latest@sha256:123522ffdce3a4a82af00c96bfee21b28dd7fdf483001990bed9a2ce02ff92d6
             env:
               # OIDC via Authentik (client id/secret + session key come from the secret).
               OIDC_ISSUER: https://auth.materia.wtf/application/o/wlogs-parser
