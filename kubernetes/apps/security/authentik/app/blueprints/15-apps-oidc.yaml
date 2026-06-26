@@ -2,7 +2,7 @@
 # yaml-language-server: $schema=https://version-2026-5.goauthentik.io/blueprints/v1/schema.json
 # All native-OIDC (OAuth2) applications. Proxy/forward-auth apps live in
 # 16-apps-proxy-media.yaml / 17-apps-proxy-admin.yaml; the embedded outpost is 18.
-# NOTE: this is a single shared failure domain — a bad entry (e.g. a !Find that can't
+# NOTE: this is a single shared failure domain - a bad entry (e.g. a !Find that can't
 # resolve, or a missing !Env secret) can block this whole blueprint from applying.
 # Apps are kept alphabetical within each section.
 version: 1
@@ -102,7 +102,7 @@ entries:
     attrs:
       order: 0
 
-  # ── wlogs-parser ──────────────────────────────────────────────────────────────
+  # wlogs-parser
   - id: wlogs_parser_provider
     model: authentik_providers_oauth2.oauth2provider
     identifiers:

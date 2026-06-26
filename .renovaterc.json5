@@ -80,7 +80,7 @@
     },
     // Version constraint rules
     {
-      description: "Proton Mail Bridge — only track v-prefixed release tags (repo mixes schemes)",
+      description: "Proton Mail Bridge - only track v-prefixed release tags (repo mixes schemes)",
       matchDatasources: [ "docker" ],
       matchPackageNames: [ "/videocurio\\/proton-mail-bridge/" ],
       allowedVersions: "/^v\\d/",
