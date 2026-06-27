@@ -20,7 +20,7 @@ spec:
             image:
               # Rolling :latest, digest-pinned so Renovate PRs each new build.
               repository: ghcr.io/malpractis/wlogs-parser
-              tag: latest@sha256:123522ffdce3a4a82af00c96bfee21b28dd7fdf483001990bed9a2ce02ff92d6
+              tag: latest@sha256:b25b0888118dc5e8a9a5640eab7cdc65ab3685a89b8a8a1c63474c1405468f1c
             env:
               # OIDC via Authentik (client id/secret + session key come from the secret).
               OIDC_ISSUER: https://auth.materia.wtf/application/o/wlogs-parser
