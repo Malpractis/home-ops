@@ -50,9 +50,13 @@ jobs:
 
       - name: Extract Images
         id: extract
+        # Private images are dropped: talosctl image pull uses the node's containerd,
+        # which has no GHCR auth, so they hang the runner (they pull fine in-cluster
+        # via the ghcr-pull-secret when the pod actually starts).
         run: |
           echo 'images<<EOF' >> $GITHUB_OUTPUT
-          flate diff images -p ./kubernetes/flux/cluster -o json >> $GITHUB_OUTPUT
+          flate diff images -p ./kubernetes/flux/cluster -o json \
+            | jq -c 'map(select(startswith("ghcr.io/malpractis/") | not))' >> $GITHUB_OUTPUT
           echo 'EOF' >> $GITHUB_OUTPUT
 
   pull:
