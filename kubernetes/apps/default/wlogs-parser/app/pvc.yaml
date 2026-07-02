@@ -1,0 +1,14 @@
+---
+# Generated reports live here so they survive image bumps / reschedules.
+# No volsync: the app expires reports after 8h, so this is cache-tier data.
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: wlogs-parser
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 1Gi
+  storageClassName: ceph-block
