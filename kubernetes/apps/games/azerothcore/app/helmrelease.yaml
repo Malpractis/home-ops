@@ -1,0 +1,210 @@
+---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/bjw-s-labs/helm-charts/main/charts/other/app-template/schemas/helmrelease-helm-v2.schema.json
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: azerothcore
+spec:
+  chartRef:
+    kind: OCIRepository
+    name: azerothcore
+  # The wow-panel (and manual kubectl) scale these Deployments 0↔1; without
+  # the replicas ignore, cluster-wide drift detection reverts every scale
+  # within the reconcile interval (precedent: media/arr-apps/bazarr-anime).
+  driftDetection:
+    mode: enabled
+    ignore:
+      - paths: [/spec/replicas]
+  interval: 1h
+  values:
+    controllers:
+      authserver:
+        annotations:
+          reloader.stakater.com/auto: "true"
+        replicas: 1
+        containers:
+          app:
+            nameOverride: authserver
+            image: &image
+              repository: ghcr.io/malpractis/azerothcore-wotlk-playerbots
+              tag: latest@sha256:46b666ee6b89c9b1ce3f12e10257d7bf0c9f9aa6e89db64d70660d1fe15d74b8
+            # Image CMD is worldserver; same image runs both servers.
+            command: ["authserver"]
+            env:
+              AC_LOGIN_DATABASE_INFO:
+                valueFrom:
+                  secretKeyRef:
+                    name: azerothcore-secret
+                    key: AC_LOGIN_DATABASE_INFO
+              TZ: Australia/Melbourne
+            securityContext: &securityContext
+              allowPrivilegeEscalation: false
+              readOnlyRootFilesystem: true
+              capabilities: {drop: ["ALL"]}
+            probes:
+              liveness: &authProbe
+                enabled: true
+                custom: true
+                spec:
+                  tcpSocket:
+                    port: 3724
+                  periodSeconds: 30
+              readiness: *authProbe
+              startup:
+                enabled: true
+                custom: true
+                spec:
+                  tcpSocket:
+                    port: 3724
+                  failureThreshold: 30
+                  periodSeconds: 5
+            resources:
+              requests:
+                cpu: 10m
+                memory: 64Mi
+              limits:
+                memory: 256Mi
+      worldserver:
+        annotations:
+          reloader.stakater.com/auto: "true"
+        replicas: 1
+        # RWO client-data PVC: the replacement pod can't mount until the old
+        # one is gone.
+        strategy: Recreate
+        pod:
+          # Worldserver flushes character/bot state to the DB on SIGTERM —
+          # generous on purpose, do not shorten. Image runs worldserver as
+          # PID 1 (exec-form CMD, no shell wrapper).
+          terminationGracePeriodSeconds: 180
+        containers:
+          app:
+            nameOverride: worldserver
+            image: *image
+            env:
+              TZ: Australia/Melbourne
+            envFrom:
+              # The four AC_*_DATABASE_INFO DSNs
+              - secretRef:
+                  name: azerothcore-secret
+            securityContext: *securityContext
+            probes:
+              liveness: &worldProbe
+                enabled: true
+                custom: true
+                spec:
+                  tcpSocket:
+                    port: 8085
+                  periodSeconds: 30
+              readiness: *worldProbe
+              startup:
+                enabled: true
+                custom: true
+                spec:
+                  tcpSocket:
+                    port: 8085
+                  # 120 × 10 s = 20 min boot budget: first boot applies module
+                  # SQL and 300 random bots log in before the world socket
+                  # opens; liveness only applies after startup succeeds.
+                  failureThreshold: 120
+                  periodSeconds: 10
+            resources:
+              requests:
+                cpu: 1
+                memory: 5Gi
+              limits:
+                memory: 8Gi
+    defaultPodOptions:
+      imagePullSecrets:
+        - name: ghcr-pull-secret
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 1000
+        runAsGroup: 1000
+        fsGroup: 1000
+        fsGroupChangePolicy: OnRootMismatch
+    service:
+      auth:
+        controller: authserver
+        type: LoadBalancer
+        annotations:
+          # Both game Services share the realm VIP (WP8 validated live);
+          # the VIP is permanent — it's baked into the DB realmlist row.
+          lbipam.cilium.io/ips: 192.168.10.120
+          lbipam.cilium.io/sharing-key: azerothcore
+        ports:
+          auth:
+            port: 3724
+      soap:
+        # ClusterIP ONLY — SOAP is the admin path (account creation, GM
+        # commands, player counts) and must never be exposed via
+        # LoadBalancer or HTTPRoute.
+        controller: worldserver
+        ports:
+          soap:
+            port: 7878
+      world:
+        controller: worldserver
+        type: LoadBalancer
+        annotations:
+          lbipam.cilium.io/ips: 192.168.10.120
+          lbipam.cilium.io/sharing-key: azerothcore
+        ports:
+          world:
+            port: 8085
+    persistence:
+      client-data:
+        # Populated once by the WP2 extraction (maps/vmaps/mmaps/dbc/cameras
+        # + VERSION marker); worldserver only ever reads it.
+        existingClaim: azerothcore-client-data
+        advancedMounts:
+          worldserver:
+            app:
+              - path: /azerothcore/data
+                readOnly: true
+      config:
+        type: configMap
+        name: azerothcore-config
+        advancedMounts:
+          authserver:
+            app:
+              - path: /azerothcore/etc/authserver.conf
+                subPath: authserver.conf
+                readOnly: true
+          worldserver:
+            app:
+              - path: /azerothcore/etc/modules/mod_ahbot.conf
+                subPath: mod_ahbot.conf
+                readOnly: true
+              - path: /azerothcore/etc/modules/mod_ale.conf
+                subPath: mod_ale.conf
+                readOnly: true
+              - path: /azerothcore/etc/modules/mod_ollama_chat.conf
+                subPath: mod_ollama_chat.conf
+                readOnly: true
+              - path: /azerothcore/etc/modules/playerbots.conf
+                subPath: playerbots.conf
+                readOnly: true
+              - path: /azerothcore/etc/modules/transmog.conf
+                subPath: transmog.conf
+                readOnly: true
+              - path: /azerothcore/etc/worldserver.conf
+                subPath: worldserver.conf
+                readOnly: true
+      logs:
+        type: emptyDir
+        globalMounts:
+          - path: /azerothcore/logs
+      lua-scripts:
+        # ALE.ScriptPath — empty today; future Lua lands via git in
+        # app/lua_scripts/, no image rebuild.
+        type: configMap
+        name: azerothcore-lua-scripts
+        advancedMounts:
+          worldserver:
+            app:
+              - path: /azerothcore/lua_scripts
+                readOnly: true
+      tmp:
+        type: emptyDir
+        globalMounts:
+          - path: /tmp

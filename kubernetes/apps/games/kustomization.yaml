@@ -9,6 +9,7 @@ components:
 
 resources:
   - ./namespace.yaml
+  - ./azerothcore/ks.yaml
   - ./azerothcore-client-data/ks.yaml
   - ./azerothcore-db/ks.yaml
   - ./wow-panel/ks.yaml

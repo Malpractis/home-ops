@@ -1,0 +1,30 @@
+---
+# yaml-language-server: $schema=https://json.schemastore.org/kustomization
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+resources:
+  - ./externalsecret.yaml
+  - ./helmrelease.yaml
+  - ./ocirepository.yaml
+configMapGenerator:
+  # Full .conf files (dist copies + WP7's reviewed deltas — see
+  # docs/wow-server/context/05-module-config-reference.md). DB credentials are
+  # NOT in these files; they're env-injected (AC_*) from azerothcore-secret.
+  - name: azerothcore-config
+    files:
+      - ./configs/authserver.conf
+      - ./configs/mod_ahbot.conf
+      - ./configs/mod_ale.conf
+      - ./configs/mod_ollama_chat.conf
+      - ./configs/playerbots.conf
+      - ./configs/transmog.conf
+      - ./configs/worldserver.conf
+  # Mounted at ALE.ScriptPath; add future .lua files here.
+  - name: azerothcore-lua-scripts
+    files:
+      - ./lua_scripts/README.md
+generatorOptions:
+  disableNameSuffixHash: true
+  annotations:
+    # conf contents are runtime values, never Flux substitutions
+    kustomize.toolkit.fluxcd.io/substitute: disabled
