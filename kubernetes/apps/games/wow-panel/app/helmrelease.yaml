@@ -43,7 +43,7 @@ spec:
               # Partner's PC. Pods resolve *.internal via CoreDNS's dedicated
               # `internal` zone (forwards to the Pi-holes). Until the owner
               # creates the record + static lease this just shows a red dot.
-              OLLAMA_URL: http://kitty.internal:11434
+              OLLAMA_URL: http://kiterium.internal:11434
               SOAP_HOST: azerothcore-soap.games.svc.cluster.local
               SOAP_PORT: "7878"
               TZ: Australia/Melbourne
