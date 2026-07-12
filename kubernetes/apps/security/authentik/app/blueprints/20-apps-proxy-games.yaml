@@ -29,10 +29,6 @@ entries:
       group: games
       meta_launch_url: https://wow.materia.wtf
       meta_description: Realm control (scale up/down, players online)
-      # Original sword-and-portal SVG (same art as the panel favicon,
-      # wow-panel repo src/app/icon.svg). Owner uploads it to the S3 media
-      # bucket at this key; until then Authentik shows the initials tile.
-      meta_icon: application-icons/svg/wow-panel.svg
       open_in_new_tab: true
 
   - id: policy_binding_wow_panel
