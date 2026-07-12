@@ -91,6 +91,12 @@
       matchPackageNames: [ "/videocurio\\/proton-mail-bridge/" ],
       allowedVersions: "/^v\\d/",
     },
+    {
+      description: "Hold MySQL at the 8.4 LTS line — AzerothCore does not support 9.x innovation releases",
+      matchDatasources: [ "docker" ],
+      matchPackageNames: [ "/library\\/mysql/" ],
+      allowedVersions: "<9.0.0",
+    },
     // Grouping rules
     {
       description: "Actions Runner Controller Group",
