@@ -14,3 +14,6 @@ configMapGenerator:
       - ./config/my.cnf
 generatorOptions:
   disableNameSuffixHash: true
+  annotations:
+    # the shell scripts' ${VAR}s are runtime values, not Flux substitutions
+    kustomize.toolkit.fluxcd.io/substitute: disabled
