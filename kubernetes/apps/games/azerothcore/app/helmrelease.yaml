@@ -31,9 +31,6 @@ spec:
             # Image CMD is worldserver; same image runs both servers.
             command: ["authserver"]
             env:
-              # Writable emptyDir; the conf keeps the dist's LogsDir="" (cwd),
-              # which is read-only here.
-              AC_LOGS_DIR: /azerothcore/logs
               AC_LOGIN_DATABASE_INFO:
                 valueFrom:
                   secretKeyRef:
@@ -84,12 +81,6 @@ spec:
             nameOverride: worldserver
             image: *image
             env:
-              AC_LOGS_DIR: /azerothcore/logs
-              # The dist default ("") resolves to the compiled-in build path,
-              # which doesn't exist at runtime — the boot-time auto-updater
-              # (core + module SQL, incl. first-boot acore_playerbots schema)
-              # needs the image's SQL tree. Same fix the dbimport run proved.
-              AC_SOURCE_DIRECTORY: /azerothcore/source
               TZ: Australia/Melbourne
             envFrom:
               # The four AC_*_DATABASE_INFO DSNs
