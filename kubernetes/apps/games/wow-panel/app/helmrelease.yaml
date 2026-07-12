@@ -40,10 +40,10 @@ spec:
               # Display-only: the model mod-ollama-chat is configured to use
               # (an actual runtime switch is GitOps-owned — WP7 ConfigMap).
               OLLAMA_MODEL: llama3.1:8b-instruct-q4_K_M
-              # OLLAMA_URL: http://<OLLAMA_IP>:11434 — OLLAMA_IP is still
-              # TBD-owner in 04-parameters.md (WP6/WP8). Unset renders a calm
-              # "not configured yet" dot; fill in once the PC's static lease
-              # is reserved.
+              # Partner's PC. Pods resolve *.internal via CoreDNS's dedicated
+              # `internal` zone (forwards to the Pi-holes). Until the owner
+              # creates the record + static lease this just shows a red dot.
+              OLLAMA_URL: http://kitty.internal:11434
               SOAP_HOST: azerothcore-soap.games.svc.cluster.local
               SOAP_PORT: "7878"
               TZ: Australia/Melbourne
