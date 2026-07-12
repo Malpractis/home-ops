@@ -69,6 +69,12 @@ jobs:
           permission-statuses: write
           permission-vulnerability-alerts: read
           permission-workflows: write
+          # Renovate also manages the azerothcore-image source pins
+          # (versions.json git-refs manager); the github-bot App must be
+          # INSTALLED on that repo or token generation fails.
+          repositories: |
+            ${{ github.event.repository.name }}
+            azerothcore-image
 
       - name: Checkout
         uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
@@ -81,7 +87,7 @@ jobs:
         env:
           LOG_LEVEL: ${{ inputs.logLevel || 'debug' }}
           RENOVATE_AUTODISCOVER: true
-          RENOVATE_AUTODISCOVER_FILTER: ${{ github.repository }}
+          RENOVATE_AUTODISCOVER_FILTER: ${{ github.repository }},${{ github.repository_owner }}/azerothcore-image
           RENOVATE_DRY_RUN: ${{ inputs.dryRun }}
           RENOVATE_INTERNAL_CHECKS_FILTER: strict
           RENOVATE_PLATFORM: github
