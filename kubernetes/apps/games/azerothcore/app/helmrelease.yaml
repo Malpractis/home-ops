@@ -81,6 +81,12 @@ spec:
             nameOverride: worldserver
             image: *image
             env:
+              # AH-bot activation (05 §3/§8): numeric IDs, not secrets — the
+              # `ahbot` account (acore_auth.account.id) and its character
+              # (acore_characters.characters.guid), created by WP9. The bot
+              # is inert while these override the conf's zeros.
+              AC_AUCTION_HOUSE_BOT_ACCOUNT: "72"
+              AC_AUCTION_HOUSE_BOT_GUID: "701"
               TZ: Australia/Melbourne
             envFrom:
               # The four AC_*_DATABASE_INFO DSNs
