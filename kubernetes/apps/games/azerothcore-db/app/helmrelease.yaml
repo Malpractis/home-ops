@@ -1,0 +1,115 @@
+---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/bjw-s-labs/helm-charts/main/charts/other/app-template/schemas/helmrelease-helm-v2.schema.json
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: azerothcore-db
+spec:
+  chartRef:
+    kind: OCIRepository
+    name: azerothcore-db
+  interval: 1h
+  values:
+    controllers:
+      azerothcore-db:
+        annotations:
+          reloader.stakater.com/auto: "true"
+        type: statefulset
+        replicas: 1
+        statefulset:
+          volumeClaimTemplates:
+            - name: data
+              accessMode: ReadWriteOnce
+              size: 20Gi
+              storageClass: ceph-block
+              globalMounts:
+                - path: /var/lib/mysql
+        containers:
+          app:
+            nameOverride: "{{ .Release.Name }}"
+            image:
+              repository: docker.io/library/mysql
+              tag: 8.0@sha256:7dcddc01f13bab2f15cde676d44d01f61fc9f99fe7785e86196dfc07d358ae2b
+            env:
+              # Consumed by config/init-databases.sh on first datadir init to
+              # create the acore application user.
+              ACORE_PASSWORD:
+                valueFrom:
+                  secretKeyRef:
+                    name: azerothcore-db-secret
+                    key: ACORE_PASSWORD
+              MYSQL_ROOT_PASSWORD:
+                valueFrom:
+                  secretKeyRef:
+                    name: azerothcore-db-secret
+                    key: MYSQL_ROOT_PASSWORD
+              TZ: Australia/Melbourne
+            securityContext:
+              allowPrivilegeEscalation: false
+              readOnlyRootFilesystem: true
+              capabilities: {drop: ["ALL"]}
+            probes:
+              liveness: &probe
+                enabled: true
+                custom: true
+                spec:
+                  exec:
+                    command:
+                      - sh
+                      - -c
+                      - mysqladmin ping -h 127.0.0.1 -uroot -p"$MYSQL_ROOT_PASSWORD" --silent
+                  periodSeconds: 30
+              readiness: *probe
+              startup:
+                enabled: true
+                custom: true
+                spec:
+                  exec:
+                    command:
+                      - sh
+                      - -c
+                      - mysqladmin ping -h 127.0.0.1 -uroot -p"$MYSQL_ROOT_PASSWORD" --silent
+                  failureThreshold: 30
+                  periodSeconds: 10
+            resources:
+              requests:
+                cpu: 100m
+                memory: 1Gi
+              limits:
+                memory: 2Gi
+    defaultPodOptions:
+      securityContext:
+        runAsNonRoot: true
+        # The official mysql image runs as uid 999 (mysql), not the home-ops
+        # default 1000; fight the image and initdb fails on the datadir.
+        runAsUser: 999
+        runAsGroup: 999
+        fsGroup: 999
+        fsGroupChangePolicy: OnRootMismatch
+    service:
+      app:
+        controller: azerothcore-db
+        ports:
+          mysql:
+            port: 3306
+    persistence:
+      config:
+        type: configMap
+        name: azerothcore-db-config
+        globalMounts:
+          # Sourced by the entrypoint ONLY when the datadir is empty (first boot).
+          - path: /docker-entrypoint-initdb.d/init-databases.sh
+            subPath: init-databases.sh
+            readOnly: true
+          - path: /etc/mysql/conf.d/zz-homeops.cnf
+            subPath: my.cnf
+            readOnly: true
+      run-mysqld:
+        type: emptyDir
+        globalMounts:
+          # mysqld's unix socket; required with readOnlyRootFilesystem
+          - path: /var/run/mysqld
+      tmp:
+        type: emptyDir
+        globalMounts:
+          - path: /tmp

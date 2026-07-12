@@ -1,0 +1,91 @@
+---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/bjw-s-labs/helm-charts/main/charts/other/app-template/schemas/helmrelease-helm-v2.schema.json
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: azerothcore-db-backups
+spec:
+  chartRef:
+    kind: OCIRepository
+    name: azerothcore-db-backups
+  interval: 1h
+  values:
+    controllers:
+      # Nightly: the small, precious databases (auth/characters/playerbots).
+      main:
+        type: cronjob
+        cronjob:
+          schedule: "0 3 * * *"
+          timeZone: Australia/Melbourne
+          backoffLimit: 2
+          concurrencyPolicy: Forbid
+          failedJobsHistory: 3
+          successfulJobsHistory: 1
+        pod:
+          restartPolicy: OnFailure
+        containers:
+          app:
+            image: &image
+              # Same digest as the azerothcore-db StatefulSet — dump with the
+              # exact client version the server runs.
+              repository: docker.io/library/mysql
+              tag: 8.0@sha256:7dcddc01f13bab2f15cde676d44d01f61fc9f99fe7785e86196dfc07d358ae2b
+            command: ["bash", "/scripts/backup-main.sh"]
+            env: &env
+              # mysql/mysqldump read the password from MYSQL_PWD; keeps it off argv
+              MYSQL_PWD:
+                valueFrom:
+                  secretKeyRef:
+                    name: azerothcore-db-secret
+                    key: ACORE_PASSWORD
+              TZ: Australia/Melbourne
+            securityContext: &sc
+              allowPrivilegeEscalation: false
+              readOnlyRootFilesystem: true
+              capabilities: {drop: ["ALL"]}
+            resources: &resources
+              requests:
+                cpu: 50m
+                memory: 128Mi
+              limits:
+                memory: 512Mi
+      # Weekly: acore_world — huge but reproducible; a dump keeps restores one-step.
+      world:
+        type: cronjob
+        cronjob:
+          schedule: "0 4 * * 0"
+          timeZone: Australia/Melbourne
+          backoffLimit: 2
+          concurrencyPolicy: Forbid
+          failedJobsHistory: 3
+          successfulJobsHistory: 1
+        pod:
+          restartPolicy: OnFailure
+        containers:
+          app:
+            image: *image
+            command: ["bash", "/scripts/backup-world.sh"]
+            env: *env
+            securityContext: *sc
+            resources: *resources
+    defaultPodOptions:
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 1000
+        runAsGroup: 1000
+        fsGroup: 1000
+        fsGroupChangePolicy: OnRootMismatch
+    persistence:
+      backups:
+        # Created by the volsync component on the azerothcore-db-backups
+        # Kustomization — deliberately NOT a volumeClaimTemplate, so dumps
+        # outlive the DB app, and volsync copies them off-PVC to the NAS.
+        existingClaim: azerothcore-db-backups
+        globalMounts:
+          - path: /backups
+      scripts:
+        type: configMap
+        name: azerothcore-db-backup-scripts
+        globalMounts:
+          - path: /scripts
+            readOnly: true
