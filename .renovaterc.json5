@@ -34,6 +34,12 @@
       ignoreTests: false,
     },
     {
+      description: "AzerothCore server image — never auto-merge; human PR merge is the realm promotion gate (docs/wow-server: 01 §2, 10 §4)",
+      matchDatasources: [ "docker" ],
+      matchPackageNames: [ "/azerothcore-wotlk-playerbots/" ],
+      automerge: false,
+    },
+    {
       description: "Auto-merge high-cadence OCI packages weekly",
       matchDatasources: [ "docker" ],
       matchUpdateTypes: [ "minor", "patch" ],
