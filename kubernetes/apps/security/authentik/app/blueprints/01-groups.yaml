@@ -28,6 +28,15 @@ entries:
     attrs:
       is_superuser: false
 
+  # Game realm operators — the wow-panel (scale the AzerothCore realm)
+  - id: group_games
+    model: authentik_core.group
+    identifiers:
+      name: games
+    attrs:
+      is_superuser: false
+      parent: !KeyOf group_users
+
   # Media managers — arr stack, download clients, Stash
   - id: group_media
     model: authentik_core.group

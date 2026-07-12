@@ -34,6 +34,15 @@
       ignoreTests: false,
     },
     {
+      description: "Auto-merge wow-panel image digests (own rolling :latest; only SERVER_IMAGE carries the promotion gate)",
+      matchDatasources: [ "docker" ],
+      matchUpdateTypes: [ "digest" ],
+      matchPackageNames: [ "/wow-panel/" ],
+      automerge: true,
+      automergeType: "pr",
+      ignoreTests: false,
+    },
+    {
       description: "AzerothCore server image — never auto-merge; human PR merge is the realm promotion gate (docs/wow-server: 01 §2, 10 §4)",
       matchDatasources: [ "docker" ],
       matchPackageNames: [ "/azerothcore-wotlk-playerbots/" ],

@@ -1,0 +1,23 @@
+---
+# yaml-language-server: $schema=https://schemas.materia.wtf/kustomize.toolkit.fluxcd.io/kustomization_v1.json
+apiVersion: kustomize.toolkit.fluxcd.io/v1
+kind: Kustomization
+metadata:
+  name: &app wow-panel
+spec:
+  components:
+    - ../../../../components/authentik-forward-auth
+  interval: 1h
+  path: ./kubernetes/apps/games/wow-panel/app
+  postBuild:
+    substitute:
+      APP: *app
+      # PANEL_HOST (docs/wow-server 04-parameters.md) — not <app>.materia.wtf
+      APP_HOST: wow.materia.wtf
+  prune: true
+  sourceRef:
+    kind: GitRepository
+    name: flux-system
+    namespace: flux-system
+  targetNamespace: games
+  wait: false
