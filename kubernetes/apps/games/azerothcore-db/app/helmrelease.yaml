@@ -29,7 +29,7 @@ spec:
             nameOverride: "{{ .Release.Name }}"
             image:
               repository: docker.io/library/mysql
-              tag: 8.0@sha256:7dcddc01f13bab2f15cde676d44d01f61fc9f99fe7785e86196dfc07d358ae2b
+              tag: 9.7@sha256:ae269281abffe401d65f04cb54d45a069a495b8174b9c0a815e502fed7fa0370
             env:
               # Consumed by config/init-databases.sh on first datadir init to
               # create the acore application user.
