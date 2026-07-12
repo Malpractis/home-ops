@@ -35,3 +35,4 @@ configMapGenerator:
       - ./blueprints/17-apps-proxy-admin.yaml
       - ./blueprints/18-outpost.yaml
       - ./blueprints/19-notifications.yaml
+      - ./blueprints/20-apps-proxy-games.yaml

@@ -26,6 +26,8 @@ entries:
         - !Find [authentik_providers_proxy.proxyprovider, [name, "sonarr"]]
         - !Find [authentik_providers_proxy.proxyprovider, [name, "sonarr anime"]]
         - !Find [authentik_providers_proxy.proxyprovider, [name, "stash"]]
+        # Games apps
+        - !Find [authentik_providers_proxy.proxyprovider, [name, "wow-panel"]]
         # Admin apps
         - !Find [authentik_providers_proxy.proxyprovider, [name, "alertmanager"]]
         - !Find [authentik_providers_proxy.proxyprovider, [name, "flux"]]

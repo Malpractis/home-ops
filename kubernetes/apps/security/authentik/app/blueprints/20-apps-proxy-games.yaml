@@ -1,0 +1,40 @@
+---
+# yaml-language-server: $schema=https://version-2026-5.goauthentik.io/blueprints/v1/schema.json
+version: 1
+metadata:
+  name: Materia - Apps - Proxy (Games)
+entries:
+  # ── WoW Panel ─────────────────────────────────────────────────────────────────
+  # No skip_path_regex on purpose: the panel's /api routes scale the realm and
+  # must stay behind the SSO wall.
+  - id: provider_wow_panel
+    model: authentik_providers_proxy.proxyprovider
+    identifiers:
+      name: wow-panel
+    attrs:
+      mode: forward_single
+      external_host: https://wow.materia.wtf
+      authorization_flow: !Find [authentik_flows.flow, [slug, "default-provider-authorization-implicit-consent"]]
+      invalidation_flow: !Find [authentik_flows.flow, [slug, "materia-invalidation"]]
+      property_mappings:
+        - !Find [authentik_providers_oauth2.scopemapping, [scope_name, "proxy-outpost-reduced"]]
+
+  - id: app_wow_panel
+    model: authentik_core.application
+    identifiers:
+      slug: wow-panel
+    attrs:
+      name: WoW Panel
+      provider: !KeyOf provider_wow_panel
+      group: games
+      meta_launch_url: https://wow.materia.wtf
+      meta_description: Realm control (scale up/down, players online)
+      open_in_new_tab: true
+
+  - id: policy_binding_wow_panel
+    model: authentik_policies.policybinding
+    identifiers:
+      target: !KeyOf app_wow_panel
+      group: !Find [authentik_core.group, [name, "games"]]
+    attrs:
+      order: 0

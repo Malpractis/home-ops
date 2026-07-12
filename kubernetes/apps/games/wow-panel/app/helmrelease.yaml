@@ -1,0 +1,121 @@
+---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/bjw-s-labs/helm-charts/main/charts/other/app-template/schemas/helmrelease-helm-v2.schema.json
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: wow-panel
+spec:
+  chartRef:
+    kind: OCIRepository
+    name: wow-panel
+  interval: 1h
+  values:
+    global:
+      # The SA is owned by rbac.yaml (with its RBAC-spec'd Role/RoleBinding);
+      # without this the chart would render a conflicting default SA.
+      createDefaultServiceAccount: false
+    controllers:
+      wow-panel:
+        annotations:
+          reloader.stakater.com/auto: "true"
+        # The idle auto-scale-down loop is an in-memory singleton — exactly one
+        # replica, always (see wow-panel README).
+        replicas: 1
+        serviceAccount:
+          name: wow-panel
+        containers:
+          app:
+            nameOverride: "{{ .Release.Name }}"
+            image:
+              # Rolling :latest, digest-pinned so Renovate PRs each new build.
+              repository: ghcr.io/malpractis/wow-panel
+              tag: latest@sha256:76b1cfcc0f8d6e2033042b0f09ebe8fdd7937226bdfee8aaaa860e57c7c5a413
+            env:
+              AUTH_DEPLOY: azerothcore-authserver
+              # Idle auto-scale-down (docs/wow-server 04-parameters.md):
+              # IDLE_SCALEDOWN_ENABLED=false is the single kill switch.
+              IDLE_SCALEDOWN_ENABLED: "true"
+              IDLE_SCALEDOWN_HOURS: "3"
+              NAMESPACE: games
+              # Display-only: the model mod-ollama-chat is configured to use
+              # (an actual runtime switch is GitOps-owned — WP7 ConfigMap).
+              OLLAMA_MODEL: llama3.1:8b-instruct-q4_K_M
+              # OLLAMA_URL: http://<OLLAMA_IP>:11434 — OLLAMA_IP is still
+              # TBD-owner in 04-parameters.md (WP6/WP8). Unset renders a calm
+              # "not configured yet" dot; fill in once the PC's static lease
+              # is reserved.
+              SOAP_HOST: azerothcore-soap.games.svc.cluster.local
+              SOAP_PORT: "7878"
+              TZ: Australia/Melbourne
+              WORLD_DEPLOY: azerothcore-worldserver
+            envFrom:
+              - secretRef:
+                  name: wow-panel-secret
+            securityContext:
+              allowPrivilegeEscalation: false
+              readOnlyRootFilesystem: true
+              capabilities: {drop: ["ALL"]}
+            probes:
+              liveness: &probe
+                enabled: true
+                custom: true
+                spec:
+                  httpGet:
+                    path: /api/healthz
+                    port: 3000
+                  periodSeconds: 30
+              readiness: *probe
+              startup:
+                enabled: true
+                custom: true
+                spec:
+                  httpGet:
+                    path: /api/healthz
+                    port: 3000
+                  failureThreshold: 30
+                  periodSeconds: 5
+            resources:
+              requests:
+                cpu: 25m
+                memory: 128Mi
+              limits:
+                memory: 512Mi
+    defaultPodOptions:
+      # The in-cluster ServiceAccount token is how the panel scales the game
+      # Deployments; the SA itself has automount disabled (rbac.yaml) so only
+      # this pod carries it.
+      automountServiceAccountToken: true
+      imagePullSecrets:
+        - name: ghcr-pull-secret
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 1000
+        runAsGroup: 1000
+        fsGroup: 1000
+        fsGroupChangePolicy: OnRootMismatch
+    service:
+      app:
+        ports:
+          http:
+            port: 80
+            targetPort: 3000
+    route:
+      app:
+        # PANEL_HOST — SSO-walled by the authentik-forward-auth component
+        # wired in ks.yaml (SecurityPolicy targets this route).
+        hostnames:
+          - wow.materia.wtf
+        parentRefs:
+          - name: envoy-internal
+            namespace: network
+    persistence:
+      # Next.js standalone needs these two writable paths with the read-only
+      # rootfs.
+      cache:
+        type: emptyDir
+        globalMounts:
+          - path: /app/.next/cache
+      tmp:
+        type: emptyDir
+        globalMounts:
+          - path: /tmp

@@ -1,0 +1,42 @@
+---
+# Exactly docs/wow-server/context/11-panel-rbac-spec.md — anything the panel
+# "needs" beyond this is an escalation, not an addition here.
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: wow-panel
+# Token is NOT auto-mounted by default; only the panel pod opts in
+# (automountServiceAccountToken in the HelmRelease pod options).
+automountServiceAccountToken: false
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: wow-panel
+rules:
+  # Scale + inspect exactly the two game Deployments (resourceNames-pinned).
+  # The DB StatefulSet is deliberately out of reach — a panel bug must never
+  # be able to scale MySQL.
+  - apiGroups: ["apps"]
+    resources: ["deployments", "deployments/scale"]
+    resourceNames: ["azerothcore-authserver", "azerothcore-worldserver"]
+    verbs: ["get", "patch"]
+  # Pod readiness display. list/watch cannot be resourceNames-pinned in RBAC,
+  # so this is namespace-wide read on pods — accepted; the namespace contains
+  # only this stack.
+  - apiGroups: [""]
+    resources: ["pods"]
+    verbs: ["get", "list", "watch"]
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: wow-panel
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: Role
+  name: wow-panel
+subjects:
+  - kind: ServiceAccount
+    name: wow-panel
+    namespace: games

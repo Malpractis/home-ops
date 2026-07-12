@@ -11,3 +11,4 @@ resources:
   - ./namespace.yaml
   - ./azerothcore-client-data/ks.yaml
   - ./azerothcore-db/ks.yaml
+  - ./wow-panel/ks.yaml
