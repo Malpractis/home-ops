@@ -130,7 +130,7 @@ spec:
           # LAN-only A record (Pi-hole + UniFi external-dns watch Services;
           # the Cloudflare instance only watches envoy-external HTTPRoutes) —
           # players' realmlist.wtf points at this name instead of the raw VIP.
-          external-dns.alpha.kubernetes.io/hostname: wow-server.materia.wtf
+          external-dns.alpha.kubernetes.io/hostname: wow.internal
           # Both game Services share the realm VIP (WP8 validated live);
           # the VIP is permanent — it's baked into the DB realmlist row.
           lbipam.cilium.io/ips: 192.168.10.120
