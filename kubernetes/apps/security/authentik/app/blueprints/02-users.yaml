@@ -14,6 +14,7 @@ entries:
       groups:
         - !Find [authentik_core.group, [name, "admins"]]
         - !Find [authentik_core.group, [name, "games"]]
+        - !Find [authentik_core.group, [name, "games-admins"]]
         - !Find [authentik_core.group, [name, "infra"]]
         - !Find [authentik_core.group, [name, "media"]]
 
