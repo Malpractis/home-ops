@@ -7,9 +7,6 @@ resources:
   - ./helmrelease.yaml
   - ./ocirepository.yaml
 configMapGenerator:
-  # Full .conf files (dist copies + WP7's reviewed deltas — see
-  # docs/wow-server/context/05-module-config-reference.md). DB credentials are
-  # NOT in these files; they're env-injected (AC_*) from azerothcore-secret.
   - name: azerothcore-config
     files:
       - ./configs/authserver.conf
@@ -26,5 +23,4 @@ configMapGenerator:
 generatorOptions:
   disableNameSuffixHash: true
   annotations:
-    # conf contents are runtime values, never Flux substitutions
     kustomize.toolkit.fluxcd.io/substitute: disabled
