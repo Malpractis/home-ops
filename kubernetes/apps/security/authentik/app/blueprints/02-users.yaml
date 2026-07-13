@@ -27,6 +27,7 @@ entries:
       is_active: true
       groups:
         - !Find [authentik_core.group, [name, "members"]]
+        - !Find [authentik_core.group, [name, "games"]]
 
   - id: user_suri
     model: authentik_core.user
