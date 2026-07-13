@@ -37,6 +37,17 @@ entries:
       is_superuser: false
       parent: !KeyOf group_users
 
+  # Elevated realm admins — unlocks the wow-panel's account-management and GM
+  # console tier. Checked in-app via the x-authentik-groups header, not an app
+  # binding; parented to games so members inherit panel access itself.
+  - id: group_games_admins
+    model: authentik_core.group
+    identifiers:
+      name: games-admins
+    attrs:
+      is_superuser: false
+      parent: !KeyOf group_games
+
   # Media managers — arr stack, download clients, Stash
   - id: group_media
     model: authentik_core.group
