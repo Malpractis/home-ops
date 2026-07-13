@@ -192,6 +192,9 @@ spec:
               - path: /azerothcore/etc/modules/mod_ollama_chat.conf
                 subPath: mod_ollama_chat.conf
                 readOnly: true
+              - path: /azerothcore/etc/modules/MultiBotBridge.conf
+                subPath: MultiBotBridge.conf
+                readOnly: true
               - path: /azerothcore/etc/modules/playerbots.conf
                 subPath: playerbots.conf
                 readOnly: true

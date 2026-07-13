@@ -13,6 +13,7 @@ configMapGenerator:
       - ./configs/mod_ahbot.conf
       - ./configs/mod_ale.conf
       - ./configs/mod_ollama_chat.conf
+      - ./configs/MultiBotBridge.conf
       - ./configs/playerbots.conf
       - ./configs/transmog.conf
       - ./configs/worldserver.conf
