@@ -183,11 +183,23 @@ spec:
                 readOnly: true
           worldserver:
             app:
+              - path: /azerothcore/etc/modules/CFBG.conf
+                subPath: CFBG.conf
+                readOnly: true
+              - path: /azerothcore/etc/modules/mod_accountbound.conf
+                subPath: mod_accountbound.conf
+                readOnly: true
+              - path: /azerothcore/etc/modules/mod_achievements.conf
+                subPath: mod_achievements.conf
+                readOnly: true
               - path: /azerothcore/etc/modules/mod_ahbot.conf
                 subPath: mod_ahbot.conf
                 readOnly: true
               - path: /azerothcore/etc/modules/mod_ale.conf
                 subPath: mod_ale.conf
+                readOnly: true
+              - path: /azerothcore/etc/modules/mod_aoe_loot.conf
+                subPath: mod_aoe_loot.conf
                 readOnly: true
               - path: /azerothcore/etc/modules/mod_ollama_chat.conf
                 subPath: mod_ollama_chat.conf
