@@ -30,6 +30,11 @@ on:
         description: Renovate Version
         default: latest
         required: true
+  repository_dispatch:
+    # Fired by the source repos (wlogs-parser, wow-panel, azerothcore-image)
+    # the moment they publish a new image, so the bump PR is opened right away
+    # instead of waiting up to an hour for the schedule above.
+    types: [image-published]
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.event.number || github.ref }}
