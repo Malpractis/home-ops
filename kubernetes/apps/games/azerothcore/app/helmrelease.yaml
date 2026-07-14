@@ -27,7 +27,7 @@ spec:
             nameOverride: authserver
             image: &image
               repository: ghcr.io/malpractis/azerothcore-wotlk-playerbots
-              tag: latest@sha256:c0dce375b9ebb243cb35fa6b3ca8dbb69407daa0da6ba4f479318a9e58f6c71b
+              tag: 1.1.0@sha256:93f91999dd26335773021bc984caea2f8c99284347560ba5c65fc836375d3bb4
             # Image CMD is worldserver; same image runs both servers.
             command: ["authserver"]
             env:
@@ -185,9 +185,6 @@ spec:
             app:
               - path: /azerothcore/etc/modules/CFBG.conf
                 subPath: CFBG.conf
-                readOnly: true
-              - path: /azerothcore/etc/modules/mod_accountbound.conf
-                subPath: mod_accountbound.conf
                 readOnly: true
               - path: /azerothcore/etc/modules/mod_achievements.conf
                 subPath: mod_achievements.conf
