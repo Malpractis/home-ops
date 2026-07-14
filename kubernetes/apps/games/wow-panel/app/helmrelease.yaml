@@ -29,7 +29,7 @@ spec:
             image:
               # Rolling :latest, digest-pinned so Renovate PRs each new build.
               repository: ghcr.io/malpractis/wow-panel
-              tag: 1.1.0@sha256:38b9aaec379c53d93083c7682300a87689b0a93ba8a08f41331b6bbd69c97022
+              tag: 1.1.0@sha256:9c9c7a9968a0bc735d9aba607cb1ec3fdea5d1941fbf3850e87c396a062ceced
             env:
               AUTH_DEPLOY: azerothcore-authserver
               # Idle auto-scale-down (docs/wow-server 04-parameters.md):
