@@ -72,10 +72,14 @@ spec:
         # one is gone.
         strategy: Recreate
         pod:
-          # Worldserver flushes character/bot state to the DB on SIGTERM —
-          # generous on purpose, do not shorten. Image runs worldserver as
-          # PID 1 (exec-form CMD, no shell wrapper).
-          terminationGracePeriodSeconds: 180
+          # Budget = preStop hook (900s in-game restart countdown when real
+          # players are online + 120s hold margin — see
+          # scripts/prestop-restart-warning.sh) + SIGTERM save time (~180s:
+          # worldserver flushes character/bot state to the DB — generous on
+          # purpose, do not shorten). Image runs worldserver as PID 1
+          # (exec-form CMD, no shell wrapper). With nobody online the hook
+          # returns immediately and only the save time is used.
+          terminationGracePeriodSeconds: 1200
         containers:
           app:
             nameOverride: worldserver
@@ -89,9 +93,18 @@ spec:
               AC_AUCTION_HOUSE_BOT_GUID: "701"
               TZ: Australia/Melbourne
             envFrom:
-              # The four AC_*_DATABASE_INFO DSNs
+              # The four AC_*_DATABASE_INFO DSNs + SOAP_USERNAME/SOAP_PASSWORD
+              # (the preStop hook's SOAP login; non-AC_ names are invisible to
+              # AzerothCore's env-override config reader)
               - secretRef:
                   name: azerothcore-secret
+            # In-game 15-min restart warning before any orchestrated
+            # termination, skipped when no real players are online.
+            # Emergency bypass: kubectl delete pod --grace-period=1
+            lifecycle:
+              preStop:
+                exec:
+                  command: ["/bin/bash", "/scripts/prestop-restart-warning.sh"]
             securityContext: *securityContext
             probes:
               liveness: &worldProbe
@@ -229,6 +242,14 @@ spec:
           worldserver:
             app:
               - path: /azerothcore/lua_scripts
+                readOnly: true
+      scripts:
+        type: configMap
+        name: azerothcore-scripts
+        advancedMounts:
+          worldserver:
+            app:
+              - path: /scripts
                 readOnly: true
       tmp:
         type: emptyDir
