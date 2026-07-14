@@ -186,6 +186,9 @@ spec:
               - path: /azerothcore/etc/modules/CFBG.conf
                 subPath: CFBG.conf
                 readOnly: true
+              - path: /azerothcore/etc/modules/mod_account_mount.conf
+                subPath: mod_account_mount.conf
+                readOnly: true
               - path: /azerothcore/etc/modules/mod_achievements.conf
                 subPath: mod_achievements.conf
                 readOnly: true
