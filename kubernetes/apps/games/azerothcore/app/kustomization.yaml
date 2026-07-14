@@ -25,6 +25,12 @@ configMapGenerator:
   - name: azerothcore-lua-scripts
     files:
       - ./lua_scripts/README.md
+  # Lifecycle-hook scripts (worldserver preStop restart warning). The
+  # substitute:disabled annotation below is load-bearing here: the script
+  # uses bash ${...} that strict envsubst would otherwise mangle.
+  - name: azerothcore-scripts
+    files:
+      - ./scripts/prestop-restart-warning.sh
 generatorOptions:
   disableNameSuffixHash: true
   annotations:
