@@ -1,0 +1,29 @@
+---
+# yaml-language-server: $schema=https://schemas.materia.wtf/monitoring.coreos.com/prometheusrule_v1.json
+# Endpoint-down alerting is GatusEndpointDown (gatus-sidecar rules); this only
+# covers what the synthetic check can't see: the app serving errors while up.
+apiVersion: monitoring.coreos.com/v1
+kind: PrometheusRule
+metadata:
+  name: raidscope-rules
+spec:
+  groups:
+    - name: raidscope.rules
+      rules:
+        - alert: RaidscopeHigh5xxRatio
+          # Ratio-based with a minimum-traffic guard (~9 requests/15m) so a
+          # single failed request on an idle app doesn't page.
+          expr: |
+            (
+              sum(rate(http_requests_total{namespace="default", job="raidscope", status="5xx"}[15m]))
+                /
+              sum(rate(http_requests_total{namespace="default", job="raidscope"}[15m]))
+            ) > 0.05
+            and
+            sum(rate(http_requests_total{namespace="default", job="raidscope"}[15m])) > 0.01
+          for: 15m
+          annotations:
+            summary: >-
+              raidscope is serving {{ $value | humanizePercentage }} 5xx responses
+          labels:
+            severity: critical

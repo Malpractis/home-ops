@@ -38,7 +38,10 @@ spec:
               # All caps dropped: the app binds unprivileged 8080 (see Dockerfile).
               capabilities: {drop: ["ALL"]}
             probes:
-              liveness: &probe
+              # Liveness stays on the static /healthz: a storage blip must not
+              # restart-loop the pod. Readiness write-probes the reports PVC
+              # (/readyz), so a pod on a broken/stale ceph mount stops serving.
+              liveness:
                 enabled: true
                 custom: true
                 spec:
@@ -46,7 +49,14 @@ spec:
                     path: /healthz
                     port: 8080
                   periodSeconds: 30
-              readiness: *probe
+              readiness:
+                enabled: true
+                custom: true
+                spec:
+                  httpGet:
+                    path: /readyz
+                    port: 8080
+                  periodSeconds: 30
               startup:
                 enabled: true
                 spec:
@@ -72,6 +82,11 @@ spec:
         ports:
           http:
             port: 8080
+    serviceMonitor:
+      app:
+        endpoints:
+          # metrics share the app port; /metrics is OIDC-exempt in the app
+          - port: http
     route:
       app:
         annotations:
