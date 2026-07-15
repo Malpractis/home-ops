@@ -21,6 +21,10 @@ spec:
         # The idle auto-scale-down loop is an in-memory singleton — exactly one
         # replica, always (see wow-panel README).
         replicas: 1
+        # RollingUpdate would briefly run two pods — two idle loops — on every
+        # deploy. Recreate keeps the singleton airtight; the ~seconds gap on a
+        # rollout is invisible for a panel nobody watches continuously.
+        strategy: Recreate
         serviceAccount:
           name: wow-panel
         containers:
