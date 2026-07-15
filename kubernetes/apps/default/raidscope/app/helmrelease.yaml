@@ -35,7 +35,7 @@ spec:
             securityContext:
               allowPrivilegeEscalation: false
               readOnlyRootFilesystem: true
-              # NET_BIND_SERVICE lets the non-root process bind privileged port 80.
+              # All caps dropped: the app binds unprivileged 8080 (see Dockerfile).
               capabilities: {drop: ["ALL"]}
             probes:
               liveness: &probe
@@ -74,6 +74,13 @@ spec:
             port: 8080
     route:
       app:
+        annotations:
+          # Probe the open health endpoint: the root URL sits behind the OIDC
+          # wall, and this must test the CF -> tunnel -> Envoy -> pod path
+          # without depending on Authentik being up.
+          gatus.home-operations.com/endpoint: |-
+            path: /healthz
+            conditions: ["[STATUS] == 200"]
         hostnames:
           - "{{ .Release.Name }}.materia.wtf"
         parentRefs:
