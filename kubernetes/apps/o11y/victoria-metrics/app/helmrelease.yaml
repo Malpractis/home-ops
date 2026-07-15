@@ -262,7 +262,12 @@ spec:
         groups:
           - name: wow-panel
             type: vlogs
-            interval: 30m
+            # Evaluate every 10m over an explicit 30m window (the _time filter
+            # in the expr overrides vmalert's default interval-sized window),
+            # with for: 30m — paging needs ~4 consecutive empty windows, so a
+            # one-off ingestion hiccup or pod roll at an evaluation boundary
+            # can't false-page (it did exactly that on first deploy).
+            interval: 10m
             rules:
               # The panel logs `[idle-scaledown] check: ...` every tick
               # (5 min) while IDLE_SCALEDOWN_ENABLED=true — a documented
@@ -274,7 +279,8 @@ spec:
                 annotations:
                   summary: wow-panel logged no idle-scaledown check line in 30m — the auto-park loop is wedged or disabled. Check the wow-panel pod logs.
                 expr: |-
-                  kubernetes.pod_namespace:=games kubernetes.container_name:=wow-panel "[idle-scaledown]" | stats count() as checks | filter checks:<1
+                  kubernetes.pod_namespace:=games kubernetes.container_name:=wow-panel "[idle-scaledown]" _time:30m | stats count() as checks | filter checks:<1
+                for: 30m
                 labels:
                   severity: warning
       zfs-rules:
