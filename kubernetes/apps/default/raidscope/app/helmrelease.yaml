@@ -3,15 +3,15 @@
 apiVersion: helm.toolkit.fluxcd.io/v2
 kind: HelmRelease
 metadata:
-  name: wlogs-parser
+  name: raidscope
 spec:
   chartRef:
     kind: OCIRepository
-    name: wlogs-parser
+    name: raidscope
   interval: 1h
   values:
     controllers:
-      wlogs-parser:
+      raidscope:
         annotations:
           reloader.stakater.com/auto: "true"
         # RWO PVC: the replacement pod can't mount until the old one is gone.
@@ -20,16 +20,18 @@ spec:
           app:
             nameOverride: "{{ .Release.Name }}"
             image:
-              # Rolling :latest, digest-pinned so Renovate PRs each new build.
-              repository: ghcr.io/malpractis/wlogs-parser
-              tag: 2.0.0@sha256:f278aa7bd1b1313aa983629e8d64cdebcd37c106afabdad6e19b29b5804eef57
+              # Digest-pinned by Renovate on each new build. 3.0.0 is the first
+              # release published under the raidscope package name (the old
+              # ghcr.io/malpractis/wlogs-parser images were not migrated).
+              repository: ghcr.io/malpractis/raidscope
+              tag: 3.0.0
             env:
               # OIDC via Authentik (client id/secret + session key come from the secret).
-              OIDC_ISSUER: https://auth.materia.wtf/application/o/wlogs-parser
-              OIDC_REDIRECT_URL: https://wlogs-parser.materia.wtf/auth
+              OIDC_ISSUER: https://auth.materia.wtf/application/o/raidscope
+              OIDC_REDIRECT_URL: https://raidscope.materia.wtf/auth
             envFrom:
               - secretRef:
-                  name: wlogs-parser-secret
+                  name: raidscope-secret
             securityContext:
               allowPrivilegeEscalation: false
               readOnlyRootFilesystem: true
@@ -79,7 +81,7 @@ spec:
             namespace: network
     persistence:
       reports:
-        existingClaim: wlogs-parser
+        existingClaim: raidscope
         globalMounts:
           - path: /app/reports
       tmp:

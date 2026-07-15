@@ -4,7 +4,7 @@
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: wlogs-parser
+  name: raidscope
 spec:
   accessModes:
     - ReadWriteOnce

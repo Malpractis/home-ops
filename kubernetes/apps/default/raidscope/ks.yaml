@@ -3,10 +3,10 @@
 apiVersion: kustomize.toolkit.fluxcd.io/v1
 kind: Kustomization
 metadata:
-  name: &app wlogs-parser
+  name: &app raidscope
 spec:
   interval: 1h
-  path: ./kubernetes/apps/default/wlogs-parser/app
+  path: ./kubernetes/apps/default/raidscope/app
   postBuild:
     substitute:
       APP: *app
