@@ -1,0 +1,76 @@
+---
+# yaml-language-server: $schema=https://schemas.materia.wtf/grafana.integreatly.org/grafanadashboard_v1beta1.json
+# Audit view over the panel's stdout audit contract (see wow-panel
+# ARCHITECTURE.md): every mutating call logs one `[scale]`/`[admin]` line, and
+# every idle-loop tick logs `[idle-scaledown] check: ...` (the loop's liveness
+# signal — WowPanelIdleLoopSilent alerts on its absence).
+apiVersion: grafana.integreatly.org/v1beta1
+kind: GrafanaDashboard
+metadata:
+  name: wow-panel-audit
+spec:
+  allowCrossNamespaceImport: true
+  instanceSelector:
+    matchLabels:
+      dashboards: grafana
+  json: |-
+    {
+      "uid": "wow-panel-audit",
+      "title": "WoW Panel / Audit",
+      "tags": ["wow-panel", "games"],
+      "timezone": "browser",
+      "editable": true,
+      "schemaVersion": 39,
+      "refresh": "1m",
+      "time": {"from": "now-7d", "to": "now"},
+      "panels": [
+        {
+          "id": 1,
+          "type": "logs",
+          "title": "Audit — admin actions & manual scales",
+          "description": "One line per mutating call: [admin] user=<user> <audit> and [scale] target=<up|down> requested by <user>. Generated passwords never appear here by design.",
+          "datasource": {"type": "victoriametrics-logs-datasource", "uid": "victorialogs"},
+          "gridPos": {"h": 12, "w": 24, "x": 0, "y": 0},
+          "options": {
+            "showTime": true,
+            "sortOrder": "Descending",
+            "wrapLogMessage": true,
+            "enableLogDetails": true,
+            "dedupStrategy": "none",
+            "showLabels": false,
+            "showCommonLabels": false,
+            "prettifyLogMessage": false
+          },
+          "targets": [
+            {
+              "refId": "A",
+              "expr": "kubernetes.pod_namespace:=games kubernetes.container_name:=wow-panel (\"[admin]\" OR \"[scale]\")"
+            }
+          ]
+        },
+        {
+          "id": 2,
+          "type": "logs",
+          "title": "Idle auto-scale-down loop",
+          "description": "Per-tick check outcomes (every 5 min while enabled) plus scale-to-0 actions. Silence while the loop is enabled = wedged loop (alerted).",
+          "datasource": {"type": "victoriametrics-logs-datasource", "uid": "victorialogs"},
+          "gridPos": {"h": 12, "w": 24, "x": 0, "y": 12},
+          "options": {
+            "showTime": true,
+            "sortOrder": "Descending",
+            "wrapLogMessage": true,
+            "enableLogDetails": true,
+            "dedupStrategy": "none",
+            "showLabels": false,
+            "showCommonLabels": false,
+            "prettifyLogMessage": false
+          },
+          "targets": [
+            {
+              "refId": "A",
+              "expr": "kubernetes.pod_namespace:=games kubernetes.container_name:=wow-panel \"[idle-scaledown]\""
+            }
+          ]
+        }
+      ]
+    }

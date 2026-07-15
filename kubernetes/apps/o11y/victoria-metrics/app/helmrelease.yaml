@@ -257,6 +257,26 @@ spec:
                   kubernetes.pod_namespace:=media kubernetes.container_name:=recyclarr ("[ERR]" OR "[WRN]" OR "[FTL]" OR "level=error") | stats count() as errors | filter errors:>0
                 labels:
                   severity: warning
+      wow-panel-rules:
+        create: true
+        groups:
+          - name: wow-panel
+            type: vlogs
+            interval: 30m
+            rules:
+              # The panel logs `[idle-scaledown] check: ...` every tick
+              # (5 min) while IDLE_SCALEDOWN_ENABLED=true — a documented
+              # liveness contract (wow-panel README). Silence over a full 30m
+              # window means the loop is wedged, the pod is crash-looping, or
+              # log collection broke. Also fires if the kill switch is turned
+              # off — a deliberate reminder that auto-park is disabled.
+              - alert: WowPanelIdleLoopSilent
+                annotations:
+                  summary: wow-panel logged no idle-scaledown check line in 30m — the auto-park loop is wedged or disabled. Check the wow-panel pod logs.
+                expr: |-
+                  kubernetes.pod_namespace:=games kubernetes.container_name:=wow-panel "[idle-scaledown]" | stats count() as checks | filter checks:<1
+                labels:
+                  severity: warning
       zfs-rules:
         create: true
         groups:
