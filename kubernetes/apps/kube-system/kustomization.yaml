@@ -12,5 +12,6 @@ resources:
   - ./coredns/ks.yaml
   - ./crd-schema-publisher/ks.yaml
   - ./drm-exporter/ks.yaml
+  - ./etcd-defrag/ks.yaml
   - ./intel-gpu-resource-driver/ks.yaml
   - ./metrics-server/ks.yaml
