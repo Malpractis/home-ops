@@ -27,6 +27,7 @@ configMapGenerator:
   - name: azerothcore-lua-scripts
     files:
       - ./lua_scripts/README.md
+      - ./lua_scripts/wwi-tyraels-hilt.lua
   # Lifecycle-hook + probe scripts (worldserver preStop restart warning,
   # SOAP liveness). The substitute:disabled annotation below is load-bearing
   # here: the scripts use bash ${...} that strict envsubst would otherwise
