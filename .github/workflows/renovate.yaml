@@ -31,7 +31,7 @@ on:
         default: latest
         required: true
   repository_dispatch:
-    # Fired by the source repos (wlogs-parser, wow-panel, azerothcore-image)
+    # Fired by the source repos (raidscope, wow-panel, azerothcore-image)
     # the moment they publish a new image, so the bump PR is opened right away
     # instead of waiting up to an hour for the schedule above.
     types: [image-published]
@@ -57,8 +57,6 @@ jobs:
           OP_SERVICE_ACCOUNT_TOKEN: ${{ secrets.OP_SERVICE_ACCOUNT_TOKEN }}
           GITHUB_BOT_APP_CLIENT_ID: op://kubernetes/github-bot/GITHUB_BOT_APP_CLIENT_ID
           GITHUB_BOT_APP_PRIVATE_KEY: op://kubernetes/github-bot/GITHUB_BOT_APP_PRIVATE_KEY
-          # read:packages PAT (reused from the cluster's GHCR pull secret) so Renovate
-          # can read the private ghcr.io/malpractis/wlogs-parser package digest.
           RENOVATE_GHCR_TOKEN: op://kubernetes/ghcr-pull/token
 
       - name: Generate Token
@@ -76,12 +74,12 @@ jobs:
           permission-workflows: write
           # Renovate also manages the azerothcore-image source pins
           # (versions.json git-refs manager), wow-panel's npm/actions/base
-          # image, and wlogs-parser's pip/actions/base image; the github-bot
+          # image, and raidscope's pip/actions/base image; the github-bot
           # App must be INSTALLED on those repos or token generation fails.
           repositories: |
             ${{ github.event.repository.name }}
             azerothcore-image
-            wlogs-parser
+            raidscope
             wow-panel
 
       - name: Checkout
@@ -95,7 +93,7 @@ jobs:
         env:
           LOG_LEVEL: ${{ inputs.logLevel || 'debug' }}
           RENOVATE_AUTODISCOVER: true
-          RENOVATE_AUTODISCOVER_FILTER: ${{ github.repository }},${{ github.repository_owner }}/azerothcore-image,${{ github.repository_owner }}/wlogs-parser,${{ github.repository_owner }}/wow-panel
+          RENOVATE_AUTODISCOVER_FILTER: ${{ github.repository }},${{ github.repository_owner }}/azerothcore-image,${{ github.repository_owner }}/raidscope,${{ github.repository_owner }}/wow-panel
           RENOVATE_DRY_RUN: ${{ inputs.dryRun }}
           RENOVATE_INTERNAL_CHECKS_FILTER: strict
           RENOVATE_PLATFORM: github
