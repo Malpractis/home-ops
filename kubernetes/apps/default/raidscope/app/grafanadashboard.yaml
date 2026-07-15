@@ -1,0 +1,92 @@
+---
+# yaml-language-server: $schema=https://schemas.materia.wtf/grafana.integreatly.org/grafanadashboard_v1beta1.json
+apiVersion: grafana.integreatly.org/v1beta1
+kind: GrafanaDashboard
+metadata:
+  name: raidscope
+  annotations:
+    # Strict envsubst (ks.yaml postBuild) would fail on the ${DS_PROMETHEUS}
+    # datasource placeholder in the JSON below — grafana-operator owns it.
+    kustomize.toolkit.fluxcd.io/substitute: disabled
+spec:
+  allowCrossNamespaceImport: true
+  instanceSelector:
+    matchLabels:
+      dashboards: grafana
+  datasources:
+    - datasourceName: VictoriaMetrics
+      inputName: DS_PROMETHEUS
+  json: |-
+    {
+      "title": "Raidscope",
+      "uid": "raidscope",
+      "tags": ["default", "raidscope"],
+      "timezone": "browser",
+      "schemaVersion": 39,
+      "refresh": "30s",
+      "time": {"from": "now-24h", "to": "now"},
+      "panels": [
+        {
+          "id": 1, "type": "stat", "title": "Endpoint reachable (gatus)",
+          "datasource": "${DS_PROMETHEUS}",
+          "gridPos": {"h": 4, "w": 6, "x": 0, "y": 0},
+          "targets": [{"refId": "A", "expr": "min(gatus_results_endpoint_success{group=\"external\", name=\"raidscope\"})"}],
+          "fieldConfig": {"defaults": {"mappings": [{"type": "value", "options": {"0": {"text": "DOWN", "color": "red"}, "1": {"text": "UP", "color": "green"}}}], "thresholds": {"mode": "absolute", "steps": [{"color": "red", "value": null}, {"color": "green", "value": 1}]}}, "overrides": []}
+        },
+        {
+          "id": 2, "type": "stat", "title": "5xx (1h)",
+          "datasource": "${DS_PROMETHEUS}",
+          "gridPos": {"h": 4, "w": 6, "x": 6, "y": 0},
+          "targets": [{"refId": "A", "expr": "sum(increase(http_requests_total{namespace=\"default\", job=\"raidscope\", status=\"5xx\"}[1h])) or vector(0)"}],
+          "fieldConfig": {"defaults": {"thresholds": {"mode": "absolute", "steps": [{"color": "green", "value": null}, {"color": "red", "value": 1}]}}, "overrides": []}
+        },
+        {
+          "id": 3, "type": "stat", "title": "Failed jobs (24h)",
+          "datasource": "${DS_PROMETHEUS}",
+          "gridPos": {"h": 4, "w": 6, "x": 12, "y": 0},
+          "targets": [{"refId": "A", "expr": "sum(increase(raidscope_jobs_total{namespace=\"default\", outcome=\"error\"}[24h])) or vector(0)"}],
+          "fieldConfig": {"defaults": {"thresholds": {"mode": "absolute", "steps": [{"color": "green", "value": null}, {"color": "yellow", "value": 1}]}}, "overrides": []}
+        },
+        {
+          "id": 4, "type": "stat", "title": "Pod restarts (24h)",
+          "datasource": "${DS_PROMETHEUS}",
+          "gridPos": {"h": 4, "w": 6, "x": 18, "y": 0},
+          "targets": [{"refId": "A", "expr": "sum(increase(kube_pod_container_status_restarts_total{namespace=\"default\", container=\"raidscope\"}[24h]))"}],
+          "fieldConfig": {"defaults": {"thresholds": {"mode": "absolute", "steps": [{"color": "green", "value": null}, {"color": "red", "value": 1}]}}, "overrides": []}
+        },
+        {
+          "id": 5, "type": "timeseries", "title": "Request rate by handler",
+          "datasource": "${DS_PROMETHEUS}",
+          "gridPos": {"h": 8, "w": 12, "x": 0, "y": 4},
+          "targets": [{"refId": "A", "expr": "sum by (handler) (rate(http_requests_total{namespace=\"default\", job=\"raidscope\"}[5m]))", "legendFormat": "{{handler}}"}],
+          "fieldConfig": {"defaults": {"unit": "reqps", "custom": {"fillOpacity": 10}}, "overrides": []}
+        },
+        {
+          "id": 6, "type": "timeseries", "title": "Request latency p95 / p50",
+          "datasource": "${DS_PROMETHEUS}",
+          "gridPos": {"h": 8, "w": 12, "x": 12, "y": 4},
+          "targets": [
+            {"refId": "A", "expr": "histogram_quantile(0.95, sum by (le) (rate(http_request_duration_seconds_bucket{namespace=\"default\", job=\"raidscope\"}[5m])))", "legendFormat": "p95"},
+            {"refId": "B", "expr": "histogram_quantile(0.50, sum by (le) (rate(http_request_duration_seconds_bucket{namespace=\"default\", job=\"raidscope\"}[5m])))", "legendFormat": "p50"}
+          ],
+          "fieldConfig": {"defaults": {"unit": "s", "custom": {"fillOpacity": 10}}, "overrides": []}
+        },
+        {
+          "id": 7, "type": "timeseries", "title": "Build jobs by outcome (1h windows)",
+          "datasource": "${DS_PROMETHEUS}",
+          "gridPos": {"h": 8, "w": 12, "x": 0, "y": 12},
+          "targets": [{"refId": "A", "expr": "sum by (outcome) (increase(raidscope_jobs_total{namespace=\"default\"}[1h]))", "legendFormat": "{{outcome}}"}],
+          "fieldConfig": {"defaults": {"custom": {"fillOpacity": 10}}, "overrides": []}
+        },
+        {
+          "id": 8, "type": "timeseries", "title": "Memory vs limit",
+          "datasource": "${DS_PROMETHEUS}",
+          "gridPos": {"h": 8, "w": 12, "x": 12, "y": 12},
+          "targets": [
+            {"refId": "A", "expr": "max(container_memory_working_set_bytes{namespace=\"default\", container=\"raidscope\"})", "legendFormat": "working set"},
+            {"refId": "B", "expr": "max(kube_pod_container_resource_limits{namespace=\"default\", container=\"raidscope\", resource=\"memory\"})", "legendFormat": "limit"}
+          ],
+          "fieldConfig": {"defaults": {"unit": "bytes", "custom": {"fillOpacity": 10}}, "overrides": []}
+        }
+      ]
+    }
