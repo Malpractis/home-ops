@@ -38,6 +38,14 @@ endpoints:
     interval: 15m
     conditions:
       - "[STATUS] == 200"
+  - name: Reforged Manager update feed
+    group: upstreams
+    # latest.yml on the PUBLIC mirror repo — the electron-updater feed the
+    # installed fleet polls (source repo is private, its assets 404).
+    url: https://github.com/Malpractis/reforged-manager-releases/releases/latest/download/latest.yml
+    interval: 15m
+    conditions:
+      - "[STATUS] == 200"
   - name: Reforged R2 patch bucket
     group: upstreams
     url: "https://pub-0f05631d243e4046993fc02ca7be9542.r2.dev/Wrath%20of%20the%20Lich%20King/patches/patch-A.mpq"
