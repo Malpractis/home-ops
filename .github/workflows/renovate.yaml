@@ -75,12 +75,13 @@ jobs:
           permission-vulnerability-alerts: read
           permission-workflows: write
           # Renovate also manages the azerothcore-image source pins
-          # (versions.json git-refs manager) and wow-panel's npm/actions/base
-          # image; the github-bot App must be INSTALLED on those repos or
-          # token generation fails.
+          # (versions.json git-refs manager), wow-panel's npm/actions/base
+          # image, and wlogs-parser's pip/actions/base image; the github-bot
+          # App must be INSTALLED on those repos or token generation fails.
           repositories: |
             ${{ github.event.repository.name }}
             azerothcore-image
+            wlogs-parser
             wow-panel
 
       - name: Checkout
@@ -94,7 +95,7 @@ jobs:
         env:
           LOG_LEVEL: ${{ inputs.logLevel || 'debug' }}
           RENOVATE_AUTODISCOVER: true
-          RENOVATE_AUTODISCOVER_FILTER: ${{ github.repository }},${{ github.repository_owner }}/azerothcore-image,${{ github.repository_owner }}/wow-panel
+          RENOVATE_AUTODISCOVER_FILTER: ${{ github.repository }},${{ github.repository_owner }}/azerothcore-image,${{ github.repository_owner }}/wlogs-parser,${{ github.repository_owner }}/wow-panel
           RENOVATE_DRY_RUN: ${{ inputs.dryRun }}
           RENOVATE_INTERNAL_CHECKS_FILTER: strict
           RENOVATE_PLATFORM: github
