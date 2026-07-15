@@ -28,6 +28,16 @@ spec:
           labels:
             severity: critical
 
+        - alert: GatusReleasePipelineBroken
+          expr: |
+            gatus_results_endpoint_success{group="ci"} == 0
+          for: 1h
+          annotations:
+            summary: >-
+              ATT release pipeline check {{ $labels.name }} is failing (cron disabled, release run failed, or the monitoring PAT expired)
+          labels:
+            severity: critical
+
         - alert: GatusUpstreamDown
           expr: |
             gatus_results_endpoint_success{group="upstreams"} == 0

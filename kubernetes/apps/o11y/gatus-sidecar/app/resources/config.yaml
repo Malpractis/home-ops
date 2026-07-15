@@ -4,6 +4,32 @@ connectivity:
     target: 1.1.1.1:53
     interval: 1m
 endpoints:
+  # Dead-man switch for the ATT release pipeline (AllTheThings-WotLK):
+  # pull-based via the GitHub API because Cloudflare Bot Fight Mode would eat
+  # a push from GitHub Actions runners. Token: gatus-sidecar-secret (ESO).
+  - name: att-release-cron-enabled
+    group: ci
+    # state must be "active" - GitHub silently disables scheduled workflows
+    # after 60 days without repo activity (state becomes disabled_inactivity)
+    url: https://api.github.com/repos/Malpractis/AllTheThings-WotLK/actions/workflows/upstream-release.yml
+    interval: 30m
+    headers:
+      Authorization: Bearer ${ATT_GITHUB_TOKEN}
+    conditions:
+      - "[STATUS] == 200"
+      - "[BODY].state == active"
+  - name: att-release-last-run
+    group: ci
+    # latest completed run must have succeeded - catches failing releases
+    # (incl. expired RELEASES_TOKEN / SIGNING_KEY problems) and check-job
+    # failures the repo's own drift-alert job cannot see
+    url: "https://api.github.com/repos/Malpractis/AllTheThings-WotLK/actions/workflows/upstream-release.yml/runs?status=completed&per_page=1"
+    interval: 30m
+    headers:
+      Authorization: Bearer ${ATT_GITHUB_TOKEN}
+    conditions:
+      - "[STATUS] == 200"
+      - "[BODY].workflow_runs[0].conclusion == success"
   - name: Cloudflare
     group: connectivity
     url: icmp://1.1.1.1

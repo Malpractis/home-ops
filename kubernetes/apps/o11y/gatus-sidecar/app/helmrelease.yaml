@@ -16,6 +16,13 @@ spec:
       delayStartSeconds: "5"
       env:
         TZ: Australia/Melbourne
+      # ${ATT_GITHUB_TOKEN} for the ci-group checks in config.yaml. optional:
+      # gatus still starts (and the checks fail loudly) if the secret is
+      # missing; reloader rolls the pod when ESO creates it.
+      envFrom:
+        - secretRef:
+            name: gatus-sidecar-secret
+            optional: true
       securityContext:
         allowPrivilegeEscalation: false
         readOnlyRootFilesystem: true
