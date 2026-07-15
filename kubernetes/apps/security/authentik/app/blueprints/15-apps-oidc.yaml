@@ -59,6 +59,22 @@ entries:
       order: 0
 
   # ── Raidscope (Warcraft Logs intelligence; ex wlogs-parser) ───────────────────
+  # The old wlogs-parser objects must be deleted BEFORE the raidscope provider is
+  # created: both use the same client_id (same 1Password fields) and authentik
+  # enforces client_id uniqueness, so create-before-delete fails validation and
+  # blueprints apply all-or-nothing. Drop the absent entries once applied.
+  - id: wlogs_parser_application
+    model: authentik_core.application
+    state: absent
+    identifiers:
+      slug: wlogs-parser
+
+  - id: wlogs_parser_provider
+    model: authentik_providers_oauth2.oauth2provider
+    state: absent
+    identifiers:
+      name: wlogs-parser
+
   - id: raidscope_provider
     model: authentik_providers_oauth2.oauth2provider
     identifiers:
@@ -145,23 +161,6 @@ entries:
     attrs:
       order: 0
 
-  # wlogs-parser — superseded by raidscope (rebrand). Blueprint removal alone
-  # would orphan the live objects, so delete them explicitly; the application's
-  # policy bindings cascade with it. Drop these entries once applied.
-  # (2026-07-15: comment retouched to change the file hash — the first apply
-  # was rolled back by a Postgres deadlock in the deletion cascade, and
-  # authentik skips re-applying an unchanged file.)
-  - id: wlogs_parser_application
-    model: authentik_core.application
-    state: absent
-    identifiers:
-      slug: wlogs-parser
-
-  - id: wlogs_parser_provider
-    model: authentik_providers_oauth2.oauth2provider
-    state: absent
-    identifiers:
-      name: wlogs-parser
 
   # ════════════════════════════════════════════════════════════════════════════
   # Media
