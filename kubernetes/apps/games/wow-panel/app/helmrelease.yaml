@@ -21,6 +21,10 @@ spec:
         # The idle auto-scale-down loop is an in-memory singleton — exactly one
         # replica, always (see wow-panel README).
         replicas: 1
+        # RollingUpdate would briefly run two pods — two idle loops — on every
+        # deploy. Recreate keeps the singleton airtight; the ~seconds gap on a
+        # rollout is invisible for a panel nobody watches continuously.
+        strategy: Recreate
         serviceAccount:
           name: wow-panel
         containers:
@@ -87,6 +91,9 @@ spec:
       automountServiceAccountToken: true
       imagePullSecrets:
         - name: ghcr-pull-secret
+      # The panel is the realm's control plane — most needed exactly when the
+      # cluster is under pressure. Never preempts (see priorityclass.yaml).
+      priorityClassName: wow-panel
       securityContext:
         runAsNonRoot: true
         runAsUser: 1000
@@ -95,6 +102,17 @@ spec:
         fsGroupChangePolicy: OnRootMismatch
     service:
       app:
+        # In-cluster uptime check on the SSO-free probe endpoint. The route's
+        # auto-generated gatus entry is only the internal-gateway DNS exposure
+        # guard (wow.materia.wtf must NOT resolve publicly) — without this the
+        # pod itself has no uptime monitoring. group: services lands it in the
+        # existing GatusEndpointDown alert.
+        annotations:
+          gatus.home-operations.com/enabled: "true"
+          gatus.home-operations.com/endpoint: |-
+            group: services
+            url: http://wow-panel.games.svc:80/api/healthz
+            conditions: ["[STATUS] == 200", "[BODY].ok == true"]
         ports:
           http:
             port: 80
