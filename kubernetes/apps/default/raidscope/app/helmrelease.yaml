@@ -20,11 +20,11 @@ spec:
           app:
             nameOverride: "{{ .Release.Name }}"
             image:
-              # Digest-pinned by Renovate on each new build. 3.0.0 is the first
-              # release published under the raidscope package name (the old
+              # Digest-pinned so Renovate PRs each new build. 3.0.0 is the first
+              # release under the raidscope package name (the old
               # ghcr.io/malpractis/wlogs-parser images were not migrated).
               repository: ghcr.io/malpractis/raidscope
-              tag: 3.0.0
+              tag: 3.0.0@sha256:3dac7a17f0dc8775676222a93d205b36336e8e9ff6ae51198fd1e7a44089be58
             env:
               # OIDC via Authentik (client id/secret + session key come from the secret).
               OIDC_ISSUER: https://auth.materia.wtf/application/o/raidscope
