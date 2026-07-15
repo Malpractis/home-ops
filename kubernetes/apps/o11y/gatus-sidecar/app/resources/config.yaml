@@ -48,6 +48,51 @@ endpoints:
     interval: 1m
     conditions:
       - "[CONNECTED] == true"
+  # Third-party sources Reforged Manager (WoW client tooling) pulls from —
+  # a failure here explains "check for updates" breaking fleet-wide before
+  # anyone reports it. HEAD keeps the multi-GB bucket objects cheap to poll.
+  - name: DXVK releases API
+    group: upstreams
+    url: https://api.github.com/repos/doitsujin/dxvk/releases/latest
+    interval: 15m
+    conditions:
+      - "[STATUS] == 200"
+  - name: Lexara (GitHub raw)
+    group: upstreams
+    url: https://raw.githubusercontent.com/Stormhand-dev/Lexara---HD-Font-Renderer-for-WoW-3.3.5/main/Lexara.zip
+    method: HEAD
+    interval: 15m
+    conditions:
+      - "[STATUS] == 200"
+  - name: Reforged Manager update feed
+    group: upstreams
+    # latest.yml on the PUBLIC mirror repo — the electron-updater feed the
+    # installed fleet polls (source repo is private, its assets 404).
+    url: https://github.com/Malpractis/reforged-manager-releases/releases/latest/download/latest.yml
+    interval: 15m
+    conditions:
+      - "[STATUS] == 200"
+  - name: Reforged R2 patch bucket
+    group: upstreams
+    url: "https://pub-0f05631d243e4046993fc02ca7be9542.r2.dev/Wrath%20of%20the%20Lich%20King/patches/patch-A.mpq"
+    method: HEAD
+    interval: 15m
+    conditions:
+      - "[STATUS] == 200"
+  - name: Vanguard (GitHub raw)
+    group: upstreams
+    url: https://raw.githubusercontent.com/Stormhand-dev/Vanguard---WotLK-AutoLogin/main/AccountLogin.lua
+    method: HEAD
+    interval: 15m
+    conditions:
+      - "[STATUS] == 200"
+  - name: WoW Patcher (GitHub raw)
+    group: upstreams
+    url: https://raw.githubusercontent.com/Stormhand-dev/WoW-3.3.5-Patcher---Project-Reforged/main/Project%20Reforged%20-%20WoW%203.3.5%20Patcher.zip
+    method: HEAD
+    interval: 15m
+    conditions:
+      - "[STATUS] == 200"
 metrics: true
 storage:
   type: sqlite

@@ -37,3 +37,14 @@ spec:
               ATT release pipeline check {{ $labels.name }} is failing (cron disabled, release run failed, or the monitoring PAT expired)
           labels:
             severity: critical
+
+        - alert: GatusUpstreamDown
+          expr: |
+            gatus_results_endpoint_success{group="upstreams"} == 0
+          for: 30m
+          annotations:
+            summary: >-
+              The {{ $labels.name }} third-party upstream is unreachable
+          labels:
+            # Third-party outages aren't actionable at 3am — warn, don't page.
+            severity: warning
