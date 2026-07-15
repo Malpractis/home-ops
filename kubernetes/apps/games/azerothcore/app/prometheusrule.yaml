@@ -1,0 +1,57 @@
+---
+# yaml-language-server: $schema=https://schemas.materia.wtf/monitoring.coreos.com/prometheusrule_v1.json
+apiVersion: monitoring.coreos.com/v1
+kind: PrometheusRule
+metadata:
+  name: azerothcore-rules
+spec:
+  groups:
+    - name: azerothcore.rules
+      rules:
+        # The gatus `games` group is intentionally outside gatus-sidecar's
+        # blanket GatusEndpointDown rule (external|services): the panel scales
+        # the realm 0↔1 on purpose, and deliberate downtime must not page.
+        # The `unless` clause drops the alert whenever either game Deployment
+        # is scaled to zero.
+        - alert: AzerothCoreRealmDown
+          expr: |-
+            gatus_results_endpoint_success{group="games"} == 0
+            unless on ()
+            (min(kube_deployment_spec_replicas{namespace="games", deployment=~"azerothcore-(authserver|worldserver)"}) == 0)
+          for: 5m
+          annotations:
+            summary: >-
+              The {{ $labels.name }} realm endpoint is down while its
+              Deployment is scaled up
+          labels:
+            severity: critical
+
+        # Liveness-probe flapping or crash-looping: distinct from the
+        # cluster-wide OomKilled rule, which only sees OOM restarts.
+        - alert: AzerothCoreWorldserverRestartLoop
+          expr: |-
+            increase(kube_pod_container_status_restarts_total{namespace="games", container="worldserver"}[2h]) > 2
+          annotations:
+            summary: >-
+              worldserver restarted {{ $value }} times in the last 2h —
+              check liveness probe results and Server.log
+          labels:
+            severity: critical
+
+        # Early warning before the cluster-wide OomKilled rule fires after
+        # the fact: bots + players growing the working set toward the 8Gi
+        # limit is capacity drift, not a fault — raise the limit deliberately.
+        - alert: AzerothCoreWorldserverMemoryHigh
+          expr: |-
+            max by (pod) (container_memory_working_set_bytes{namespace="games", container="worldserver"})
+              / on (pod)
+            max by (pod) (kube_pod_container_resource_limits{namespace="games", container="worldserver", resource="memory"})
+            > 0.92
+          for: 15m
+          annotations:
+            summary: >-
+              worldserver working set is at {{ $value | humanizePercentage }}
+              of its memory limit for 15m — OOM kill imminent, plan a limit
+              bump
+          labels:
+            severity: warning

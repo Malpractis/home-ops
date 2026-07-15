@@ -1,0 +1,13 @@
+---
+apiVersion: scheduling.k8s.io/v1
+kind: PriorityClass
+metadata:
+  name: azerothcore-critical
+value: 1000000
+globalDefault: false
+description: >-
+  Realm pods (worldserver/authserver/MySQL): under node pressure these are
+  evicted after ordinary workloads — a *arr restart is free, a realm restart
+  costs players a 15-minute countdown. Defined in azerothcore-db because the
+  azerothcore app dependsOn it, guaranteeing the class exists before any
+  consumer references it.

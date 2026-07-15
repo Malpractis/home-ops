@@ -6,7 +6,10 @@ resources:
   - ./externalsecret.yaml
   - ./helmrelease.yaml
   - ./ocirepository.yaml
+  - ./priorityclass.yaml
+  - ./prometheusrule.yaml
   - ./pullsecret.yaml
+  - ./servicemonitor.yaml
 configMapGenerator:
   - name: azerothcore-db-config
     files:

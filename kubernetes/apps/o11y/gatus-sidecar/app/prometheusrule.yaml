@@ -27,3 +27,13 @@ spec:
               The {{ $labels.name }} endpoint has a public DNS record and is exposed
           labels:
             severity: critical
+
+        - alert: GatusReleasePipelineBroken
+          expr: |
+            gatus_results_endpoint_success{group="ci"} == 0
+          for: 1h
+          annotations:
+            summary: >-
+              ATT release pipeline check {{ $labels.name }} is failing (cron disabled, release run failed, or the monitoring PAT expired)
+          labels:
+            severity: critical
