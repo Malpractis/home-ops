@@ -16,10 +16,10 @@ spec:
   datasources:
     - datasourceName: VictoriaMetrics
       inputName: DS_PROMETHEUS
-  # The two worldserver panels (sessions / update time) query AC's built-in
-  # InfluxDB metrics via __name__ regexes because VictoriaMetrics derives the
-  # metric name from measurement+field — tighten to the exact names once the
-  # first live data lands in vmsingle.
+  # Worldserver panels use AC's built-in InfluxDB metrics; VictoriaMetrics
+  # names them {measurement}_{field} — exact names verified live 2026-07-15
+  # (online_players_value, update_time_diff_value, world_update_time_value,
+  # db_queue_{login,character,world}_value, ...).
   json: |-
     {
       "title": "AzerothCore Realm",
@@ -62,14 +62,17 @@ spec:
           "id": 5, "type": "timeseries", "title": "Online sessions (includes bots)",
           "datasource": "${DS_PROMETHEUS}",
           "gridPos": {"h": 8, "w": 12, "x": 0, "y": 4},
-          "targets": [{"refId": "A", "expr": "{__name__=~\"online_players(_value)?\", db=\"worldserver\"}", "legendFormat": "sessions"}],
+          "targets": [{"refId": "A", "expr": "online_players_value{db=\"worldserver\"}", "legendFormat": "sessions"}],
           "fieldConfig": {"defaults": {"custom": {"fillOpacity": 10}}, "overrides": []}
         },
         {
           "id": 6, "type": "timeseries", "title": "World update time",
           "datasource": "${DS_PROMETHEUS}",
           "gridPos": {"h": 8, "w": 12, "x": 12, "y": 4},
-          "targets": [{"refId": "A", "expr": "{__name__=~\"update_time_diff(_value)?\", db=\"worldserver\"}", "legendFormat": "update diff"}],
+          "targets": [
+            {"refId": "A", "expr": "update_time_diff_value{db=\"worldserver\"}", "legendFormat": "tick diff"},
+            {"refId": "B", "expr": "world_update_time_value{db=\"worldserver\"}", "legendFormat": "world update"}
+          ],
           "fieldConfig": {"defaults": {"unit": "ms", "custom": {"fillOpacity": 10}}, "overrides": []}
         },
         {
