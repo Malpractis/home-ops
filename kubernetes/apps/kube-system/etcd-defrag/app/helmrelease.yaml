@@ -16,6 +16,7 @@ spec:
         runAsGroup: 0
         runAsNonRoot: false
         runAsUser: 0
+      # Ensure this only runs on control-plane nodes
       nodeSelector:
         node-role.kubernetes.io/control-plane: ""
       tolerations:
@@ -27,6 +28,7 @@ spec:
       etcd-defrag:
         type: cronjob
         cronjob:
+          # Run weekly on Sunday at 3 AM
           schedule: "0 3 * * 0"
           timeZone: Australia/Melbourne
           concurrencyPolicy: Forbid
@@ -45,10 +47,16 @@ spec:
               - --cacert=/certs/ca.crt
               - --cert=/certs/server.crt
               - --key=/certs/server.key
+              # Defrag when DB quota usage > 50% OR reclaimable space > 100MiB
               - --defrag-rule=dbQuotaUsage > 0.5 || dbSizeFree > 100*1024*1024
+              # Move leadership away before defragging the leader
               - --move-leader
+              # Pause between members so quorum never sees two stalls at once
               - --wait-between-defrags=30s
+              # Talos default quota-backend-bytes (2GiB) — keep in sync with
+              # cluster.etcd.extraArgs if that is ever overridden
               - --etcd-storage-quota-bytes=2147483648
+              # Auto-disarm space quota alarms once usage drops below threshold
               - --auto-disalarm
               - --disalarm-threshold=0.8
             resources:
