@@ -77,7 +77,35 @@ spec:
                 memory: 1Gi
               limits:
                 memory: 2Gi
+          exporter:
+            image:
+              repository: docker.io/prom/mysqld-exporter
+              tag: v0.19.0@sha256:eacb4b18e2ec1e0abdf2d64851b68526c964f6d9cb3e9458fb5d5f5062ea94c1
+            args:
+              - --mysqld.address=127.0.0.1:3306
+              - --mysqld.username=root
+            env:
+              # Root because the init script only runs on first datadir init —
+              # a dedicated exporter user would need a manual SQL step on the
+              # live DB. Same-pod loopback only; the secret never leaves the
+              # pod spec it already lives in.
+              MYSQLD_EXPORTER_PASSWORD:
+                valueFrom:
+                  secretKeyRef:
+                    name: azerothcore-db-secret
+                    key: MYSQL_ROOT_PASSWORD
+            securityContext:
+              allowPrivilegeEscalation: false
+              readOnlyRootFilesystem: true
+              capabilities: {drop: ["ALL"]}
+            resources:
+              requests:
+                cpu: 10m
+                memory: 32Mi
+              limits:
+                memory: 64Mi
     defaultPodOptions:
+      priorityClassName: azerothcore-critical
       securityContext:
         runAsNonRoot: true
         # The official mysql image runs as uid 999 (mysql), not the home-ops
@@ -90,6 +118,8 @@ spec:
       app:
         controller: azerothcore-db
         ports:
+          metrics:
+            port: 9104
           mysql:
             port: 3306
     persistence:

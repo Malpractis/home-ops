@@ -1,0 +1,117 @@
+---
+# yaml-language-server: $schema=https://schemas.materia.wtf/grafana.integreatly.org/grafanadashboard_v1beta1.json
+apiVersion: grafana.integreatly.org/v1beta1
+kind: GrafanaDashboard
+metadata:
+  name: azerothcore
+  annotations:
+    # Strict envsubst (ks.yaml postBuild) would fail on the ${DS_PROMETHEUS}
+    # datasource placeholder in the JSON below — grafana-operator owns it.
+    kustomize.toolkit.fluxcd.io/substitute: disabled
+spec:
+  allowCrossNamespaceImport: true
+  instanceSelector:
+    matchLabels:
+      dashboards: grafana
+  datasources:
+    - datasourceName: VictoriaMetrics
+      inputName: DS_PROMETHEUS
+  # The two worldserver panels (sessions / update time) query AC's built-in
+  # InfluxDB metrics via __name__ regexes because VictoriaMetrics derives the
+  # metric name from measurement+field — tighten to the exact names once the
+  # first live data lands in vmsingle.
+  json: |-
+    {
+      "title": "AzerothCore Realm",
+      "uid": "azerothcore-realm",
+      "tags": ["games", "azerothcore"],
+      "timezone": "browser",
+      "schemaVersion": 39,
+      "refresh": "30s",
+      "time": {"from": "now-6h", "to": "now"},
+      "panels": [
+        {
+          "id": 1, "type": "stat", "title": "Realm reachable (VIP)",
+          "datasource": "${DS_PROMETHEUS}",
+          "gridPos": {"h": 4, "w": 6, "x": 0, "y": 0},
+          "targets": [{"refId": "A", "expr": "min(gatus_results_endpoint_success{group=\"games\"})"}],
+          "fieldConfig": {"defaults": {"mappings": [{"type": "value", "options": {"0": {"text": "DOWN", "color": "red"}, "1": {"text": "UP", "color": "green"}}}], "thresholds": {"mode": "absolute", "steps": [{"color": "red", "value": null}, {"color": "green", "value": 1}]}}, "overrides": []}
+        },
+        {
+          "id": 2, "type": "stat", "title": "Deployments scaled up",
+          "datasource": "${DS_PROMETHEUS}",
+          "gridPos": {"h": 4, "w": 6, "x": 6, "y": 0},
+          "targets": [{"refId": "A", "expr": "sum(kube_deployment_spec_replicas{namespace=\"games\", deployment=~\"azerothcore-(authserver|worldserver)\"})"}],
+          "fieldConfig": {"defaults": {"thresholds": {"mode": "absolute", "steps": [{"color": "yellow", "value": null}, {"color": "green", "value": 2}]}}, "overrides": []}
+        },
+        {
+          "id": 3, "type": "stat", "title": "worldserver restarts (24h)",
+          "datasource": "${DS_PROMETHEUS}",
+          "gridPos": {"h": 4, "w": 6, "x": 12, "y": 0},
+          "targets": [{"refId": "A", "expr": "sum(increase(kube_pod_container_status_restarts_total{namespace=\"games\", container=\"worldserver\"}[24h]))"}],
+          "fieldConfig": {"defaults": {"thresholds": {"mode": "absolute", "steps": [{"color": "green", "value": null}, {"color": "red", "value": 1}]}}, "overrides": []}
+        },
+        {
+          "id": 4, "type": "stat", "title": "MySQL up",
+          "datasource": "${DS_PROMETHEUS}",
+          "gridPos": {"h": 4, "w": 6, "x": 18, "y": 0},
+          "targets": [{"refId": "A", "expr": "min(mysql_up{namespace=\"games\"})"}],
+          "fieldConfig": {"defaults": {"mappings": [{"type": "value", "options": {"0": {"text": "DOWN", "color": "red"}, "1": {"text": "UP", "color": "green"}}}], "thresholds": {"mode": "absolute", "steps": [{"color": "red", "value": null}, {"color": "green", "value": 1}]}}, "overrides": []}
+        },
+        {
+          "id": 5, "type": "timeseries", "title": "Online sessions (includes bots)",
+          "datasource": "${DS_PROMETHEUS}",
+          "gridPos": {"h": 8, "w": 12, "x": 0, "y": 4},
+          "targets": [{"refId": "A", "expr": "{__name__=~\"online_players(_value)?\", db=\"worldserver\"}", "legendFormat": "sessions"}],
+          "fieldConfig": {"defaults": {"custom": {"fillOpacity": 10}}, "overrides": []}
+        },
+        {
+          "id": 6, "type": "timeseries", "title": "World update time",
+          "datasource": "${DS_PROMETHEUS}",
+          "gridPos": {"h": 8, "w": 12, "x": 12, "y": 4},
+          "targets": [{"refId": "A", "expr": "{__name__=~\"update_time_diff(_value)?\", db=\"worldserver\"}", "legendFormat": "update diff"}],
+          "fieldConfig": {"defaults": {"unit": "ms", "custom": {"fillOpacity": 10}}, "overrides": []}
+        },
+        {
+          "id": 7, "type": "timeseries", "title": "worldserver memory vs limit",
+          "datasource": "${DS_PROMETHEUS}",
+          "gridPos": {"h": 8, "w": 12, "x": 0, "y": 12},
+          "targets": [
+            {"refId": "A", "expr": "max(container_memory_working_set_bytes{namespace=\"games\", container=\"worldserver\"})", "legendFormat": "working set"},
+            {"refId": "B", "expr": "max(kube_pod_container_resource_limits{namespace=\"games\", container=\"worldserver\", resource=\"memory\"})", "legendFormat": "limit"}
+          ],
+          "fieldConfig": {"defaults": {"unit": "bytes", "custom": {"fillOpacity": 10}}, "overrides": []}
+        },
+        {
+          "id": 8, "type": "timeseries", "title": "worldserver CPU",
+          "datasource": "${DS_PROMETHEUS}",
+          "gridPos": {"h": 8, "w": 12, "x": 12, "y": 12},
+          "targets": [{"refId": "A", "expr": "sum(rate(container_cpu_usage_seconds_total{namespace=\"games\", container=\"worldserver\"}[5m]))", "legendFormat": "cores"}],
+          "fieldConfig": {"defaults": {"custom": {"fillOpacity": 10}}, "overrides": []}
+        },
+        {
+          "id": 9, "type": "timeseries", "title": "MySQL queries/s",
+          "datasource": "${DS_PROMETHEUS}",
+          "gridPos": {"h": 8, "w": 8, "x": 0, "y": 20},
+          "targets": [{"refId": "A", "expr": "rate(mysql_global_status_queries{namespace=\"games\"}[5m])", "legendFormat": "qps"}],
+          "fieldConfig": {"defaults": {"custom": {"fillOpacity": 10}}, "overrides": []}
+        },
+        {
+          "id": 10, "type": "timeseries", "title": "MySQL connections",
+          "datasource": "${DS_PROMETHEUS}",
+          "gridPos": {"h": 8, "w": 8, "x": 8, "y": 20},
+          "targets": [
+            {"refId": "A", "expr": "mysql_global_status_threads_connected{namespace=\"games\"}", "legendFormat": "connected"},
+            {"refId": "B", "expr": "mysql_global_variables_max_connections{namespace=\"games\"}", "legendFormat": "max"}
+          ],
+          "fieldConfig": {"defaults": {"custom": {"fillOpacity": 10}}, "overrides": []}
+        },
+        {
+          "id": 11, "type": "timeseries", "title": "games PVC usage",
+          "datasource": "${DS_PROMETHEUS}",
+          "gridPos": {"h": 8, "w": 8, "x": 16, "y": 20},
+          "targets": [{"refId": "A", "expr": "kubelet_volume_stats_used_bytes{namespace=\"games\"} / kubelet_volume_stats_capacity_bytes{namespace=\"games\"}", "legendFormat": "{{ persistentvolumeclaim }}"}],
+          "fieldConfig": {"defaults": {"unit": "percentunit", "max": 1, "custom": {"fillOpacity": 10}}, "overrides": []}
+        }
+      ]
+    }

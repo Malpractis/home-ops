@@ -1,0 +1,48 @@
+---
+# yaml-language-server: $schema=https://schemas.materia.wtf/monitoring.coreos.com/prometheusrule_v1.json
+apiVersion: monitoring.coreos.com/v1
+kind: PrometheusRule
+metadata:
+  name: azerothcore-db-rules
+spec:
+  groups:
+    - name: azerothcore-db.rules
+      rules:
+        - alert: AzerothCoreDbDown
+          expr: |-
+            mysql_up{namespace="games"} == 0
+          for: 5m
+          annotations:
+            summary: >-
+              azerothcore-db is not answering the mysqld-exporter — the realm
+              cannot save or authenticate
+          labels:
+            severity: critical
+
+        # The exporter target vanishing (pod gone, service port renamed,
+        # scrape broken) would otherwise silently blind the mysql_up alert.
+        - alert: AzerothCoreDbExporterAbsent
+          expr: |-
+            absent(mysql_up{namespace="games"})
+          for: 15m
+          annotations:
+            summary: >-
+              mysqld-exporter for azerothcore-db has disappeared from scrape
+              discovery — DB alerting is blind
+          labels:
+            severity: warning
+
+        # worldserver + authserver + dbimport share the pool; playerbots is
+        # connection-hungry. Headroom gone = login failures before hard down.
+        - alert: AzerothCoreDbConnectionsHigh
+          expr: |-
+            mysql_global_status_threads_connected{namespace="games"}
+              / mysql_global_variables_max_connections{namespace="games"}
+            > 0.8
+          for: 10m
+          annotations:
+            summary: >-
+              azerothcore-db is at {{ $value | humanizePercentage }} of
+              max_connections for 10m
+          labels:
+            severity: warning
