@@ -141,9 +141,9 @@ flowchart TD
     ext --> apps[HTTPRoutes]
     int --> apps
     subgraph external-dns
-        edcf[cloudflare: public CNAMEs -> tunnel]
-        edpi[pihole: internal records]
-        eduni[unifi: internal records]
+        edcf["cloudflare: public CNAMEs → tunnel"]
+        edpi["pihole: internal records"]
+        eduni["unifi: internal records"]
     end
 ```
 
@@ -189,7 +189,8 @@ sequenceDiagram
     F->>K: cluster-apps Kustomization (kubernetes/apps)
     K->>K: per-app Kustomizations (ks.yaml, dependsOn, components)
     K->>C: HelmReleases / manifests (server-side apply)
-    C-->>K: drift detected → re-apply; failed upgrade → remediate (2 retries)
+    C-->>K: drift detected → re-apply
+    C-->>K: failed upgrade → remediate (2 retries)
     K-->>G: Alerts → Alertmanager → Pushover on errors
 ```
 

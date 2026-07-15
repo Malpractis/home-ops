@@ -13,12 +13,12 @@ flowchart TD
     subgraph companion["Companion repos (azerothcore-image, wow-panel, raidscope)"]
         c1[Conventional commit] --> rp[release-please PR] --> tag[semver tag]
         tag --> build[Image build + GHCR push]
-        build --> disp[repository_dispatch: image-published]
+        build --> disp["repository_dispatch: image-published"]
     end
     subgraph homeops["home-ops"]
         disp --> ren[Renovate run] --> bump[Bump PR]
         pr[Manual PR] --> checks
-        bump --> checks{PR checks:\nkonflate diff + status\nImage Pull pre-warm}
+        bump --> checks{"PR checks:<br/>konflate diff + status<br/>Image Pull pre-warm"}
         checks -->|merge to main| main[main]
     end
     main -->|webhook / poll| flux[Flux reconcile]

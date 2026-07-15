@@ -19,7 +19,7 @@ from 1Password at apply time using your local `op` session.
 
 ```mermaid
 flowchart LR
-    iso[Talos ISO\nImage Factory schematic] --> nodes[Apply machine configs]
+    iso["Talos ISO<br/>(Image Factory schematic)"] --> nodes[Apply machine configs]
     nodes --> etcd[Bootstrap etcd]
     etcd --> base[Namespaces + seed Secrets + CRDs]
     base --> apps[helmfile: cilium → … → flux-instance]
