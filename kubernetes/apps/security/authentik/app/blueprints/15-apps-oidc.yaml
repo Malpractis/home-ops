@@ -148,6 +148,9 @@ entries:
   # wlogs-parser — superseded by raidscope (rebrand). Blueprint removal alone
   # would orphan the live objects, so delete them explicitly; the application's
   # policy bindings cascade with it. Drop these entries once applied.
+  # (2026-07-15: comment retouched to change the file hash — the first apply
+  # was rolled back by a Postgres deadlock in the deletion cascade, and
+  # authentik skips re-applying an unchanged file.)
   - id: wlogs_parser_application
     model: authentik_core.application
     state: absent
