@@ -74,15 +74,17 @@ jobs:
           permission-workflows: write
           # Renovate also manages the azerothcore-image source pins
           # (versions.json git-refs manager), wow-panel's npm/actions/base
-          # image, raidscope's pip/actions/base image, and reforged-manager's
-          # npm/actions; the github-bot App must be INSTALLED on those repos
-          # or token generation fails.
+          # image, raidscope's pip/actions/base image, reforged-manager's
+          # npm/actions, and wow-realmchat's nuget/actions/Ollama pin; the
+          # github-bot App must be INSTALLED on those repos or token
+          # generation fails.
           repositories: |
             ${{ github.event.repository.name }}
             azerothcore-image
             raidscope
             reforged-manager
             wow-panel
+            wow-realmchat
 
       - name: Checkout
         uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
@@ -95,7 +97,7 @@ jobs:
         env:
           LOG_LEVEL: ${{ inputs.logLevel || 'debug' }}
           RENOVATE_AUTODISCOVER: true
-          RENOVATE_AUTODISCOVER_FILTER: ${{ github.repository }},${{ github.repository_owner }}/azerothcore-image,${{ github.repository_owner }}/raidscope,${{ github.repository_owner }}/reforged-manager,${{ github.repository_owner }}/wow-panel
+          RENOVATE_AUTODISCOVER_FILTER: ${{ github.repository }},${{ github.repository_owner }}/azerothcore-image,${{ github.repository_owner }}/raidscope,${{ github.repository_owner }}/reforged-manager,${{ github.repository_owner }}/wow-panel,${{ github.repository_owner }}/wow-realmchat
           RENOVATE_DRY_RUN: ${{ inputs.dryRun }}
           RENOVATE_INTERNAL_CHECKS_FILTER: strict
           RENOVATE_PLATFORM: github
