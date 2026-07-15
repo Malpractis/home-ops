@@ -38,6 +38,23 @@ spec:
           labels:
             severity: critical
 
+        # Dead-man switch on the worldserver→vmsingle influx flow: the server
+        # push-fails silently (metric name verified live 2026-07-15), and a
+        # silent stop would blind the sessions/update-time panels while
+        # everything else stays green. Replica-guarded like RealmDown.
+        - alert: AzerothCoreMetricsFlowStopped
+          expr: |-
+            absent_over_time(online_players_value{db="worldserver"}[15m])
+            and on ()
+            (kube_deployment_spec_replicas{namespace="games", deployment="azerothcore-worldserver"} == 1)
+          for: 5m
+          annotations:
+            summary: >-
+              worldserver is running but no built-in metrics reached
+              VictoriaMetrics for 15m — check Metric.Enable / vmsingle /write
+          labels:
+            severity: warning
+
         # Early warning before the cluster-wide OomKilled rule fires after
         # the fact: bots + players growing the working set toward the 8Gi
         # limit is capacity drift, not a fault — raise the limit deliberately.
