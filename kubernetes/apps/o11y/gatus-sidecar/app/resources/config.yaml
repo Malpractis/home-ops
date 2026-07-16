@@ -30,6 +30,20 @@ endpoints:
     conditions:
       - "[STATUS] == 200"
       - "[BODY].workflow_runs[0].conclusion == success"
+  # Dead-man for the materia-core release pipeline: the latest completed
+  # release.yml run must have succeeded — catches failed installer builds,
+  # smoke-test failures, and mirror-publish breakage (SIGNING_KEY /
+  # github-bot App problems) that would otherwise silently stop the
+  # installed fleet from receiving updates.
+  - name: materia-core-release-last-run
+    group: ci
+    url: "https://api.github.com/repos/Malpractis/materia-core/actions/workflows/release.yml/runs?status=completed&per_page=1"
+    interval: 30m
+    headers:
+      Authorization: Bearer ${MATERIA_GITHUB_TOKEN}
+    conditions:
+      - "[STATUS] == 200"
+      - "[BODY].workflow_runs[0].conclusion == success"
   - name: Cloudflare
     group: connectivity
     url: icmp://1.1.1.1
@@ -48,7 +62,7 @@ endpoints:
     interval: 1m
     conditions:
       - "[CONNECTED] == true"
-  # Third-party sources Reforged Manager (WoW client tooling) pulls from —
+  # Third-party sources Materia Core (WoW client tooling) pulls from —
   # a failure here explains "check for updates" breaking fleet-wide before
   # anyone reports it. HEAD keeps the multi-GB bucket objects cheap to poll.
   - name: DXVK releases API
@@ -64,7 +78,18 @@ endpoints:
     interval: 15m
     conditions:
       - "[STATUS] == 200"
-  - name: Reforged Manager update feed
+  - name: Materia Core latest release assets
+    group: upstreams
+    # the mirror's latest release must actually carry the installer set
+    # (installer, blockmap, latest.yml, checksums, seed stub) — catches a
+    # cut release whose asset upload died half-way, which the feed check
+    # below can't see. Unauthenticated: 2 req/h against the 60/h/IP limit.
+    url: https://api.github.com/repos/Malpractis/materia-core-releases/releases/latest
+    interval: 30m
+    conditions:
+      - "[STATUS] == 200"
+      - "len([BODY].assets) >= 5"
+  - name: Materia Core update feed
     group: upstreams
     # latest.yml on the PUBLIC mirror repo — the electron-updater feed the
     # installed fleet polls (source repo is private, its assets 404).
