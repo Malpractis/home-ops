@@ -24,7 +24,7 @@ spec:
               # release under the raidscope package name (the old
               # ghcr.io/malpractis/wlogs-parser images were not migrated).
               repository: ghcr.io/malpractis/raidscope
-              tag: 3.1.0@sha256:5c893547cb5bfbbec252c14702a5a66d9f1780314438f5bdd48ccf79fb975494
+              tag: 3.1.1@sha256:6422a4d067d197cf8b17b74d664103d68fe04da80fd0466c4b4edc6ac6150031
             env:
               # OIDC via Authentik (client id/secret + session key come from the secret).
               OIDC_ISSUER: https://auth.materia.wtf/application/o/raidscope
