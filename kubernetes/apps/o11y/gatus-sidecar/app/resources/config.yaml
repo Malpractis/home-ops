@@ -68,7 +68,7 @@ endpoints:
     group: upstreams
     # latest.yml on the PUBLIC mirror repo — the electron-updater feed the
     # installed fleet polls (source repo is private, its assets 404).
-    url: https://github.com/Malpractis/reforged-manager-releases/releases/latest/download/latest.yml
+    url: https://github.com/Malpractis/materia-core-releases/releases/latest/download/latest.yml
     interval: 15m
     conditions:
       - "[STATUS] == 200"
