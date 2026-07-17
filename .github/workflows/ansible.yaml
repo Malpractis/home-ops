@@ -137,9 +137,11 @@ jobs:
       - name: Install Ansible Galaxy Roles
         run: ansible-galaxy install -r infrastructure/requirements.yaml
       - name: Setup SSH Key
+        env:
+          ANSIBLE_PRIVATE_KEY: ${{ secrets.ANSIBLE_PRIVATE_KEY }}
         run: |
           mkdir -p ~/.ssh
-          echo "${{ secrets.ANSIBLE_PRIVATE_KEY }}" > ~/.ssh/id_ed25519
+          echo "$ANSIBLE_PRIVATE_KEY" > ~/.ssh/id_ed25519
           chmod 600 ~/.ssh/id_ed25519
           echo "StrictHostKeyChecking no" >> ~/.ssh/config
       - name: Install 1Password CLI
@@ -185,9 +187,11 @@ jobs:
       - name: Install Galaxy Roles
         run: ansible-galaxy install -r infrastructure/requirements.yaml
       - name: Setup SSH Key
+        env:
+          ANSIBLE_PRIVATE_KEY: ${{ secrets.ANSIBLE_PRIVATE_KEY }}
         run: |
           mkdir -p ~/.ssh
-          echo "${{ secrets.ANSIBLE_PRIVATE_KEY }}" > ~/.ssh/id_ed25519
+          echo "$ANSIBLE_PRIVATE_KEY" > ~/.ssh/id_ed25519
           chmod 600 ~/.ssh/id_ed25519
           echo "StrictHostKeyChecking no" >> ~/.ssh/config
       - name: Install 1Password CLI
