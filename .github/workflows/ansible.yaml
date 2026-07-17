@@ -31,12 +31,44 @@ on:
 permissions: {}
 
 jobs:
+  # PR path. The live-host dry run (`check`) needs the SSH key and the
+  # 1Password token, so it cannot run for a pull_request; this validates the
+  # playbook on a GitHub-hosted runner with no credentials instead. It catches
+  # syntax and role-resolution errors pre-merge, and `check` still gates
+  # `apply` once the change lands on main.
+  validate:
+    name: Validate (Syntax Check)
+    if: github.event_name == 'pull_request'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - name: Checkout
+        uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+        with:
+          persist-credentials: false
+      - name: Setup Python
+        uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1 # v6.3.0
+        with:
+          python-version: "3.14"
+          cache: "pip"
+          cache-dependency-path: infrastructure/requirements.txt
+      - name: Install Requirements
+        run: pip install -r infrastructure/requirements.txt
+      - name: Install Ansible Galaxy Roles
+        run: ansible-galaxy install -r infrastructure/requirements.yaml
+      - name: Syntax Check
+        working-directory: infrastructure
+        run: ansible-playbook -i inventory/hosts.yaml playbook.yaml --syntax-check
+
   # Job 0: decide which play tags to run from the changed paths.
   # Only roles/dnscrypt_proxy changed -> dnscrypt; only group_vars -> observability;
   # structural files (playbook/inventory/requirements/cfg) or a manual blank -> all.
   plan:
     name: Plan (decide tags)
     runs-on: home-ops-runner
+    # Self-hosted runner: never expose it to pull_request-controlled code.
+    if: github.event_name != 'pull_request'
     permissions:
       contents: read
       pull-requests: read
@@ -81,11 +113,14 @@ jobs:
           echo "tags=$SEL" >> "$GITHUB_OUTPUT"
           echo "resolved tags='$SEL' (blank = all)"
 
-  # Job 1: Dry Run (Runs on PRs and Main)
+  # Job 1: Dry Run against the live hosts. Runs on push to main and on
+  # workflow_dispatch only — it holds credentials and runs on the self-hosted
+  # runner, so it must stay off the pull_request path.
   check:
     name: Ansible Check (Dry Run)
     needs: plan
     runs-on: home-ops-runner
+    if: github.event_name != 'pull_request'
     steps:
       - name: Checkout
         uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
@@ -102,9 +137,11 @@ jobs:
       - name: Install Ansible Galaxy Roles
         run: ansible-galaxy install -r infrastructure/requirements.yaml
       - name: Setup SSH Key
+        env:
+          ANSIBLE_PRIVATE_KEY: ${{ secrets.ANSIBLE_PRIVATE_KEY }}
         run: |
           mkdir -p ~/.ssh
-          echo "${{ secrets.ANSIBLE_PRIVATE_KEY }}" > ~/.ssh/id_ed25519
+          echo "$ANSIBLE_PRIVATE_KEY" > ~/.ssh/id_ed25519
           chmod 600 ~/.ssh/id_ed25519
           echo "StrictHostKeyChecking no" >> ~/.ssh/config
       - name: Install 1Password CLI
@@ -150,9 +187,11 @@ jobs:
       - name: Install Galaxy Roles
         run: ansible-galaxy install -r infrastructure/requirements.yaml
       - name: Setup SSH Key
+        env:
+          ANSIBLE_PRIVATE_KEY: ${{ secrets.ANSIBLE_PRIVATE_KEY }}
         run: |
           mkdir -p ~/.ssh
-          echo "${{ secrets.ANSIBLE_PRIVATE_KEY }}" > ~/.ssh/id_ed25519
+          echo "$ANSIBLE_PRIVATE_KEY" > ~/.ssh/id_ed25519
           chmod 600 ~/.ssh/id_ed25519
           echo "StrictHostKeyChecking no" >> ~/.ssh/config
       - name: Install 1Password CLI
