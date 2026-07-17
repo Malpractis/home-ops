@@ -159,8 +159,14 @@ jobs:
         working-directory: infrastructure
         env:
           OP_SERVICE_ACCOUNT_TOKEN: ${{ secrets.OP_SERVICE_ACCOUNT_TOKEN }}
+          TAGS: ${{ needs.plan.outputs.tags }}
+          LIMIT: ${{ inputs.limit }}
         run: |
-          ansible-playbook -i inventory/hosts.yaml playbook.yaml --check --diff ${{ needs.plan.outputs.tags && format('--tags {0}', needs.plan.outputs.tags) || '' }} ${{ inputs.limit && format('--limit {0}', inputs.limit) || '' }} -e 'ansible_python_interpreter=/usr/bin/python3'
+          args=()
+          if [ -n "$TAGS" ]; then args+=(--tags "$TAGS"); fi
+          if [ -n "$LIMIT" ]; then args+=(--limit "$LIMIT"); fi
+          ansible-playbook -i inventory/hosts.yaml playbook.yaml --check --diff \
+            "${args[@]}" -e 'ansible_python_interpreter=/usr/bin/python3'
 
   # Job 2: Apply. Auto-runs on push to main (after Check passes); can also be triggered
   # manually via workflow_dispatch (check_only=false), optionally scoped with `limit`/`tags`.
@@ -209,5 +215,11 @@ jobs:
         working-directory: infrastructure
         env:
           OP_SERVICE_ACCOUNT_TOKEN: ${{ secrets.OP_SERVICE_ACCOUNT_TOKEN }}
+          TAGS: ${{ needs.plan.outputs.tags }}
+          LIMIT: ${{ inputs.limit }}
         run: |
-          ansible-playbook -i inventory/hosts.yaml playbook.yaml ${{ needs.plan.outputs.tags && format('--tags {0}', needs.plan.outputs.tags) || '' }} ${{ inputs.limit && format('--limit {0}', inputs.limit) || '' }} -e 'ansible_python_interpreter=/usr/bin/python3'
+          args=()
+          if [ -n "$TAGS" ]; then args+=(--tags "$TAGS"); fi
+          if [ -n "$LIMIT" ]; then args+=(--limit "$LIMIT"); fi
+          ansible-playbook -i inventory/hosts.yaml playbook.yaml \
+            "${args[@]}" -e 'ansible_python_interpreter=/usr/bin/python3'
