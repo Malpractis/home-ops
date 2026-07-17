@@ -49,6 +49,15 @@
       automerge: false,
     },
     {
+      description: "AzerothCore MySQL image — never auto-merge; rolling the DB statefulset drops the worldserver's connection and loses unsaved realm progress. Run realm maintenance first.",
+      matchDatasources: [ "docker" ],
+      matchPackageNames: [ "/library\\/mysql/" ],
+      automerge: false,
+      prBodyNotes: [
+        "⚠️ **Realm maintenance required before merging.** This rolls the `azerothcore-db` statefulset under the live worldserver. First run `saveall` (or a full `server shutdown`) via the wow-panel admin page or SOAP, then merge; the worldserver reconnects/restarts on its own once MySQL is back.",
+      ],
+    },
+    {
       description: "Auto-merge high-cadence OCI packages weekly",
       matchDatasources: [ "docker" ],
       matchUpdateTypes: [ "minor", "patch" ],
