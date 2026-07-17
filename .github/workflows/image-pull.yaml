@@ -83,6 +83,8 @@ jobs:
       - name: Pull Image
         env:
           IMAGE: ${{ matrix.image }}
+        # NODE is not set here — it comes from the self-hosted runner's
+        # environment (set on home-ops-runner), not from this workflow.
         run: talosctl --nodes "$NODE" image pull "$IMAGE"
 
   success:
