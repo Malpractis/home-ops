@@ -15,6 +15,7 @@ configMapGenerator:
     files:
       - ./config/init-databases.sh
       - ./config/my.cnf
+      - ./config/prestop-saveall.sh
 generatorOptions:
   disableNameSuffixHash: true
   annotations:
