@@ -35,6 +35,12 @@ spec:
               repository: ghcr.io/malpractis/wow-panel
               tag: 1.6.0@sha256:88482e59efde8eedc4b2f9bc889fc64d96d4f6ac138ab3b694d1c2317c219086
             env:
+              # Read-only game-DB access for the /bot-roster page (the acore
+              # app user; AC_DB_PASSWORD arrives via wow-panel-secret). Unset
+              # host = the page degrades to an explanatory card.
+              AC_DB_HOST: azerothcore-db.games.svc.cluster.local
+              AC_DB_PORT: "3306"
+              AC_DB_USER: acore
               AUTH_DEPLOY: azerothcore-authserver
               # Idle auto-scale-down (docs/wow-server 04-parameters.md):
               # IDLE_SCALEDOWN_ENABLED=false is the single kill switch.
