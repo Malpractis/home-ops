@@ -16,6 +16,11 @@ spec:
           reloader.stakater.com/auto: "true"
         type: statefulset
         replicas: 1
+        pod:
+          # Budget = preStop hook (20s SOAP saveall + 15s async-save flush,
+          # see config/prestop-saveall.sh) + mysqld's own SIGTERM shutdown.
+          # The 30s default risks SIGKILLing mysqld mid-flush.
+          terminationGracePeriodSeconds: 120
         statefulset:
           volumeClaimTemplates:
             - name: data
@@ -43,7 +48,25 @@ spec:
                   secretKeyRef:
                     name: azerothcore-db-secret
                     key: MYSQL_ROOT_PASSWORD
+              # preStop hook's SOAP login (config/prestop-saveall.sh)
+              SOAP_PASSWORD:
+                valueFrom:
+                  secretKeyRef:
+                    name: azerothcore-db-secret
+                    key: SOAP_PASSWORD
+              SOAP_USERNAME:
+                valueFrom:
+                  secretKeyRef:
+                    name: azerothcore-db-secret
+                    key: SOAP_USERNAME
               TZ: Australia/Melbourne
+            # Flush worldserver state to the DB before mysqld goes down — an
+            # orchestrated DB roll must never rewind the realm to the last
+            # periodic save.
+            lifecycle:
+              preStop:
+                exec:
+                  command: ["/bin/bash", "/scripts/prestop-saveall.sh"]
             securityContext:
               allowPrivilegeEscalation: false
               readOnlyRootFilesystem: true
@@ -133,6 +156,9 @@ spec:
             readOnly: true
           - path: /etc/mysql/conf.d/zz-homeops.cnf
             subPath: my.cnf
+            readOnly: true
+          - path: /scripts/prestop-saveall.sh
+            subPath: prestop-saveall.sh
             readOnly: true
       run-mysqld:
         type: emptyDir
