@@ -37,6 +37,8 @@ jobs:
   plan:
     name: Plan (decide tags)
     runs-on: home-ops-runner
+    # Self-hosted runner: never expose it to pull_request-controlled code.
+    if: github.event_name != 'pull_request'
     permissions:
       contents: read
       pull-requests: read
@@ -81,11 +83,14 @@ jobs:
           echo "tags=$SEL" >> "$GITHUB_OUTPUT"
           echo "resolved tags='$SEL' (blank = all)"
 
-  # Job 1: Dry Run (Runs on PRs and Main)
+  # Job 1: Dry Run against the live hosts. Runs on push to main and on
+  # workflow_dispatch only — it holds credentials and runs on the self-hosted
+  # runner, so it must stay off the pull_request path.
   check:
     name: Ansible Check (Dry Run)
     needs: plan
     runs-on: home-ops-runner
+    if: github.event_name != 'pull_request'
     steps:
       - name: Checkout
         uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
