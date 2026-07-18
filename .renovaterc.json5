@@ -189,4 +189,24 @@
       addLabels: [ "type/digest" ],
     },
   ],
+  // Track the two CI version pins that no standard manager covers:
+  // talosctl in image-pull.yaml (pinned to the cluster's Talos version)
+  // and the renovate runner's own version.
+  customManagers: [
+    {
+      customType: "regex",
+      managerFilePatterns: [ ".github/workflows/image-pull.yaml" ],
+      matchStrings: [ "talosctl (?<currentValue>[0-9.]+)" ],
+      datasourceTemplate: "github-releases",
+      depNameTemplate: "siderolabs/talos",
+      extractVersionTemplate: "^v(?<version>.*)$",
+    },
+    {
+      customType: "regex",
+      managerFilePatterns: [ ".github/workflows/renovate.yaml" ],
+      matchStrings: [ "renovate-version: .+ '(?<currentValue>[0-9.]+)' }}" ],
+      datasourceTemplate: "docker",
+      depNameTemplate: "ghcr.io/renovatebot/renovate",
+    },
+  ],
 }
