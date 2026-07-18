@@ -32,8 +32,8 @@ spec:
             nameOverride: "{{ .Release.Name }}"
             image:
               # Rolling :latest, digest-pinned so Renovate PRs each new build.
-              repository: ghcr.io/malpractis/wow-panel
-              tag: 1.8.1@sha256:c4245e25b57c8cf9d7fa68497d1783856ae663634dbb8287d9dff572f97b605f
+              repository: ghcr.io/materia-ops/wow-panel
+              tag: 1.8.3@sha256:59c620d68fe1b0229d09c8bf2195057d4d12ae11d156462e8594c413f194a4da
             env:
               # Read-only game-DB access for the /bot-roster page (the acore
               # app user; AC_DB_PASSWORD arrives via wow-panel-secret). Unset

@@ -56,7 +56,7 @@ jobs:
         run: |
           echo 'images<<EOF' >> $GITHUB_OUTPUT
           flate diff images -p ./kubernetes/flux/cluster -o json \
-            | jq -c 'map(select(startswith("ghcr.io/malpractis/") | not))' >> $GITHUB_OUTPUT
+            | jq -c 'map(select((startswith("ghcr.io/malpractis/") or startswith("ghcr.io/materia-ops/")) | not))' >> $GITHUB_OUTPUT
           echo 'EOF' >> $GITHUB_OUTPUT
 
   pull:
