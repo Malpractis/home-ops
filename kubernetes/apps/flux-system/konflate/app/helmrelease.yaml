@@ -11,7 +11,7 @@ spec:
   interval: 1h
   values:
     config:
-      repo: github://Malpractis/home-ops
+      repo: github://materia-ops/home-ops
       refreshInterval: 15m
       statusChecks: true
       prComments: true
