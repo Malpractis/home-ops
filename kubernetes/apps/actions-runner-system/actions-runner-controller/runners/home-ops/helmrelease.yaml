@@ -12,7 +12,9 @@ spec:
   values:
     githubConfigUrl: https://github.com/materia-ops/home-ops
     githubConfigSecret: home-ops-runner-secret
-    minRunners: 1
+    # 0: no warm pod holding the Talos os:admin identity between jobs; ARC
+    # cold-starts a runner in ~30-60s, fine for the push/dispatch-only load.
+    minRunners: 0
     maxRunners: 3
     containerMode:
       type: kubernetes

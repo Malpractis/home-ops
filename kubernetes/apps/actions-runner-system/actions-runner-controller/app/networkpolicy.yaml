@@ -1,0 +1,89 @@
+---
+# Default-deny egress for the whole runner namespace (security review #4 /
+# infra-automation #3): the cluster's highest-value pods — the Talos-admin
+# CI runner and the privileged dind builder — get an explicit egress
+# allowlist instead of unrestricted pod/node/LAN reach. Ingress is left
+# unenforced (nothing routes to runners; the controller only polls out).
+#
+# If a workflow starts failing on a blocked destination, the miss shows up
+# in hubble as a dropped DNS/connect from this namespace; extend the list
+# deliberately rather than deleting the policy.
+apiVersion: cilium.io/v2
+kind: CiliumNetworkPolicy
+metadata:
+  name: actions-runner-egress
+spec:
+  endpointSelector: {}
+  enableDefaultDeny:
+    egress: true
+    ingress: false
+  egress:
+    # DNS via cluster CoreDNS — the DNS rule also feeds the toFQDNs proxy.
+    - toEndpoints:
+        - matchLabels:
+            io.kubernetes.pod.namespace: kube-system
+            k8s-app: kube-dns
+      toPorts:
+        - ports:
+            - port: "53"
+              protocol: ANY
+          rules:
+            dns:
+              - matchPattern: "*"
+    # ARC kubernetes containerMode + the controller both drive the API server.
+    - toEntities:
+        - kube-apiserver
+    # Runner <-> job pods within the namespace.
+    - toEndpoints:
+        - {}
+    # talosctl image pull (image-pull.yaml) to the node apid endpoints.
+    - toCIDRSet:
+        - cidr: 192.168.20.10/32
+        - cidr: 192.168.20.11/32
+        - cidr: 192.168.20.12/32
+      toPorts:
+        - ports:
+            - port: "50000"
+              protocol: TCP
+    # Ansible over SSH to the managed LAN hosts (pve/pi *.internal).
+    - toCIDRSet:
+        - cidr: 192.168.0.0/16
+      toPorts:
+        - ports:
+            - port: "22"
+              protocol: TCP
+    # HTTPS destinations CI actually uses:
+    #   GitHub control plane + Actions service + artifact/cache storage,
+    #   GHCR, Docker Hub (dind base images), PyPI + Ansible Galaxy
+    #   (ansible.yaml installs), 1Password (op CLI download + API).
+    - toFQDNs:
+        - matchName: github.com
+        - matchName: api.github.com
+        - matchName: codeload.github.com
+        - matchPattern: "*.githubusercontent.com"
+        - matchPattern: "*.actions.githubusercontent.com"
+        - matchPattern: "*.blob.core.windows.net"
+        - matchName: ghcr.io
+        - matchName: registry-1.docker.io
+        - matchName: auth.docker.io
+        - matchName: index.docker.io
+        - matchName: production.cloudflare.docker.com
+        - matchName: pypi.org
+        - matchName: files.pythonhosted.org
+        - matchName: galaxy.ansible.com
+        - matchName: cache.agilebits.com
+        - matchPattern: "*.1password.com"
+      toPorts:
+        - ports:
+            - port: "443"
+              protocol: TCP
+    # apt for the dind builder (Ubuntu/Debian base image package installs).
+    - toFQDNs:
+        - matchPattern: "*.ubuntu.com"
+        - matchName: deb.debian.org
+      toPorts:
+        - ports:
+            - port: "80"
+              protocol: TCP
+            - port: "443"
+              protocol: TCP

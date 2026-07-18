@@ -71,6 +71,9 @@ jobs:
           permission-pull-requests: write
           permission-statuses: write
           permission-vulnerability-alerts: read
+          # workflows:write is load-bearing: the github-actions manager bumps
+          # SHA-pinned actions inside .github/workflows/** (audited 2026-07-18,
+          # security review #8 - do not drop without disabling that manager).
           permission-workflows: write
           # Renovate also manages the azerothcore-image source pins
           # (versions.json git-refs manager), wow-panel's npm/actions/base
