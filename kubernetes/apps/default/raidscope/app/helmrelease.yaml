@@ -20,11 +20,11 @@ spec:
           app:
             nameOverride: "{{ .Release.Name }}"
             image:
-              # Digest-pinned so Renovate PRs each new build. 3.0.0 is the first
-              # release under the raidscope package name (the old
-              # ghcr.io/malpractis/wlogs-parser images were not migrated).
-              repository: ghcr.io/malpractis/raidscope
-              tag: 3.2.0@sha256:6f78039203cb05e9af0d2001d4e6d3bd2e4a0005b979e0bce3c0ec570bae9f33
+              # Digest-pinned so Renovate PRs each new build. 3.2.0 is the first
+              # image under the materia-ops namespace (pre-3.2.0 history stays
+              # under ghcr.io/malpractis/raidscope and wlogs-parser).
+              repository: ghcr.io/materia-ops/raidscope
+              tag: 3.2.0@sha256:0eb7d54a10fdeed0c24887e1d0dae5c5c37505966f3ffe19c9eb98f69384e8a8
             env:
               # OIDC via Authentik (client id/secret + session key come from the secret).
               OIDC_ISSUER: https://auth.materia.wtf/application/o/raidscope
