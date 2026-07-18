@@ -118,6 +118,19 @@ endpoints:
     interval: 15m
     conditions:
       - "[STATUS] == 200"
+  # Forward-auth guard (security review #2): wow.materia.wtf is SSO-fronted by
+  # the authentik-forward-auth component. Unauthenticated, the gateway must
+  # redirect to Authentik (302) — a 200 here means the SecurityPolicy is being
+  # skipped and the app is serving with no auth (the fail-open regression this
+  # check exists to catch). ignore-redirect so the 302 is observed, not followed.
+  - name: wow-panel-sso-guard
+    group: security
+    url: https://wow.materia.wtf
+    interval: 5m
+    client:
+      ignore-redirect: true
+    conditions:
+      - "[STATUS] == 302"
 metrics: true
 storage:
   type: sqlite

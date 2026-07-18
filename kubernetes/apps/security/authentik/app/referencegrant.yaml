@@ -4,6 +4,11 @@
 # Split into two grants (SecurityPolicy refs / HTTPRoute refs) because the API
 # caps spec.from at 16 items and the combined list outgrew it; multiple
 # ReferenceGrants are additive.
+#
+# The from-namespace list must cover EVERY namespace where a forward-auth app
+# can land, or the cross-ns ref to authentik-server is denied and (with
+# failOpen:false) the app fails closed. Keep it alphabetical and complete;
+# there is no `storage` namespace (Ceph is `rook-ceph`) — do not re-add it.
 apiVersion: gateway.networking.k8s.io/v1beta1
 kind: ReferenceGrant
 metadata:
@@ -16,6 +21,8 @@ spec:
       kind: SecurityPolicy
       namespace: database
     - <<: *policy
+      namespace: default
+    - <<: *policy
       namespace: flux-system
     - <<: *policy
       namespace: games
@@ -26,7 +33,7 @@ spec:
     - <<: *policy
       namespace: o11y
     - <<: *policy
-      namespace: storage
+      namespace: security
     - <<: *policy
       namespace: system
     - <<: *policy
@@ -49,6 +56,8 @@ spec:
       kind: HTTPRoute
       namespace: database
     - <<: *route
+      namespace: default
+    - <<: *route
       namespace: flux-system
     - <<: *route
       namespace: games
@@ -59,7 +68,7 @@ spec:
     - <<: *route
       namespace: o11y
     - <<: *route
-      namespace: storage
+      namespace: security
     - <<: *route
       namespace: system
     - <<: *route

@@ -16,9 +16,10 @@ spec:
       kind: HTTPRoute
       name: ${APP_ROUTE:-${APP}}
   extAuth:
-    # failOpen=true: if the outpost is unreachable, allow the request through
-    # (matches today's no-auth behaviour; flip to false once trusted for fail-closed).
-    failOpen: true
+    # failOpen=false: if the outpost is unreachable, DENY rather than serve the
+    # app unauthenticated. The outpost is now trusted (security review #2 —
+    # fail-open was a latent "silently serves with no auth" trap).
+    failOpen: false
     # Headers forwarded FROM the client request TO the outpost (ext_authz check).
     # For an HTTP auth service, Envoy Gateway otherwise sends only Host/Method/Path/
     # Content-Length/Authorization â€” it strips Cookie, so the outpost never sees the
