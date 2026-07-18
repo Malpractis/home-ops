@@ -1,5 +1,8 @@
--- TCG loot vendor: Landro Longshot (Booty Bay, NPC 17249)
--- Makes the retail TCG-code redeemer a gold vendor for all WotLK-era TCG loot.
+-- TCG loot + bag vendor: Landro Longshot (Booty Bay, NPC 17249)
+-- Makes the retail TCG-code redeemer a gold vendor for all WotLK-era TCG loot,
+-- plus every 16+ slot bag (general + profession) not sold by a stock vendor —
+-- crafted-only bags (Netherweave/Frostweave/…) structurally never appear on
+-- the AH (AHBot draws greens uniformly from a ~5,400-item pool).
 --
 -- NOT applied by Flux/dbimport. Apply manually against acore_world:
 --   kubectl exec -i -n games azerothcore-db-0 -- \
@@ -66,7 +69,8 @@ UPDATE item_template SET BuyPrice =    1000000 WHERE entry = 54455; -- Paint Bom
 UPDATE item_template SET BuyPrice =     500000 WHERE entry = 35223; -- Papa Hummel's Old-Fashioned Pet Biscuit (50g)
 
 -- ---------------------------------------------------------------------------
--- Vendor inventory (slot = display order: mounts, pets, tabards, toys, consumables)
+-- Vendor inventory (slot = display order: mounts, pets, tabards, toys,
+-- consumables, then bags)
 -- ---------------------------------------------------------------------------
 DELETE FROM npc_vendor WHERE entry = 17249;
 INSERT INTO npc_vendor (entry, slot, item, maxcount, incrtime, ExtendedCost, VerifiedBuild) VALUES
@@ -115,7 +119,62 @@ INSERT INTO npc_vendor (entry, slot, item, maxcount, incrtime, ExtendedCost, Ver
 (17249, 43, 46779, 0, 0, 0, 0), -- Path of Cenarius
 (17249, 44, 38577, 0, 0, 0, 0), -- Party G.R.E.N.A.D.E.
 (17249, 45, 54455, 0, 0, 0, 0), -- Paint Bomb
-(17249, 46, 35223, 0, 0, 0, 0); -- Papa Hummel's Old-Fashioned Pet Biscuit
+(17249, 46, 35223, 0, 0, 0, 0), -- Papa Hummel's Old-Fashioned Pet Biscuit
+-- Bags: general (by size), then soul/herb/enchanting/engineering/gem/mining/
+-- leatherworking/inscription. Prices come from the items' stock BuyPrice
+-- (all nonzero — no item_template changes, so no client cache wipe needed).
+-- Excluded: test/deprecated items (1977, 4501, 13330, 21857, 2119x, 23162)
+-- and bags stock vendors already sell (Haris Pilton, Halaa, profession
+-- suppliers: 27680, 30745-30748, 38082, 51809).
+(17249, 47,  4500, 0, 0, 0, 0), -- Traveler's Backpack (16)
+(17249, 48, 10683, 0, 0, 0, 0), -- Explorer's Knapsack (16)
+(17249, 49, 10959, 0, 0, 0, 0), -- Demon Hide Sack (16)
+(17249, 50, 11742, 0, 0, 0, 0), -- Wayfarer's Knapsack (16)
+(17249, 51, 14155, 0, 0, 0, 0), -- Mooncloth Bag (16)
+(17249, 52, 20400, 0, 0, 0, 0), -- Pumpkin Bag (16)
+(17249, 53, 21841, 0, 0, 0, 0), -- Netherweave Bag (16)
+(17249, 54, 22233, 0, 0, 0, 0), -- Zigris' Footlocker (16)
+(17249, 55, 14156, 0, 0, 0, 0), -- Bottomless Bag (18)
+(17249, 56, 17966, 0, 0, 0, 0), -- Onyxia Hide Backpack (18)
+(17249, 57, 19914, 0, 0, 0, 0), -- Panther Hide Sack (18)
+(17249, 58, 21843, 0, 0, 0, 0), -- Imbued Netherweave Bag (18)
+(17249, 59, 22679, 0, 0, 0, 0), -- Supply Bag (18)
+(17249, 60, 33117, 0, 0, 0, 0), -- Jack-o'-Lantern (18)
+(17249, 61, 21876, 0, 0, 0, 0), -- Primal Mooncloth Bag (20)
+(17249, 62, 34067, 0, 0, 0, 0), -- Tattered Hexcloth Sack (20)
+(17249, 63, 34845, 0, 0, 0, 0), -- Pit Lord's Satchel (20)
+(17249, 64, 35516, 0, 0, 0, 0), -- Sun Touched Satchel (20)
+(17249, 65, 41599, 0, 0, 0, 0), -- Frostweave Bag (20)
+(17249, 66, 50317, 0, 0, 0, 0), -- Papa's New Bag (20)
+(17249, 67, 41600, 0, 0, 0, 0), -- Glacial Bag (22)
+(17249, 68, 43345, 0, 0, 0, 0), -- Dragon Hide Bag (22)
+(17249, 69, 49295, 0, 0, 0, 0), -- Enlarged Onyxia Hide Backpack (22)
+(17249, 70, 50316, 0, 0, 0, 0), -- Papa's Brand New Bag (22)
+(17249, 71, 22244, 0, 0, 0, 0), -- Box of Souls (16, soul)
+(17249, 72, 21340, 0, 0, 0, 0), -- Soul Pouch (20, soul)
+(17249, 73, 21341, 0, 0, 0, 0), -- Felcloth Bag (24, soul)
+(17249, 74, 21342, 0, 0, 0, 0), -- Core Felcloth Bag (28, soul)
+(17249, 75, 21872, 0, 0, 0, 0), -- Ebon Shadowbag (28, soul)
+(17249, 76, 41597, 0, 0, 0, 0), -- Abyssal Bag (32, soul)
+(17249, 77, 22251, 0, 0, 0, 0), -- Cenarion Herb Bag (20, herb)
+(17249, 78, 22252, 0, 0, 0, 0), -- Satchel of Cenarius (24, herb)
+(17249, 79, 38225, 0, 0, 0, 0), -- Mycah's Botanical Bag (28, herb)
+(17249, 80, 45773, 0, 0, 0, 0), -- Emerald Bag (32, herb)
+(17249, 81, 22246, 0, 0, 0, 0), -- Enchanted Mageweave Pouch (16, ench)
+(17249, 82, 22248, 0, 0, 0, 0), -- Enchanted Runecloth Bag (20, ench)
+(17249, 83, 22249, 0, 0, 0, 0), -- Big Bag of Enchantment (24, ench)
+(17249, 84, 21858, 0, 0, 0, 0), -- Spellfire Bag (28, ench)
+(17249, 85, 41598, 0, 0, 0, 0), -- Mysterious Bag (32, ench)
+(17249, 86, 23774, 0, 0, 0, 0), -- Fel Iron Toolbox (24, eng)
+(17249, 87, 23775, 0, 0, 0, 0), -- Titanium Toolbox (32, eng)
+(17249, 88, 24270, 0, 0, 0, 0), -- Bag of Jewels (24, gem)
+(17249, 89, 29540, 0, 0, 0, 0), -- Reinforced Mining Bag (28, mining)
+(17249, 90, 38347, 0, 0, 0, 0), -- Mammoth Mining Bag (32, mining)
+(17249, 91, 34482, 0, 0, 0, 0), -- Leatherworker's Satchel (20, lw)
+(17249, 92, 34490, 0, 0, 0, 0), -- Bag of Many Hides (24, lw)
+(17249, 93, 38399, 0, 0, 0, 0), -- Trapper's Traveling Pack (28, lw)
+(17249, 94, 38307, 0, 0, 0, 0), -- Crafty's Bottomless Inscription Bag (32, inscr)
+(17249, 95, 44446, 0, 0, 0, 0); -- Pack of Endless Pockets (32, inscr)
 
 -- ---------------------------------------------------------------------------
 -- Give Landro the vendor flag (ships gossip-only: npcflag 1 -> 1|128 = 129)
