@@ -5,6 +5,13 @@
 # allowlist instead of unrestricted pod/node/LAN reach. Ingress is left
 # unenforced (nothing routes to runners; the controller only polls out).
 #
+# COUPLING: every pod this policy selects must run with dnsConfig ndots:1
+# (set in both runner scale-set HRs, template + listenerTemplate). coredns
+# runs autopath, which answers search-suffixed queries with the public
+# record; without ndots:1 Cilium keys the IP to the suffixed name, no
+# toFQDNs matchName matches, and traffic silently drops at the SYN
+# (2026-07-18 listener outage). New pods under this policy need the same.
+#
 # If a workflow starts failing on a blocked destination, the miss shows up
 # in hubble as a dropped DNS/connect from this namespace; extend the list
 # deliberately rather than deleting the policy.
