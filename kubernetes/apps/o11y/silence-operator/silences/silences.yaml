@@ -50,16 +50,6 @@ spec:
 apiVersion: observability.giantswarm.io/v1alpha2
 kind: Silence
 metadata:
-  name: hpa-maxed-out
-spec:
-  matchers:
-    - name: alertname
-      value: KubeHpaMaxedOut
----
-# yaml-language-server: $schema=https://schemas.materia.wtf/observability.giantswarm.io/silence_v1alpha2.json
-apiVersion: observability.giantswarm.io/v1alpha2
-kind: Silence
-metadata:
   name: infrastructure-memory-high-utilization
 spec:
   matchers:

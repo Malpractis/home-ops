@@ -98,6 +98,19 @@ spec:
         enabled: true
         spec:
           allowCrossNamespaceImport: true
+    defaultRules:
+      rules:
+        # Upstream only excludes fixed-size HPAs (max == min). The zeroscaler
+        # tier is min 0 / max 1, so every awake app read as "maxed out" —
+        # 19 permanently-firing alerts smothered by a blanket silence that
+        # also swallowed genuine maxed-out HPAs. Third guard (max > 1) makes
+        # the alert meaningful again; the silence is retired with it.
+        KubeHpaMaxedOut:
+          spec:
+            expr: |-
+              (kube_horizontalpodautoscaler_status_current_replicas{job="kube-state-metrics",namespace=~".*"} == kube_horizontalpodautoscaler_spec_max_replicas{job="kube-state-metrics",namespace=~".*"})
+              and on(namespace,horizontalpodautoscaler,cluster) (kube_horizontalpodautoscaler_spec_max_replicas{job="kube-state-metrics",namespace=~".*"} != kube_horizontalpodautoscaler_spec_min_replicas{job="kube-state-metrics",namespace=~".*"})
+              and on(namespace,horizontalpodautoscaler,cluster) (kube_horizontalpodautoscaler_spec_max_replicas{job="kube-state-metrics",namespace=~".*"} > 1)
     defaultDatasources:
       grafanaOperator:
         enabled: true
