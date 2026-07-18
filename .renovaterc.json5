@@ -3,6 +3,10 @@
   extends: [
     "github>home-operations/renovate-presets#2.1.0",
     ":timezone(Australia/Melbourne)",
+    // Org policy — LAST so it wins over the upstream :automergeBranch: forces
+    // PR-based automerge. The org ruleset forbids direct pushes to the default
+    // branch, so every automerge goes via a PR that Renovate auto-merges.
+    "github>materia-ops/.github//renovate/default",
   ],
   packageRules: [
     // Auto-merge rules
@@ -11,7 +15,7 @@
       matchManagers: [ "mise" ],
       matchUpdateTypes: [ "minor", "patch" ],
       automerge: true,
-      automergeType: "branch",
+      automergeType: "pr",
       minimumReleaseAge: "3 days",
       ignoreTests: true,
     },
@@ -72,7 +76,7 @@
       matchManagers: [ "github-actions" ],
       matchUpdateTypes: [ "minor", "patch", "digest" ],
       automerge: true,
-      automergeType: "branch",
+      automergeType: "pr",
       minimumReleaseAge: "3 days",
       ignoreTests: true,
     },
@@ -82,7 +86,7 @@
       matchPackageNames: [ "/^actions\\//", "/^renovatebot\\//" ],
       matchUpdateTypes: [ "minor", "patch", "digest" ],
       automerge: true,
-      automergeType: "branch",
+      automergeType: "pr",
       minimumReleaseAge: "1 minute",
       ignoreTests: true,
     },
@@ -91,7 +95,7 @@
       matchDatasources: [ "custom.grafana-dashboards" ],
       matchUpdateTypes: [ "major" ],
       automerge: true,
-      automergeType: "branch",
+      automergeType: "pr",
       ignoreTests: true,
     },
     {
@@ -99,7 +103,7 @@
       matchManagers: [ "renovate-config" ],
       matchUpdateTypes: [ "minor", "patch" ],
       automerge: true,
-      automergeType: "branch",
+      automergeType: "pr",
       ignoreTests: true,
     },
     // Version constraint rules
