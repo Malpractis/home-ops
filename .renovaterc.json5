@@ -29,10 +29,10 @@
       ignoreTests: false,
     },
     {
-      description: "Auto-merge wlogs-parser image (own semver releases via release-please)",
+      description: "Auto-merge raidscope image (own semver releases via release-please; package renamed from wlogs-parser)",
       matchDatasources: [ "docker" ],
       matchUpdateTypes: [ "digest", "minor", "patch" ],
-      matchPackageNames: [ "/wlogs-parser/" ],
+      matchPackageNames: [ "/raidscope/" ],
       automerge: true,
       automergeType: "pr",
       ignoreTests: false,
