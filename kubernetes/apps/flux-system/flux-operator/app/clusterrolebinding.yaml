@@ -2,10 +2,12 @@
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRoleBinding
 metadata:
-  name: flux-admin
+  name: flux-web-admin
 subjects:
+  # OIDC impersonation passes the user's Authentik groups (claims.groups) as
+  # Kubernetes groups; members of the `infra` group get full flux web admin.
   - kind: Group
-    name: flux-admin
+    name: infra
     apiGroup: rbac.authorization.k8s.io
 roleRef:
   kind: ClusterRole

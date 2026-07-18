@@ -8,17 +8,47 @@ spec:
     kind: OCIRepository
     name: flux-operator
   interval: 1h
+  # clientID/clientSecret injected from the flux-web-client Secret (ESO ->
+  # 1Password) so they never live in git. The chart's config only takes inline
+  # values, so this is the supported way to keep the secret out of the repo.
+  valuesFrom:
+    - kind: Secret
+      name: flux-web-client
+      valuesKey: client-id
+      targetPath: web.config.authentication.oauth2.clientID
+    - kind: Secret
+      name: flux-web-client
+      valuesKey: client-secret
+      targetPath: web.config.authentication.oauth2.clientSecret
   values:
     serviceMonitor:
       create: true
     web:
       config:
+        # Public URL of the UI — required for OAuth2 redirect construction.
+        baseURL: https://flux-operator.materia.wtf
         authentication:
-          type: Anonymous
-          anonymous:
-            username: flux
-            groups:
-              - flux-admin
+          type: OAuth2
+          oauth2:
+            provider: OIDC
+            issuerURL: https://auth.materia.wtf/application/o/flux-operator/
+            # clientID/clientSecret come from valuesFrom above.
+            scopes:
+              - openid
+              - profile
+              - email
+              - groups
+            # Map the OIDC identity to a Kubernetes user + groups for
+            # impersonation; RBAC then binds the group (see clusterrolebinding).
+            impersonation:
+              username: "claims.email"
+              groups: "claims.groups"
+            # Defence-in-depth against the empty-claims impersonation class
+            # (GHSA-4xh5-jcj2-ch8q, fixed in 0.40.0 — we're on 0.55.0): refuse
+            # a token that carries no groups.
+            validations:
+              - expression: "size(claims.groups) > 0"
+                message: "user must belong to at least one group"
       httpRoute:
         enabled: true
         hostnames:
