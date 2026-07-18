@@ -30,7 +30,6 @@ entries:
         - !Find [authentik_providers_proxy.proxyprovider, [name, "wow-panel"]]
         # Admin apps
         - !Find [authentik_providers_proxy.proxyprovider, [name, "alertmanager"]]
-        - !Find [authentik_providers_proxy.proxyprovider, [name, "flux"]]
         - !Find [authentik_providers_proxy.proxyprovider, [name, "pi-hole (0)"]]
         - !Find [authentik_providers_proxy.proxyprovider, [name, "pi-hole (1)"]]
         - !Find [authentik_providers_proxy.proxyprovider, [name, "proxmox"]]
