@@ -64,6 +64,20 @@ restore ns app previous='0':
     flux -n {{ ns }} reconcile helmrelease {{ app }} --force
     kubectl -n {{ ns }} wait pod --for=condition=ready --selector="app.kubernetes.io/name={{ app }}" --timeout=5m
 
+[doc('Force a VolSync Kopia repo maintenance pass (compaction + GC)')]
+[script]
+kopia-maintenance:
+    # The shared Kopia repo needs periodic full maintenance or its index blobs
+    # accumulate and every mover's connect slows down (index is read over NFS).
+    # This triggers the existing daily maintenance CronJob now, as the repo's
+    # maintenance owner (maintenance@volsync). Kopia has no lock to clear — this
+    # is the recovery/optimize op (replaces the old restic `unlock` template).
+    cronjob="$(kubectl -n volsync-system get cronjob -o name | grep -m1 kopia-maint)"
+    job="kopia-maint-manual-$(date +%s)"
+    kubectl -n volsync-system create job --from="$cronjob" "$job"
+    kubectl -n volsync-system wait job/"$job" --for=condition=complete --timeout=60m
+    kubectl -n volsync-system logs job/"$job" --tail=30
+
 [doc('Snapshot VolSync PVCs')]
 [script]
 snapshot:
