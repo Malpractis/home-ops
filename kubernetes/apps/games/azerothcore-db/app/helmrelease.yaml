@@ -29,6 +29,45 @@ spec:
               storageClass: ceph-block
               globalMounts:
                 - path: /var/lib/mysql
+        initContainers:
+          # Data-loss guard (review WR#2): refuse to boot on a datadir with no
+          # initialised MySQL system schema unless a fresh init is explicitly
+          # authorised in git. An unexpectedly blank /var/lib/mysql (the ceph-csi
+          # stale-staging fault this cluster has hit) would otherwise let mysqld
+          # silently re-create empty acore_* DBs — which mysqladmin-ping probes
+          # never notice and the nightly backup then dumps and prunes over the
+          # good ones.
+          01-init-guard:
+            image:
+              repository: docker.io/library/mysql
+              tag: 8.4@sha256:c592c15aaf4a1961e15d82eb31ea5987dda862d1c4b1e93424438c0e91dc1f8d
+            env:
+              # Set to "true" in git ONLY for a deliberate first install, then
+              # revert once the datadir is populated. Any other value refuses an
+              # empty datadir.
+              ALLOW_FRESH_INIT: "false"
+            command:
+              - /bin/bash
+              - -c
+              - |
+                set -euo pipefail
+                if [ -d /var/lib/mysql/mysql ]; then
+                  echo "[init-guard] datadir initialised — proceeding"
+                  exit 0
+                fi
+                if [ "${ALLOW_FRESH_INIT:-false}" = "true" ]; then
+                  echo "[init-guard] ALLOW_FRESH_INIT=true — permitting fresh init"
+                  exit 0
+                fi
+                echo "[init-guard] REFUSING: /var/lib/mysql has no initialised MySQL system schema" >&2
+                echo "[init-guard] and ALLOW_FRESH_INIT is not 'true'. An unexpectedly empty datadir" >&2
+                echo "[init-guard] usually means a volume/staging fault, not a real first install." >&2
+                echo "[init-guard] If this genuinely is a first install, set ALLOW_FRESH_INIT=true in git." >&2
+                exit 1
+            securityContext:
+              allowPrivilegeEscalation: false
+              readOnlyRootFilesystem: true
+              capabilities: {drop: ["ALL"]}
         containers:
           app:
             nameOverride: "{{ .Release.Name }}"

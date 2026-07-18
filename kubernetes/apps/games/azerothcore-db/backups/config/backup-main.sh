@@ -7,6 +7,20 @@ HOST=azerothcore-db.games.svc.cluster.local
 STAMP="$(date +%Y%m%d-%H%M%S)"
 RETENTION_DAYS=14
 
+# Poisoning guard (review WR#2): refuse to dump/prune if the character DB is
+# empty. An empty acore_characters.characters almost always means the server
+# came up on a blank datadir (volume/staging fault); dumping and then pruning
+# here would replace the good backups with empty ones inside the retention
+# window. Bail before touching anything.
+CHAR_ROWS="$(mysql --host="${HOST}" --user=acore -N -B \
+  -e 'SELECT COUNT(*) FROM acore_characters.characters' 2>/dev/null || echo 0)"
+if [ "${CHAR_ROWS:-0}" -lt 1 ]; then
+  echo "[backup-main] REFUSING: acore_characters.characters has ${CHAR_ROWS:-0} rows;" >&2
+  echo "[backup-main] aborting before any dump or prune to protect existing backups." >&2
+  exit 1
+fi
+echo "[backup-main] guard OK: acore_characters.characters has ${CHAR_ROWS} rows"
+
 for db in acore_auth acore_characters acore_playerbots; do
   out="/backups/${db}-${STAMP}.sql.gz"
   echo "[backup-main] dumping ${db} -> ${out}"
