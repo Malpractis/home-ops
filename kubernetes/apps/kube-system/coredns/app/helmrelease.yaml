@@ -55,14 +55,8 @@ spec:
             configBlock: |-
               pods verified
               fallthrough in-addr.arpa ip6.arpa
-          # autopath @kubernetes is deliberately ABSENT. It answers a pod's
-          # search-suffixed query (api.github.com.<ns>.svc.cluster.local.)
-          # with the public record server-side, so Cilium's DNS proxy keys
-          # the IP to the suffixed name — which never matches a toFQDNs
-          # matchName — and every packet to that IP is policy-dropped. This
-          # took down the ARC listeners on 2026-07-18 (actions-runner-egress
-          # policy). Known Cilium incompatibility; the cost of living
-          # without it is a few cached NXDOMAIN round-trips per first lookup.
+          - name: autopath
+            parameters: "@kubernetes"
           - name: forward
             parameters: . 192.168.10.2
           - name: cache
