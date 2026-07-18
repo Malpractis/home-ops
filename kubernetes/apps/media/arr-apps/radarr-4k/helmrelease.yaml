@@ -11,7 +11,7 @@ spec:
   interval: 1h
   values:
     controllers:
-      sonarr:
+      radarr-4k:
         annotations:
           reloader.stakater.com/auto: "true"
         containers:
@@ -66,6 +66,9 @@ spec:
               limits:
                 memory: 4Gi
     defaultPodOptions:
+      # SQLite-backed; give the DB time to flush on the zeroscaler's SIGTERM
+      # instead of the 30s default that risks corruption mid-write.
+      terminationGracePeriodSeconds: 120
       securityContext:
         runAsNonRoot: true
         runAsUser: 1000
@@ -92,7 +95,7 @@ spec:
         server: nas.internal
         path: /mnt/apps/backup/arr-apps/radarr-4k
         globalMounts:
-          - path: /backu
+          - path: /backup
       data:
         type: nfs
         server: nas.internal

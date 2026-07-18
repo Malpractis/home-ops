@@ -22,8 +22,21 @@ spec:
         fsGroupChangePolicy: OnRootMismatch
     controllers:
       *app :
-        annotations:
-          reloader.stakater.com/auto: "true"
+        # k8s CronJob instead of a long-running daemon with an internal cron:
+        # a hung or failed sync now surfaces as a failed Job
+        # (kube_job_status_failed) instead of silently wedging and letting the
+        # two Pi-holes drift apart. (No reloader annotation — each Job run reads
+        # fresh config/secret, so it's a no-op on a CronJob.)
+        type: cronjob
+        cronjob:
+          schedule: "*/10 * * * *"
+          timeZone: Australia/Melbourne
+          concurrencyPolicy: Forbid
+          backoffLimit: 2
+          successfulJobsHistory: 1
+          failedJobsHistory: 3
+        pod:
+          restartPolicy: OnFailure
         containers:
           *app :
             image:
@@ -32,7 +45,9 @@ spec:
             env:
               FULL_SYNC: "false"
               RUN_GRAVITY: "false"
-              CRON: "*/10 * * * *"
+              # No CRON var: the k8s CronJob owns the schedule; with CRON unset
+              # nebula-sync runs a single sync and exits, which is what makes the
+              # Job success/failure meaningful.
               CLIENT_SKIP_TLS_VERIFICATION: "true"
               TZ: Australia/Melbourne
               SYNC_CONFIG_DNS: "true"
