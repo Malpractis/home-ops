@@ -24,7 +24,9 @@
     method6: auto
     ip6:
       - "{{ network_v6_address }}"
-    may_fail6: true
+    # ipv6.may-fail is left at the NetworkManager default (yes), which is what we
+    # want. The nmcli module has no may_fail6 parameter (only may_fail4); passing
+    # it makes newer community.general reject the task.
   notify: Reapply connection
 
 # Apply any profile change to the live interface before validating (reapply, not
