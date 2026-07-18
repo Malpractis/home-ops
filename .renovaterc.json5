@@ -4,6 +4,11 @@
     "github>home-operations/renovate-presets#2.1.0",
     ":timezone(Australia/Melbourne)",
   ],
+  // The org ruleset requires a PR to reach the default branch (no bypass), so
+  // override the preset's :automergeBranch — every automerge goes via a PR that
+  // Renovate then auto-merges. Applies to preset-driven minor/digest merges too,
+  // not just the explicit packageRules below.
+  automergeType: "pr",
   packageRules: [
     // Auto-merge rules
     {
