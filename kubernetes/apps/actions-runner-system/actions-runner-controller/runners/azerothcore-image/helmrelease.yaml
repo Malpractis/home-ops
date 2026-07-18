@@ -37,6 +37,10 @@ spec:
           options:
             - name: ndots
               value: "1"
+        # merge-stub: the CRD requires containers whenever listenerTemplate is
+        # set; an entry naming the generated container changes nothing else.
+        containers:
+          - name: listener
     template:
       spec:
         dnsConfig: *ndots
