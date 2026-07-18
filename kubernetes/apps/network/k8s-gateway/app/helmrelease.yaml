@@ -8,6 +8,13 @@ spec:
     kind: OCIRepository
     name: k8s-gateway
   interval: 1h
+  # Stateless leaf service (no DB/schema/CRD/datapath state): safe to
+  # auto-rollback a failed upgrade. Opts into rollback because the global
+  # default is now fail-and-hold (flux/cluster/ks.yaml).
+  upgrade:
+    remediation:
+      retries: 3
+      remediateLastFailure: true
   values:
     fullnameOverride: k8s-gateway
     domain: "materia.wtf"
