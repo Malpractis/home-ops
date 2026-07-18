@@ -27,16 +27,19 @@ spec:
     # the container still reports host cores).
     template:
       spec:
+        # The pod runs privileged dind for a public repo's builds - it must
+        # not carry a Kubernetes API credential at all.
+        automountServiceAccountToken: false
         initContainers:
           - name: init-dind-externals
-            image: ghcr.io/actions/actions-runner:2.335.1
+            image: ghcr.io/actions/actions-runner:2.335.1@sha256:08c30b0a7105f64bddfc485d2487a22aa03932a791402393352fdf674bda2c29
             command: ["cp", "-r", "/home/runner/externals/.", "/home/runner/tmpDir/"]
             volumeMounts:
               - name: dind-externals
                 mountPath: /home/runner/tmpDir
         containers:
           - name: runner
-            image: ghcr.io/actions/actions-runner:2.335.1
+            image: ghcr.io/actions/actions-runner:2.335.1@sha256:08c30b0a7105f64bddfc485d2487a22aa03932a791402393352fdf674bda2c29
             command: ["/home/runner/run.sh"]
             env:
               - name: DOCKER_HOST
@@ -56,12 +59,14 @@ spec:
               - name: dind-sock
                 mountPath: /var/run
           - name: dind
-            image: docker:29-dind
+            image: docker:29-dind@sha256:bfec1f5159c63a81ca6fdedbd81404d2c0e16378ed0feec3bb3fbf3998847659
             args:
               - dockerd
               - --host=unix:///var/run/docker.sock
               - --group=$(DOCKER_GROUP_GID)
             env:
+              # GID of the docker group in the runner image above - only
+              # valid for that digest; re-check when the runner pin moves.
               - name: DOCKER_GROUP_GID
                 value: "123"
             securityContext:
