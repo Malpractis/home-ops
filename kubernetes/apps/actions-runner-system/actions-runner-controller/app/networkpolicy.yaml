@@ -5,16 +5,16 @@
 # allowlist instead of unrestricted pod/node/LAN reach. Ingress is left
 # unenforced (nothing routes to runners; the controller only polls out).
 #
-# COUPLING: every pod this policy selects must run with dnsConfig ndots:1
-# (set in both runner scale-set HRs, template + listenerTemplate). coredns
-# runs autopath, which answers search-suffixed queries with the public
-# record; without ndots:1 Cilium keys the IP to the suffixed name, no
-# toFQDNs matchName matches, and traffic silently drops at the SYN
-# (2026-07-18 listener outage). New pods under this policy need the same.
+# Egress is CIDR-based (public 80/443 minus the private ranges), NOT a
+# per-host FQDN allowlist — see the toCIDRSet rule below for why. The
+# runner HRs still set dnsConfig ndots:1; that is now belt-and-suspenders
+# (no toFQDNs rule remains to be tripped by autopath) but harmless, and
+# keeps the door open to reintroducing an FQDN rule later. LAN access is
+# whatever the explicit :22 and :50000 rules grant and nothing more.
 #
-# If a workflow starts failing on a blocked destination, the miss shows up
-# in hubble as a dropped DNS/connect from this namespace; extend the list
-# deliberately rather than deleting the policy.
+# If a workflow fails on a blocked destination it will be a private-range
+# or metadata address (by design) — grant it narrowly like the SSH rule,
+# never by widening the public block.
 apiVersion: cilium.io/v2
 kind: CiliumNetworkPolicy
 metadata:
@@ -62,42 +62,26 @@ spec:
         - ports:
             - port: "22"
               protocol: TCP
-    # HTTPS destinations CI actually uses:
-    #   GitHub control plane + Actions service + artifact/cache storage,
-    #   GHCR, Docker Hub (dind base images), PyPI + Ansible Galaxy
-    #   (ansible.yaml installs), 1Password (op CLI download + API).
-    - toFQDNs:
-        - matchName: github.com
-        - matchName: api.github.com
-        - matchName: codeload.github.com
-        - matchPattern: "*.githubusercontent.com"
-        - matchPattern: "*.actions.githubusercontent.com"
-        - matchPattern: "*.blob.core.windows.net"
-        - matchName: ghcr.io
-        - matchName: registry-1.docker.io
-        - matchName: auth.docker.io
-        - matchName: index.docker.io
-        # Docker Hub serves blobs from BOTH CDNs and redirects between
-        # them; only one listed = intermittent buildx/pull timeouts
-        # (2026-07-18 build failure on production.cloudfront.docker.com).
-        - matchName: production.cloudflare.docker.com
-        - matchName: production.cloudfront.docker.com
-        - matchName: pypi.org
-        - matchName: files.pythonhosted.org
-        - matchName: galaxy.ansible.com
-        - matchName: cache.agilebits.com
-        - matchPattern: "*.1password.com"
+    # Public internet on 80/443, EXCEPT the private ranges and the cloud
+    # metadata IP. This replaced a per-host toFQDNs allowlist (2026-07-18):
+    # CI pulls from the whole ecosystem — GitHub, GHCR, Docker Hub's two
+    # CDNs, PyPI→pythonhosted, Ansible Galaxy→pulp object storage, apt —
+    # and each redirects to signed/rotating CDN hosts that cannot be
+    # enumerated, producing recurring "Network unreachable" job failures.
+    # The security property that mattered is preserved by the excepts: a
+    # compromised runner still cannot reach the LAN or 169.254.169.254.
+    # LAN reach is granted narrowly and explicitly by the :22 and :50000
+    # rules above; nothing else on the private ranges is permitted.
+    - toCIDRSet:
+        - cidr: 0.0.0.0/0
+          except:
+            - 10.0.0.0/8
+            - 172.16.0.0/12
+            - 192.168.0.0/16
+            - 169.254.169.254/32
       toPorts:
         - ports:
             - port: "443"
               protocol: TCP
-    # apt for the dind builder (Ubuntu/Debian base image package installs).
-    - toFQDNs:
-        - matchPattern: "*.ubuntu.com"
-        - matchName: deb.debian.org
-      toPorts:
-        - ports:
             - port: "80"
-              protocol: TCP
-            - port: "443"
               protocol: TCP
