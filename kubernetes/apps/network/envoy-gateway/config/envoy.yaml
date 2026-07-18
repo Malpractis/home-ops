@@ -11,6 +11,10 @@ spec:
   provider:
     type: Kubernetes
     kubernetes:
+      # Keep >=1 data-plane pod up during voluntary disruptions (tuppr node
+      # powercycles) so ingress never fully drops.
+      envoyPDB:
+        minAvailable: 1
       envoyDeployment:
         replicas: 2
         container:

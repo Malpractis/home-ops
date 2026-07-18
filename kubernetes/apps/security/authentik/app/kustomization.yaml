@@ -10,6 +10,7 @@ resources:
   - ./helmrelease.yaml
   - ./httproute.yaml
   - ./ocirepository.yaml
+  - ./pdb.yaml
   - ./referencegrant.yaml
 generatorOptions:
   disableNameSuffixHash: true

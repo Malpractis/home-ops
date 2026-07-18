@@ -74,7 +74,9 @@ spec:
     server:
       autoscaling:
         enabled: true
-        minReplicas: 1
+        # Floor of 2 so the SSO front-end survives a node drain (and so the PDB
+        # can actually allow a disruption — a PDB over a single pod blocks it).
+        minReplicas: 2
         maxReplicas: 2
         targetCPUUtilizationPercentage: 60
         behavior:
