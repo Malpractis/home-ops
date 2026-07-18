@@ -38,12 +38,18 @@ spec:
                   upgrade:
                     cleanupOnFail: true
                     crds: CreateReplace
-                    strategy:
-                      name: RemediateOnFailure
-                    remediation:
-                      remediateLastFailure: true
-                      retries: 2
                   maxHistory: 2
+                  # NOTE: remediation is deliberately NOT set here. This global
+                  # patch overrides any per-HR value, so injecting a rollback
+                  # policy fleet-wide clobbered every app AND rolled failed
+                  # upgrades back — fatal for apps that migrate a DB schema
+                  # forward on boot (arr/seerr/emby/stash/authentik/*-db/victoria-*):
+                  # the old image then crash-loops on the new schema.
+                  # With remediation unset, Flux defaults to fail-and-hold
+                  # (retries 0, no rollback): a failed upgrade stops and alerts,
+                  # and you roll FORWARD. Apps where rollback is safe opt in
+                  # per-workload via spec.upgrade.remediation (see the stateless
+                  # leaf services that set it).
               target:
                 group: helm.toolkit.fluxcd.io
                 kind: HelmRelease
