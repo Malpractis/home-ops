@@ -66,6 +66,9 @@ spec:
               limits:
                 memory: 1Gi
     defaultPodOptions:
+      # SQLite-backed; give the DB time to flush on the zeroscaler's SIGTERM
+      # instead of the 30s default that risks corruption mid-write.
+      terminationGracePeriodSeconds: 120
       securityContext:
         runAsNonRoot: true
         runAsUser: 1000
