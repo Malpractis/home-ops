@@ -28,6 +28,7 @@ If it runs at home, it's defined here — Git is the cluster.
 | [CI/CD](./docs/cicd.md) | Workflows, runners, Renovate, konflate, companion image repos |
 | [Working in this repo](./docs/repo-workflow.md) | Change lifecycle, common tasks, keeping pipelines green |
 | [Operations](./docs/operations.md) | Monitoring, reliability, scaling, deployment checklist |
+| [Disaster recovery](./docs/disaster-recovery.md) | Total-loss runbook: reset → bootstrap → Flux → data restore |
 
 ## 🖥️ Hardware
 
@@ -72,7 +73,8 @@ Cilium over BGP to route LoadBalancer VIPs.
 ├── kubernetes/
 │   ├── apps/          # one directory per namespace, one per app (ks.yaml + app/)
 │   ├── components/    # reusable Kustomize components (volsync, alerts, sso, …)
-│   └── flux/cluster/  # the single Flux entrypoint
+│   ├── flux/cluster/  # the single Flux entrypoint
+│   └── templates/     # manifest templates used by the kube just recipes (VolSync restore)
 ├── talos/             # machine config templates (minijinja + 1Password refs)
 ├── bootstrap/         # day-0 helmfile bring-up (CRDs → core apps → Flux)
 ├── infrastructure/    # Ansible for the Pi-hole hosts

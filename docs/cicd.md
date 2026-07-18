@@ -55,9 +55,11 @@ references, then a matrix job on the self-hosted runners runs
 workload, the image is already on disk — no pull latency, no rollout stuck on a slow
 registry.
 
-Private `ghcr.io/malpractis/*` images are filtered out: the node's containerd has no
+Private `ghcr.io/materia-ops/*` images are filtered out: the node's containerd has no
 GHCR auth for anonymous pulls (they pull fine at pod start via `ghcr-pull-secret`), so
-including them would hang the runner.
+including them would hang the runner. (The filter also covered `ghcr.io/malpractis/*`
+during the [GHCR namespace migration](#ghcr-namespace-migration-malpractis--materia-ops);
+that prefix was dropped once nothing referenced it.)
 
 ### `renovate.yaml` — dependency automation
 
@@ -99,7 +101,7 @@ area (`.github/labeler.yaml`).
 ## konflate — PR gating and Flux visibility
 
 [konflate](https://github.com/home-operations) runs **in-cluster** (`flux-system`
-namespace) connected to `github://Malpractis/home-ops`:
+namespace) connected to `github://materia-ops/home-ops`:
 
 - **PR status checks + diff comments** — renders the Flux state for each PR and posts
   what would change; this is the primary "will this do what I think" gate before merge.
@@ -137,3 +139,26 @@ Per-repo notes:
 - **wow-panel / raidscope** — same release-please pattern; release builds check out the
   **tag ref** (a past bug built from `github.sha` and shipped an empty release — fixed,
   but any broken release can be rebuilt via workflow dispatch from its tag ref).
+
+## GHCR namespace migration (malpractis → materia-ops)
+
+The GitHub org moved from `Malpractis` to `materia-ops` (2026-07-18). Git-side
+references (the `FluxInstance` GitRepository URL, konflate's `github://` repo, the
+Renovate org preset) point at `materia-ops`, and the **GHCR image move is complete** —
+nothing in `kubernetes/` references `ghcr.io/malpractis/*` anymore.
+
+How each old-namespace reference was resolved:
+
+| Reference | Where | Resolution |
+| :--- | :--- | :--- |
+| `ghcr.io/malpractis/azerothcore-wotlk-playerbots` | [`kubernetes/apps/games/azerothcore/app/helmrelease.yaml`](../kubernetes/apps/games/azerothcore/app/helmrelease.yaml) | Moved to `ghcr.io/materia-ops/azerothcore-wotlk-playerbots` (1.5.1, the first release published under the org) |
+| `ghcr.io/malpractis/*` comment | [`kubernetes/apps/games/azerothcore-db/app/pullsecret.yaml`](../kubernetes/apps/games/azerothcore-db/app/pullsecret.yaml) | Comment updated to `ghcr.io/materia-ops/*`; notes the pull PAT stays owned by the personal `malpractis` account |
+| `ghcr.io/malpractis/raidscope` / `wlogs-parser` comment | [`kubernetes/apps/default/raidscope/app/helmrelease.yaml`](../kubernetes/apps/default/raidscope/app/helmrelease.yaml) | Historical comment reworded to point here |
+| `instance: Malpractis` | [`kubernetes/apps/torrents/qbitmanage/app/externalsecret.yaml`](../kubernetes/apps/torrents/qbitmanage/app/externalsecret.yaml) | Notifiarr instance label renamed to `Materia` (cosmetic) |
+| GHCR host-rule username `malpractis` | [`.github/workflows/renovate.yaml`](../.github/workflows/renovate.yaml) | **Stays as-is** — this is the PAT-owning personal account (which still exists), not the org; the token authenticates against `ghcr.io` regardless of image namespace |
+| Filter for **both** namespaces | [`.github/workflows/image-pull.yaml`](../.github/workflows/image-pull.yaml) | Narrowed to `ghcr.io/materia-ops/` only — see [image-pull](#image-pullyaml--pre-warm-images-on-prs) above |
+
+> [!NOTE]
+> `github.com/Malpractis/...` links in old release notes, commit history, and this
+> section are deliberate migration history. Everywhere else in the docs the
+> [docs-lint workflow](../.github/workflows/docs-lint.yaml) rejects them.

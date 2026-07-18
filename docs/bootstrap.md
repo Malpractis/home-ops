@@ -116,7 +116,7 @@ then applies two things:
 | 5 | **external-secrets** (security) | ESO operator |
 | 6 | **onepassword-connect** (security) | Consumes the seed Secrets; from here `ExternalSecret`s work |
 | 7 | **flux-operator** (flux-system) | Flux lifecycle manager |
-| 8 | **flux-instance** (flux-system) | The `FluxInstance`: GitRepository `https://github.com/Malpractis/home-ops.git`, path `kubernetes/flux/cluster` |
+| 8 | **flux-instance** (flux-system) | The `FluxInstance`: GitRepository `https://github.com/materia-ops/home-ops.git`, path `kubernetes/flux/cluster` |
 
 ### 6. `kubeconfig` (final)
 
