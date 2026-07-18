@@ -11,7 +11,7 @@ endpoints:
     group: ci
     # state must be "active" - GitHub silently disables scheduled workflows
     # after 60 days without repo activity (state becomes disabled_inactivity)
-    url: https://api.github.com/repos/materia-ops/AllTheThings-WotLK/actions/workflows/upstream-release.yml
+    url: https://api.github.com/repos/materia-ops/allthethings-wotlk/actions/workflows/upstream-release.yml
     interval: 30m
     headers:
       Authorization: Bearer ${ATT_GITHUB_TOKEN}
@@ -23,7 +23,7 @@ endpoints:
     # latest completed run must have succeeded - catches failing releases
     # (incl. expired RELEASES_TOKEN / SIGNING_KEY problems) and check-job
     # failures the repo's own drift-alert job cannot see
-    url: "https://api.github.com/repos/materia-ops/AllTheThings-WotLK/actions/workflows/upstream-release.yml/runs?status=completed&per_page=1"
+    url: "https://api.github.com/repos/materia-ops/allthethings-wotlk/actions/workflows/upstream-release.yml/runs?status=completed&per_page=1"
     interval: 30m
     headers:
       Authorization: Bearer ${ATT_GITHUB_TOKEN}
