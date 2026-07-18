@@ -6,7 +6,7 @@ connectivity:
 endpoints:
   # Dead-man switch for the ATT release pipeline (AllTheThings-WotLK):
   # pull-based via the GitHub API because Cloudflare Bot Fight Mode would eat
-  # a push from GitHub Actions runners. Token: gatus-sidecar-secret (ESO).
+  # a push from GitHub Actions runners. Token: GATUS_STATUS_TOKEN via gatus-sidecar-secret (ESO).
   - name: att-release-cron-enabled
     group: ci
     # state must be "active" - GitHub silently disables scheduled workflows
@@ -14,7 +14,7 @@ endpoints:
     url: https://api.github.com/repos/materia-ops/allthethings-wotlk/actions/workflows/upstream-release.yml
     interval: 30m
     headers:
-      Authorization: Bearer ${ATT_GITHUB_TOKEN}
+      Authorization: Bearer ${GATUS_STATUS_TOKEN}
     conditions:
       - "[STATUS] == 200"
       - "[BODY].state == active"
@@ -26,7 +26,7 @@ endpoints:
     url: "https://api.github.com/repos/materia-ops/allthethings-wotlk/actions/workflows/upstream-release.yml/runs?status=completed&per_page=1"
     interval: 30m
     headers:
-      Authorization: Bearer ${ATT_GITHUB_TOKEN}
+      Authorization: Bearer ${GATUS_STATUS_TOKEN}
     conditions:
       - "[STATUS] == 200"
       - "[BODY].workflow_runs[0].conclusion == success"
@@ -40,7 +40,7 @@ endpoints:
     url: "https://api.github.com/repos/materia-ops/materia-core/actions/workflows/release.yml/runs?status=completed&per_page=1"
     interval: 30m
     headers:
-      Authorization: Bearer ${MATERIA_GITHUB_TOKEN}
+      Authorization: Bearer ${GATUS_STATUS_TOKEN}
     conditions:
       - "[STATUS] == 200"
       - "[BODY].workflow_runs[0].conclusion == success"
