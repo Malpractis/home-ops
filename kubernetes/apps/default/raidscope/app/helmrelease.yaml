@@ -24,7 +24,7 @@ spec:
               # image under the materia-ops namespace (pre-3.2.0 history stays
               # under ghcr.io/malpractis/raidscope and wlogs-parser).
               repository: ghcr.io/materia-ops/raidscope
-              tag: 3.2.0@sha256:0eb7d54a10fdeed0c24887e1d0dae5c5c37505966f3ffe19c9eb98f69384e8a8
+              tag: 3.2.1@sha256:10066e0b3d39e12a427bbe217e223ba5c2952ae4a22804763041e1ab67ed76d5
             env:
               # OIDC via Authentik (client id/secret + session key come from the secret).
               OIDC_ISSUER: https://auth.materia.wtf/application/o/raidscope
