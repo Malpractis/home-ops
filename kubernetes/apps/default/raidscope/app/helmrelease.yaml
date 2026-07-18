@@ -21,8 +21,9 @@ spec:
             nameOverride: "{{ .Release.Name }}"
             image:
               # Digest-pinned so Renovate PRs each new build. 3.2.0 is the first
-              # image under the materia-ops namespace (pre-3.2.0 history stays
-              # under ghcr.io/malpractis/raidscope and wlogs-parser).
+              # image under the materia-ops namespace (pre-3.2.0 history stayed
+              # under the old personal namespace before the org move to
+              # materia-ops; see docs/cicd.md "GHCR namespace migration").
               repository: ghcr.io/materia-ops/raidscope
               tag: 3.2.1@sha256:10066e0b3d39e12a427bbe217e223ba5c2952ae4a22804763041e1ab67ed76d5
             env:

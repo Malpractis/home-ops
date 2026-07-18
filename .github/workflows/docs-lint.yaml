@@ -1,0 +1,34 @@
+---
+# yaml-language-server: $schema=https://json.schemastore.org/github-workflow.json
+name: Docs Lint
+
+on:
+  pull_request:
+    branches:
+      - main
+    paths:
+      - docs/**
+      - README.md
+      - CONTRIBUTING.md
+
+permissions:
+  contents: read
+
+jobs:
+  stale-links:
+    name: Docs Lint - Stale Links
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+        with:
+          persist-credentials: false
+
+      # docs/cicd.md is excluded: its GHCR-migration section keeps
+      # github.com/Malpractis links as deliberate history.
+      - name: Reject stale github.com/Malpractis links
+        run: |
+          if git grep -n "github.com/Malpractis" -- docs README.md CONTRIBUTING.md ':!docs/cicd.md'; then
+            echo "Stale github.com/Malpractis links found (org moved to materia-ops)." >&2
+            exit 1
+          fi
