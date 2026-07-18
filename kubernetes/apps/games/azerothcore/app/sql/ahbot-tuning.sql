@@ -5,7 +5,9 @@
 -- trade goods (ore/herbs/cloth/leather — the levelling mats) at 27% while
 -- green equipment got 30%; observed live result was ~7 cloth / ~9 herb
 -- listings per faction house. Shift weight from green items to white trade
--- goods and raise the faction-house depth 1000 → 4000.
+-- goods and raise the listing depth 1000 → 10000 per house (2026-07-18:
+-- 4000 → 10000 after mats still felt thin; ~30k total is trivial for the
+-- server — the only cost is longer TSM full scans).
 --
 -- The 14 percent columns must keep summing to 100 (module normalizes against
 -- the total): 40+12+10+1 TGs + 10+17+8+2 items = 100.
@@ -14,7 +16,9 @@
 --   kubectl exec -i -n games azerothcore-db-0 -c azerothcore-db -- \
 --     sh -c 'mysql -uroot -p"$MYSQL_ROOT_PASSWORD" acore_world' < ahbot-tuning.sql
 -- Then restart the worldserver (the module reads this table at boot). The AH
--- fills toward the new maxitems over the following cycles.
+-- fills toward the new maxitems over the following cycles. (Live alternative,
+-- no restart: GM/SOAP `ahbotoptions maxitems <2|6|7> <n>` and
+-- `ahbotoptions percentages ...` — both persist to this table themselves.)
 --
 -- Idempotent: safe to re-run, and must be re-applied after any from-scratch
 -- dbimport rebuild (volsync restore already covers it).
@@ -25,7 +29,7 @@ UPDATE mod_auctionhousebot
 SET percentwhitetradegoods = 40,
     percentgreenitems      = 17;
 
--- Faction houses only: 4x listing depth. Neutral stays at its stock 800.
+-- All houses: 10k listing depth (neutral included — Booty Bay is the realm's
+-- shopping stop since Landro sells bags, see tcg-vendor.sql).
 UPDATE mod_auctionhousebot
-SET maxitems = 4000
-WHERE auctionhouse IN (2, 6);
+SET maxitems = 10000;
