@@ -136,14 +136,6 @@ jobs:
         run: pip install -r infrastructure/requirements.txt
       - name: Install Ansible Galaxy Roles
         run: ansible-galaxy install -r infrastructure/requirements.yaml
-      - name: Setup SSH Key
-        env:
-          ANSIBLE_PRIVATE_KEY: ${{ secrets.ANSIBLE_PRIVATE_KEY }}
-        run: |
-          mkdir -p ~/.ssh
-          echo "$ANSIBLE_PRIVATE_KEY" > ~/.ssh/id_ed25519
-          chmod 600 ~/.ssh/id_ed25519
-          echo "StrictHostKeyChecking no" >> ~/.ssh/config
       - name: Install 1Password CLI
         run: |
           set -euo pipefail
@@ -155,6 +147,14 @@ jobs:
           chmod +x "$HOME/.local/bin/op"
           echo "$HOME/.local/bin" >> "$GITHUB_PATH"
           "$HOME/.local/bin/op" --version
+      - name: Setup SSH Key
+        env:
+          OP_SERVICE_ACCOUNT_TOKEN: ${{ secrets.OP_SERVICE_ACCOUNT_TOKEN }}
+        run: |
+          mkdir -p ~/.ssh
+          op read "op://ci/ansible/ANSIBLE_PRIVATE_KEY" > ~/.ssh/id_ed25519
+          chmod 600 ~/.ssh/id_ed25519
+          echo "StrictHostKeyChecking no" >> ~/.ssh/config
       - name: Run Ansible Playbook (Check Mode)
         working-directory: infrastructure
         env:
@@ -192,14 +192,6 @@ jobs:
         run: pip install -r infrastructure/requirements.txt
       - name: Install Galaxy Roles
         run: ansible-galaxy install -r infrastructure/requirements.yaml
-      - name: Setup SSH Key
-        env:
-          ANSIBLE_PRIVATE_KEY: ${{ secrets.ANSIBLE_PRIVATE_KEY }}
-        run: |
-          mkdir -p ~/.ssh
-          echo "$ANSIBLE_PRIVATE_KEY" > ~/.ssh/id_ed25519
-          chmod 600 ~/.ssh/id_ed25519
-          echo "StrictHostKeyChecking no" >> ~/.ssh/config
       - name: Install 1Password CLI
         run: |
           set -euo pipefail
@@ -211,6 +203,14 @@ jobs:
           chmod +x "$HOME/.local/bin/op"
           echo "$HOME/.local/bin" >> "$GITHUB_PATH"
           "$HOME/.local/bin/op" --version
+      - name: Setup SSH Key
+        env:
+          OP_SERVICE_ACCOUNT_TOKEN: ${{ secrets.OP_SERVICE_ACCOUNT_TOKEN }}
+        run: |
+          mkdir -p ~/.ssh
+          op read "op://ci/ansible/ANSIBLE_PRIVATE_KEY" > ~/.ssh/id_ed25519
+          chmod 600 ~/.ssh/id_ed25519
+          echo "StrictHostKeyChecking no" >> ~/.ssh/config
       - name: Run Ansible Playbook (Apply)
         working-directory: infrastructure
         env:
