@@ -20,7 +20,11 @@ spec:
     substitute:
       APP: *app
       VOLSYNC_CAPACITY: 5Gi
-      VOLSYNC_SCHEDULE: "50 * * * *"
+      # Every 6h (was hourly). qbittorrent stores resume data in a single
+      # churny SQLite DB (torrents.db), so an hourly snapshot re-chunks most
+      # of it each run — the largest contributor to shared-repo index-blob
+      # growth. A 6h RPO on torrent resume state is ample.
+      VOLSYNC_SCHEDULE: "50 */6 * * *"
   prune: true
   sourceRef:
     kind: GitRepository
