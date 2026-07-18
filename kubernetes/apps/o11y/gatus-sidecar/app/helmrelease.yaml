@@ -50,7 +50,10 @@ spec:
         - "{{ .Release.Name }}.materia.wtf"
         - status.materia.wtf
       parentRefs:
-        - name: envoy-external
+        # Internal only: the status page exposes the full internal service +
+        # health inventory, so it stays on the LAN gateway (no public recon
+        # surface). Left open (no forward-auth) per decision.
+        - name: envoy-internal
           namespace: network
     monitoring:
       serviceMonitor:
