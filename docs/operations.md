@@ -17,7 +17,7 @@ than kube-prometheus-stack:
 | Alert hygiene | silence-operator | Declarative, Git-managed silences |
 | Logs | VictoriaLogs | Cluster log aggregation |
 | Dashboards | Grafana (grafana-operator) | Dashboards as `GrafanaDashboard` CRs next to the app that owns them |
-| Uptime / synthetic | gatus + gatus-sidecar | Endpoints declared via `gatus.home-operations.com/endpoint` annotations on HTTPRoutes; external checks resolve via public DNS (`1.1.1.1`) so they test the real public path |
+| Uptime / synthetic | gatus-sidecar (bundles gatus) | Endpoints declared via `gatus.home-operations.com/endpoint` annotations on HTTPRoutes; external checks resolve via public DNS (`1.1.1.1`) so they test the real public path |
 | Blackbox probes | blackbox-exporter | ICMP/TCP/HTTP probes for non-cluster targets |
 | Hardware | smartctl-exporter, node-exporter, drm-exporter (iGPU) | Disk health, node metrics, GPU utilisation |
 | Network gear | unpoller | UniFi controller metrics |

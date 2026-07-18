@@ -11,6 +11,7 @@ at runtime and [repo-workflow.md](./repo-workflow.md) for how to make changes.
 | [`kubernetes/apps/`](../kubernetes/apps) | Everything Flux deploys, one directory per namespace |
 | [`kubernetes/components/`](../kubernetes/components) | Reusable Kustomize components apps opt into |
 | [`kubernetes/flux/cluster/`](../kubernetes/flux/cluster) | The single Flux entrypoint (`cluster-apps` Kustomization) |
+| [`kubernetes/templates/`](../kubernetes/templates) | Manifest templates used by the `kube` just recipes (VolSync restore) |
 | [`talos/`](../talos) | Talos machine configuration (minijinja templates + per-node overrides) |
 | [`bootstrap/`](../bootstrap) | Day-0 bring-up: helmfile (CRDs, then core apps) and kustomize resources |
 | [`infrastructure/`](../infrastructure) | Ansible for out-of-cluster hosts (the Pi-holes: dnscrypt, observability) |
@@ -127,5 +128,7 @@ see [cicd.md](./cicd.md).
 - **Conventional Commits** on every commit (`feat(scope):`, `fix(scope):`, `chore:`…) —
   companion repos derive releases from them, and this repo's history stays greppable.
 - **Git hooks** via lefthook, pulling the shared config from `home-operations/.github`.
-- **Renovate config** lives in [`.renovaterc.json5`](../.renovaterc.json5) (+
-  `.renovate/`), including the auto-merge policy per dependency class.
+- **Renovate config** lives in [`.renovaterc.json5`](../.renovaterc.json5), which
+  extends the org preset `github>materia-ops/.github//renovate/default` and carries the
+  auto-merge policy per dependency class. (A `.renovate/` directory is wired as an
+  optional CI path trigger in the Renovate workflow but doesn't currently exist.)

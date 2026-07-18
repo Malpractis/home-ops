@@ -9,7 +9,7 @@ by Ansible from [`infrastructure/`](../infrastructure).
 ```mermaid
 flowchart LR
     subgraph GitHub
-        repo[Malpractis/home-ops]
+        repo[materia-ops/home-ops]
         actions[GitHub Actions]
     end
     subgraph Cluster["matalos cluster (Talos, 3 × control plane)"]
