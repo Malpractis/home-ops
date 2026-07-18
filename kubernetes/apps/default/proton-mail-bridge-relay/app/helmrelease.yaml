@@ -109,6 +109,17 @@ spec:
         fsGroupChangePolicy: OnRootMismatch
     service:
       app:
+        # This relay is Authentik's (and the cluster's) outbound email path,
+        # but had no monitoring. A TCP-accept check is imperfect (postfix
+        # listening ≠ mail actually flowing to the bridge) but far better than
+        # the previous nothing — it catches a wedged/crashed relay.
+        annotations:
+          gatus.home-operations.com/enabled: "true"
+          gatus.home-operations.com/endpoint: |-
+            group: services
+            url: tcp://proton-mail-bridge-relay.default.svc:25
+            interval: 1m
+            conditions: ["[CONNECTED] == true"]
         ports:
           smtp:
             port: *smtp
