@@ -12,9 +12,11 @@ spec:
   values:
     fullnameOverride: reloader
     reloader:
+      # enableHA uses leader election, so it needs >1 replica to mean anything —
+      # 1 replica with enableHA was self-contradictory. 2 gives a warm standby.
       enableHA: true
       deployment:
-        replicas: 1
+        replicas: 2
       readOnlyRootFileSystem: true
       podMonitor:
         enabled: true
