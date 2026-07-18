@@ -3,12 +3,11 @@
   extends: [
     "github>home-operations/renovate-presets#2.1.0",
     ":timezone(Australia/Melbourne)",
+    // Org policy — LAST so it wins over the upstream :automergeBranch: forces
+    // PR-based automerge. The org ruleset forbids direct pushes to the default
+    // branch, so every automerge goes via a PR that Renovate auto-merges.
+    "github>materia-ops/.github//renovate/default",
   ],
-  // The org ruleset requires a PR to reach the default branch (no bypass), so
-  // override the preset's :automergeBranch — every automerge goes via a PR that
-  // Renovate then auto-merges. Applies to preset-driven minor/digest merges too,
-  // not just the explicit packageRules below.
-  automergeType: "pr",
   packageRules: [
     // Auto-merge rules
     {
