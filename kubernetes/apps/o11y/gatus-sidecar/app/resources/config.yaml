@@ -30,6 +30,21 @@ endpoints:
     conditions:
       - "[STATUS] == 200"
       - "[BODY].workflow_runs[0].conclusion == success"
+  # Dead-man for the DropRate addon release pipeline (droprate-wotlk):
+  # release-please-driven like materia-core, so no cron-enabled check —
+  # the latest completed release.yml run must have succeeded, catching
+  # failed builds, signing problems (SIGNING_KEY / OP_ADDON_RELEASE_TOKEN),
+  # and mirror-publish breakage the repo's own release-failure issue job
+  # cannot see.
+  - name: droprate-release-last-run
+    group: ci
+    url: "https://api.github.com/repos/materia-ops/droprate-wotlk/actions/workflows/release.yml/runs?status=completed&per_page=1"
+    interval: 30m
+    headers:
+      Authorization: Bearer ${GATUS_STATUS_TOKEN}
+    conditions:
+      - "[STATUS] == 200"
+      - "[BODY].workflow_runs[0].conclusion == success"
   # Dead-man for the materia-core release pipeline: the latest completed
   # release.yml run must have succeeded — catches failed installer builds,
   # smoke-test failures, and mirror-publish breakage (SIGNING_KEY /
