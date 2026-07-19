@@ -33,3 +33,26 @@ SET percentwhitetradegoods = 40,
 -- shopping stop since Landro sells bags, see tcg-vendor.sql).
 UPDATE mod_auctionhousebot
 SET maxitems = 10000;
+
+-- ---------------------------------------------------------------------------
+-- Profession-mats floor (2026-07-19). Requires the azerothcore-image build
+-- carrying the mod-ah-bot profession-mats-bin patch: its module migration
+-- adds mod_auctionhousebot.percentprofessionmats (DEFAULT 0 = inert), so
+-- ORDERING MATTERS — roll that image (or run its ALTER) BEFORE this section,
+-- or the UPDATE below fails on the missing column.
+--
+-- The dedicated mats bin is fed from auctionhousebot_professionItems
+-- (~3,660 rows, gems included) and is an ADDITIVE floor: mats stay in their
+-- quality bins too. Uniform pick within the bin means per-item density =
+-- binMax / 3660; to bias gems/levelling mats harder, curate that table down
+-- later — deliberately NOT done here.
+--
+-- All 15 columns must still sum to 100 per house. Fund mats=20 from the
+-- bins it overlaps most: whiteTG 40→28, greenTG 12→8, greenItems 17→13:
+-- TGs 0+28+8+10+1+0+0 = 47, items 0+10+13+8+2+0+0 = 33, mats 20 → 100.
+-- Live-tunable afterwards via `ahbotoptions percentages` (15 values).
+UPDATE mod_auctionhousebot
+SET percentprofessionmats  = 20,
+    percentwhitetradegoods = 28,
+    percentgreentradegoods = 8,
+    percentgreenitems      = 13;
