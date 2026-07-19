@@ -62,8 +62,12 @@ with `gh pr create` and merged by the maintainer, not by sessions.
 
 ## Definition of done
 
-1. `kustomize build` runs clean on every affected path.
+1. `just kube render-local-ks <ns> <ks>` (flate) renders clean for every
+   affected app. `kustomize build` is only a rough fallback — it can't
+   resolve Flux substitutions, so a clean run proves less than flate.
 2. Conventions held (alphabetical ordering, neighbor-pattern layout,
    substitution rules).
-3. PR describes what changes on the cluster when it reconciles and how
+3. Read the konflate rendered-diff comment on the PR — it is the ground
+   truth for what actually reconciles; confirm it matches intent.
+4. PR describes what changes on the cluster when it reconciles and how
    it was validated, with a rollback note for anything stateful.
