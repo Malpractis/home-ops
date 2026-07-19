@@ -33,7 +33,7 @@ spec:
             image:
               # Rolling :latest, digest-pinned so Renovate PRs each new build.
               repository: ghcr.io/materia-ops/wow-panel
-              tag: 1.9.0@sha256:228026b989979c1258467ec895a1e9e746eacc75a3c0567c004c26bdf61ae2f8
+              tag: 1.10.0@sha256:5e49c0cf1debfb614ef1c0f24d5add414f3622103ee51ec56aab68b9206af9fe
             env:
               # Read-only game-DB access for the /bot-roster page (the acore
               # app user; AC_DB_PASSWORD arrives via wow-panel-secret). Unset
