@@ -180,3 +180,15 @@ INSERT INTO npc_vendor (entry, slot, item, maxcount, incrtime, ExtendedCost, Ver
 -- Give Landro the vendor flag (ships gossip-only: npcflag 1 -> 1|128 = 129)
 -- ---------------------------------------------------------------------------
 UPDATE creature_template SET npcflag = npcflag | 128 WHERE entry = 17249;
+
+-- ---------------------------------------------------------------------------
+-- Reach the vendor: Landro ships a gossip menu (7394, the TCG promotions
+-- tree), and a vendor npcflag alone can't open the shop when a gossip menu is
+-- present — the player needs a gossip option of type 3 (vendor). Add
+-- "browse your goods" to his root menu (OptionNpcFlag 128 = only shows while
+-- the vendor flag is set). Without this the 96 vendor rows above are
+-- unreachable. Live changes need `.reload gossip_menu_option`.
+-- ---------------------------------------------------------------------------
+DELETE FROM gossip_menu_option WHERE MenuID = 7394 AND OptionID = 1;
+INSERT INTO gossip_menu_option (MenuID, OptionID, OptionIcon, OptionText, OptionType, OptionNpcFlag)
+VALUES (7394, 1, 1, 'I would like to browse your goods.', 3, 128);
