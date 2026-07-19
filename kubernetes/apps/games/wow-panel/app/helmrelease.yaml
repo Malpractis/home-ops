@@ -38,6 +38,10 @@ spec:
               # Read-only game-DB access for the /bot-roster page (the acore
               # app user; AC_DB_PASSWORD arrives via wow-panel-secret). Unset
               # host = the page degrades to an explanatory card.
+              # /my-characters ownership beyond the automatic case-insensitive
+              # "game account == Authentik username" match (kitty↔KITTY needs
+              # nothing): vince's game account predates the SSO naming.
+              ACCOUNT_OWNERS: "vince:MALPRACTIS"
               AC_DB_HOST: azerothcore-db.games.svc.cluster.local
               AC_DB_PORT: "3306"
               AC_DB_USER: acore
