@@ -24,15 +24,6 @@ radarr:
       - trash_id: c3933358ba2356bafc41524f81471069 # [SQP] SQP-2
         reset_unmatched_scores:
           enabled: true
-      - trash_id: 2cf36c1f0106ffac993be003ade51865 # [SQP] SQP-3
-        reset_unmatched_scores:
-          enabled: true
-      - trash_id: 013f89e6da27519fe56cf482702a2db9 # [SQP] SQP-4
-        reset_unmatched_scores:
-          enabled: true
-      - trash_id: a7bb1539fd147256b21b1098f3dc2016 # [SQP] SQP-5
-        reset_unmatched_scores:
-          enabled: true
 
     custom_format_groups:
       add:
@@ -80,7 +71,4 @@ radarr:
           - ff5bc9e8ce91d46c997ca3ac6994d6f8 # FraMeSToR
         assign_scores_to:
           - name: "[SQP] SQP-2"
-          - name: "[SQP] SQP-3"
-          - name: "[SQP] SQP-4"
-          - name: "[SQP] SQP-5"
             score: 600
