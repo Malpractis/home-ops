@@ -139,7 +139,7 @@ sonarr:
         # - abe720fab2d27682adc2a735136cec02  # [Streaming Services] General
 
     custom_formats:
-      # Raise FLUX
+      # FLUX at its guide default score (the CF isn't part of the profile by default)
       - trash_ids:
           - 5d9fd1b1e06cd8a475462f40214b7df6  # FLUX
         assign_scores_to:
