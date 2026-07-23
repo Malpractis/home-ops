@@ -73,7 +73,10 @@ endpoints:
       - "[STATUS] == 200"
   - name: Lexara (GitHub raw)
     group: upstreams
-    url: https://raw.githubusercontent.com/Stormhand-dev/Lexara---HD-Font-Renderer-for-WoW-3.3.5/main/Lexara.zip
+    # upstream dropped the prebuilt Lexara.zip when it went open source
+    # (its issue #1); materia-core now fetches the in-tree DLLs, ETag-keyed
+    # on this one — keep this URL in lockstep with URL_LEXARA_DINPUT8 there.
+    url: https://raw.githubusercontent.com/Stormhand-dev/Lexara---HD-Font-Renderer-for-WoW-3.3.5/main/build/Release/Release/dinput8.dll
     method: HEAD
     interval: 15m
     conditions:
